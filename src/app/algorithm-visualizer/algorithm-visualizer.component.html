@@ -1,6 +1,6 @@
 <mat-toolbar class="array-container">
   <button type="button" [disabled]="arrService.sorting" class="btn btn-primary" (click)="resetArray()">
-    Generate New Array
+    Generate New String
   </button>
   <div class="btn-group" dropdown [insideClick]="true">
     <button id="button-animated" dropdownToggle type="button" class="btn btn-primary dropdown-toggle"
@@ -12,6 +12,11 @@
             <!-- [disabled]="arrService.sorting"> -->
       <li role="menuitem">
         <a class="dropdown-item" (click)="displayInfo(algoEnum.BUBBLE)">{{algoEnum.BUBBLE}}</a>
+        <a class="dropdown-item" (click)="displayInfo(algoEnum.NAIVE)">{{algoEnum.NAIVE}}</a>
+        <a class="dropdown-item" (click)="displayInfo(algoEnum.KMP)">{{algoEnum.KMP}}</a>
+        <a class="dropdown-item" (click)="displayInfo(algoEnum.BM)">{{algoEnum.BM}}</a>
+        <a class="dropdown-item" (click)="displayInfo(algoEnum.RK)">{{algoEnum.RK}}</a>
+        <a class="dropdown-item" (click)="displayInfo(algoEnum.TWSM)">{{algoEnum.TWSM}}</a>
       </li>
     </ul>
   </div>
@@ -20,7 +25,7 @@
     [disabled]="arrService.isSorted || arrService.sorting"> Sort
   </button>
 
-  <small>Array Size</small>
+  <small>String Size</small>
   <mat-slider [disabled]="arrService.sorting" thumbLabel tickInterval="auto" min="4" max="200"
     (input)="pitchSize($event)" value="{{ arrService.arrayLength }}"></mat-slider>
 
@@ -29,6 +34,17 @@
     [displayWith]="arrService.formatLabel" min="0" max="1000" (input)="pitchSpeed($event)"
     value="{{ arrService.animationSpeed }}">
   </mat-slider>
+
+  <form class="example-form">
+    <mat-form-field class="example-full-width">
+      <input matInput placeholder="Favorite food" value="Sushi">
+    </mat-form-field>
+  
+    <mat-form-field class="example-full-width">
+      <textarea matInput placeholder="Leave a comment"></textarea>
+    </mat-form-field>
+  </form>
+  
 </mat-toolbar>
 
 
@@ -36,50 +52,30 @@
   <div class="row">
 
     <div class="array-container col-12">
-
-      <div class="animation-slide-bar col-sm-6">
-
-        <table id="colorMeaning" class="array-container">
-          <tr>
-            <td>
-              <div class="rectangle" [ngStyle]="{'background-color': 'red'}"> </div>
-            </td>
-            <td>{{algoEnum.RED_BAR}} </td>
-            <td *ngIf="selectedAlgorithm == algoEnum.QUICK">
-              <div class="rectangle" [ngStyle]="{'background-color': 'orange'}"> </div>
-            </td>
-            <td *ngIf="selectedAlgorithm == algoEnum.QUICK">{{algoEnum.ORANGE_BAR}} </td>
-            <td>
-              <div class="rectangle" [ngStyle]="{'background-color': 'green'}"> </div>
-            </td>
-            <td>{{algoEnum.GREEN_BAR}} </td>
-          </tr>
-          <tr>
-          </tr>
-        </table>
-
-        <div class="mb-2">
-          <progressbar type="primary" [striped]="true" [animate]="true" *ngIf="arrService.sorting == false"
-            [value]="arrService.arrayLength"><i>{{arrService.arrayLength}} / 200 </i></progressbar>
-          <progressbar type="danger" [striped]="true" [animate]="true" *ngIf="arrService.sorting"
-            max="{{arrService.sortingAnimationsMax}}" [value]="arrService.sortingAnimationsLeft">
-            <i>{{arrService.sortingAnimationsLeft}} / {{arrService.sortingAnimationsMax}} </i>
-          </progressbar>
-        </div>
-      </div>
-
       <hr />
+      <div class="array-body" *ngFor="let num of arrService.numbers" class="array-bar" 
+      [ngStyle]=" { 'width.px': num.width,
+                    'height.px': num.value,
+                    'background-color': num.colour
+                  }">
+      </div>
+    </div>
+  </div>
+</div>
 
+<!-- <div class="container-fluid">
+  <div class="row">
+
+    <div class="array-container col-12">
+      <hr />
       <div class="array-body" *ngFor="let num of arrService.numbers" class="array-bar" [ngStyle]="  
           { 'width.px': num.width,
             'height.px': num.value,
             'background-color': num.colour
           }">
-
         <p *ngIf="arrService.arrayLength > 20" [style.font-size.px]="'0'">.</p>
-
         <p *ngIf="arrService.arrayLength < 20" [style.color]="'white'">{{ num.value }}</p>
       </div>
     </div>
   </div>
-</div>
+</div> -->
