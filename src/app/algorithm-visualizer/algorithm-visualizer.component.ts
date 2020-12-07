@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ArraysService } from '../shared/arrays.service';
+import { StringService } from '../shared/string.service';
+
 import { BsDropdownConfig } from 'ngx-bootstrap/dropdown';
 import { AlgorithmEnum } from '../shared/algorithm.enum';
-import { ArrayBars } from '../shared/models/ArrayBars';
 import { BubbleSort } from './algorithms/bubble-sort';
+import { NaiveSearch } from './algorithms/NaiveSearch';
 
 @Component({
   selector: 'app-algorithm-visualizer',
@@ -21,10 +23,12 @@ export class AlgorithmVisualizerComponent implements OnInit {
   algoEnum = AlgorithmEnum;
   selectedAlgorithm: AlgorithmEnum = AlgorithmEnum.BUBBLE;
 
-  constructor(public arrService: ArraysService) { }
+  constructor(public arrService: ArraysService, public stringService: StringService) { }
 
   ngOnInit(): void {
     this.arrService.resetArray();
+    this.stringService;
+    this.naiveSearch();
   }
 
   resetArray(): void {
@@ -55,6 +59,11 @@ export class AlgorithmVisualizerComponent implements OnInit {
     const numbersCopy = [...this.arrService.numbers];
     bs.bubbleSort(numbersCopy);
     bs.bubbleSortAnimation();
+  }
+
+  naiveSearch(): void {
+    const ns = new NaiveSearch(this.arrService, this.stringService);
+    ns.naiveSearch(this.stringService.stackArr, this.stringService.needleArr);
   }
 
 }

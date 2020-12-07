@@ -52,13 +52,17 @@
         </mat-form-field>
       </form>
 
-      <!-- <hr /> -->
-      <div class="array-body" *ngFor="let num of arrService.numbers" class="array-bar" 
-      [ngStyle]=" { 'width.px': num.width,
-                    'height.px': num.value,
-                    'background-color': num.colour
-                  }">
+      <div class="array-body array-bar" *ngFor="let letter of stringService.stackArr">
+        {{letter}}
       </div>
+
+      <br>
+
+      <div class="array-body array-bar" *ngFor="let letter of stringService.needleArr"
+      [ngStyle]="{ 'background-color': letter.colour }">
+        {{letter.character}}
+      </div>
+      
     </div>
   </div>
 </div>
@@ -68,7 +72,7 @@
 
     <div class="array-container col-12">
       <hr />
-      <div class="array-body" *ngFor="let num of arrService.numbers" class="array-bar" [ngStyle]="  
+      <div class="array-body array-bar" *ngFor="let num of arrService.numbers" [ngStyle]="  
           { 'width.px': num.width,
             'height.px': num.value,
             'background-color': num.colour
