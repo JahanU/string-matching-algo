@@ -8,78 +8,66 @@ export class NaiveSearch {
     animations: AnimationValues[] = [];
 
     constructor(
-        private readonly arrService: ArraysService,
         private readonly stringService: StringService,
-
     ) { }
 
-    naiveSearch(stack: string[], needle: Letters[]) {
+    naiveSearch(stack: Letters[], needle: Letters[]) {
 
         for (let i = 0; i <= stack.length - needle.length; i++) {
-
             let j = 0;
+          for (j; j < needle.length; j++) {
 
-            for (j; j < needle.length; j++) {
-
-                if (stack[i + j] != needle[j].character) {
-                    break;
-                    // probs change colour here!
+                if (stack[i + j].character != needle[j].character) {
+                  this.animations.push({isMatch: false, stackIndex: i, needleIndex: j});
+                  break;
                 }
                 else {
-                    // make colour green!
-                    // push this onto the animation stack!
+                  this.animations.push({isMatch: true, stackIndex: i, needleIndex: j});
                 }
             }
             if (j == needle.length) {
-                console.log('match found!');
-                console.log('starting at index: ', i);
+                console.log('match found! At index: ', i);
             }
         }
 
-        console.log('done!');
     }
 
-    bubbleSort(array: ArrayBars[]): void {
-    for (let i = 0; i < array.length - 1; i++) {
-      for (let j = 0; j < array.length - i - 1; j++) {
-        this.animations.push({ leftIndex: null, rightIndex: null, index: j });
-        if (array[j].value > array[j + 1].value) {
-          this.animations.push({ leftIndex: j, rightIndex: j + 1, index: null });
-          this.arrService.swap(array, j, j + 1);
-        }
-      }
-    }
-    }
-
-    bubbleSortAnimation(): void {
-    this.arrService.sortingAnimationsMax = this.animations.length;
-    const timer = setInterval(() => {
+    naiveSearchAnimation(): void {
+      let resetToWhite = false; 
+      const timer = setInterval(() => {
       const action: AnimationValues = this.animations.shift();
-      this.arrService.sortingAnimationsLeft = this.animations.length;
       if (action) {
-        this.arrService.numbers.map((num) => (num.colour = this.arrService.$primaryBars));
-        if (action.index != null) {
-          this.arrService.numbers[action.index].colour = this.arrService.$selectedIndex;
+        if (resetToWhite) {
+          console.log('setting to white!');
+          this.stringService.stackArr.map((chr) => (chr.colour = 'white'));
+          this.stringService.needleArr.map((chr) => (chr.colour = 'white'));
+          resetToWhite = false;
         }
-        else {
-          this.arrService.numbers[action.leftIndex].colour = this.arrService.$swappedIndex;
-          this.arrService.numbers[action.rightIndex].colour = this.arrService.$swappedIndex;
-          this.arrService.swap(this.arrService.numbers, action.leftIndex, action.rightIndex);
+
+        if (action.isMatch) {
+          this.stringService.needleArr[action.needleIndex].colour = '#b2ff59';
+          this.stringService.stackArr[action.stackIndex + action.needleIndex].colour = '#b2ff59';
+        }
+        else { 
+          this.stringService.needleArr[action.needleIndex].colour = 'red';
+          this.stringService.stackArr[action.stackIndex + action.needleIndex].colour = 'red';
+          resetToWhite = true;
         }
       }
       else {
         clearInterval(timer);
-        if (this.arrService.isArraySorted(this.arrService.numbers)) {
-          this.arrService.animateSortedArray();
-          this.arrService.sorting = false;
-        }
       }
-    }, this.arrService.animationSpeed);
-    }
+    }, 1000);
+  }
+
+
+
 }
 
 interface AnimationValues {
-    leftIndex: number;
-    rightIndex: number;
-    index: number;
+  isMatch: boolean;
+  stackIndex: number;
+  needleIndex: number;
+
 }
+ 

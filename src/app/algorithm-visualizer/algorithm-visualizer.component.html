@@ -52,8 +52,9 @@
         </mat-form-field>
       </form>
 
-      <div class="array-body array-bar" *ngFor="let letter of stringService.stackArr">
-        {{letter}}
+      <div class="array-body array-bar" *ngFor="let letter of stringService.stackArr"
+      [ngStyle]="{ 'background-color': letter.colour }">
+        {{letter.character}}
       </div>
 
       <br>
@@ -62,7 +63,7 @@
       [ngStyle]="{ 'background-color': letter.colour }">
         {{letter.character}}
       </div>
-      
+
     </div>
   </div>
 </div>

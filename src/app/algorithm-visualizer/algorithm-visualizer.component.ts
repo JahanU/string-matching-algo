@@ -21,14 +21,13 @@ import { NaiveSearch } from './algorithms/NaiveSearch';
 export class AlgorithmVisualizerComponent implements OnInit {
 
   algoEnum = AlgorithmEnum;
-  selectedAlgorithm: AlgorithmEnum = AlgorithmEnum.BUBBLE;
+  selectedAlgorithm: AlgorithmEnum = AlgorithmEnum.NAIVE;
 
   constructor(public arrService: ArraysService, public stringService: StringService) { }
 
   ngOnInit(): void {
-    this.arrService.resetArray();
+    // this.arrService.resetArray();
     this.stringService;
-    this.naiveSearch();
   }
 
   resetArray(): void {
@@ -52,6 +51,7 @@ export class AlgorithmVisualizerComponent implements OnInit {
   startSorting(): void {
     this.arrService.sorting = true;
     if (this.selectedAlgorithm === AlgorithmEnum.BUBBLE) { this.bubbleSort(); }
+    if (this.selectedAlgorithm === AlgorithmEnum.NAIVE) { this.naiveSearch(); }
   }
 
   bubbleSort(): void {
@@ -62,8 +62,12 @@ export class AlgorithmVisualizerComponent implements OnInit {
   }
 
   naiveSearch(): void {
-    const ns = new NaiveSearch(this.arrService, this.stringService);
-    ns.naiveSearch(this.stringService.stackArr, this.stringService.needleArr);
+    const ns = new NaiveSearch(this.stringService);
+    let needleCopy = [...this.stringService.needleArr];
+    let stackCopy = [...this.stringService.stackArr];
+    ns.naiveSearch(stackCopy, needleCopy);
+    ns.naiveSearchAnimation();
+
   }
 
 }

@@ -8,23 +8,27 @@ export class StringService {
 
   stack: string;
   needle: string;
-  stackArr: string[];
+  stackArr: Letters[];
   needleArr: Letters[];
 
-  constructor() { 
+  constructor() {
+    this.stackArr = []; 
     this.needleArr = [];
-    this.createArray();
+    this.createArrays();
   }
 
-  createArray() {
-    this.stack = "ABCDEABCABC";
+  createArrays() {
+    this.stack = "ABZZAZZZABC";
     this.needle = "ABC";
-    this.stackArr = this.stack.split(''); // Will always be unchanged!
+    let splitStack = this.stack.split(''); // Will always be unchanged!
     let splitNeedle = this.needle.split('');
 
+    for (let i = 0; i < splitStack.length; i++) {
+      this.stackArr.push({character: splitStack[i], colour: 'white', index: i});
+    }
+
     for (let i = 0; i < splitNeedle.length; i++) {
-      const letter = splitNeedle[i];
-      this.needleArr.push({character: letter, colour: '#b2ff59'});
+      this.needleArr.push({character: splitNeedle[i], colour: 'white', index: i});
     }
   }
 }
