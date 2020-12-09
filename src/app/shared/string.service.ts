@@ -23,7 +23,7 @@ export class StringService {
   }
 
   createStringsArrays() {
-    let splitStack = this.stack.split(''); // Will always be unchanged!
+    let splitStack = this.stack.split(''); 
     let splitNeedle = this.needle.split('');
 
     this.stackArr = [];
@@ -37,5 +37,6 @@ export class StringService {
       this.needleArr.push({character: splitNeedle[i], colour: 'white', index: i});
     }
   }
+
 }
 

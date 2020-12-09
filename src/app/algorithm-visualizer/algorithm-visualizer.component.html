@@ -11,12 +11,27 @@
     >
             <!-- [disabled]="stringService.isSorting"> -->
       <li role="menuitem">
-        <a class="dropdown-item" (click)="displayInfo(algoEnum.BUBBLE)">{{algoEnum.BUBBLE}}</a>
-        <a class="dropdown-item" (click)="displayInfo(algoEnum.NAIVE)">{{algoEnum.NAIVE}}</a>
-        <a class="dropdown-item" (click)="displayInfo(algoEnum.KMP)">{{algoEnum.KMP}}</a>
-        <a class="dropdown-item" (click)="displayInfo(algoEnum.BM)">{{algoEnum.BM}}</a>
-        <a class="dropdown-item" (click)="displayInfo(algoEnum.RK)">{{algoEnum.RK}}</a>
-        <a class="dropdown-item" (click)="displayInfo(algoEnum.TWSM)">{{algoEnum.TWSM}}</a>
+        <a class="dropdown-item" (click)="displayAlgo(algoEnum.NAIVE)">{{algoEnum.NAIVE}}</a>
+        <a class="dropdown-item" (click)="displayAlgo(algoEnum.KMP)">{{algoEnum.KMP}}</a>
+        <a class="dropdown-item" (click)="displayAlgo(algoEnum.BM)">{{algoEnum.BM}}</a>
+        <a class="dropdown-item" (click)="displayAlgo(algoEnum.RK)">{{algoEnum.RK}}</a>
+        <a class="dropdown-item" (click)="displayAlgo(algoEnum.TWSM)">{{algoEnum.TWSM}}</a>
+        <a class="dropdown-item" (click)="displayAlgo(algoEnum.TWSM)">All</a>
+
+      </li>
+    </ul>
+  </div>
+  <div class="btn-group" dropdown [insideClick]="true">
+    <button id="button-animated" dropdownToggle type="button" class="btn btn-primary dropdown-toggle"
+      aria-controls="dropdown-animated" [disabled]="stringService.isSorting">
+      {{ selectedInput }} <span class="caret"></span>
+    </button>
+    <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-animated"
+    >
+            <!-- [disabled]="stringService.isSorting"> -->
+      <li role="menuitem" (click)="updateInputData($event)" >
+        <a class="dropdown-item" (click)="displayInput(inputEnum.DNA)">{{inputEnum.DNA}}</a>
+        <a class="dropdown-item" (click)="displayInput(inputEnum.STORY)">{{inputEnum.STORY}}</a>
       </li>
     </ul>
   </div>
@@ -41,7 +56,7 @@
   <div class="row">
 
     <div class="array-container col-12">
-      <form [formGroup]="inputs" (keyup)="updateStrings()" class="example-form">
+      <form [formGroup]="inputForm" (keyup)="updateStrings()" class="example-form">
 
         <mat-form-field class="inputField">
           <input formControlName="needle" matInput placeholder="Needle" value="ABC">
