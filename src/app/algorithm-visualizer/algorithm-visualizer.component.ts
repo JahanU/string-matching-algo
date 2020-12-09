@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnChanges } from '@angular/core';
 import { ArraysService } from '../shared/arrays.service';
 import { StringService } from '../shared/string.service';
 
@@ -6,6 +6,7 @@ import { BsDropdownConfig } from 'ngx-bootstrap/dropdown';
 import { AlgorithmEnum } from '../shared/algorithm.enum';
 import { BubbleSort } from './algorithms/bubble-sort';
 import { NaiveSearch } from './algorithms/NaiveSearch';
+import { FormControl, FormGroup, Validators, FormControlName } from '@angular/forms';
 
 @Component({
   selector: 'app-algorithm-visualizer',
@@ -20,8 +21,13 @@ import { NaiveSearch } from './algorithms/NaiveSearch';
 })
 export class AlgorithmVisualizerComponent implements OnInit {
 
-  algoEnum = AlgorithmEnum;
   selectedAlgorithm: AlgorithmEnum = AlgorithmEnum.NAIVE;
+    
+  inputs = new FormGroup({
+    needle: new FormControl(this.stringService.needle),
+    stack: new FormControl(this.stringService.stack),
+  });
+  
 
   constructor(public arrService: ArraysService, public stringService: StringService) { }
 
@@ -31,7 +37,13 @@ export class AlgorithmVisualizerComponent implements OnInit {
   }
 
   resetArray(): void {
-    this.arrService.resetArray();
+    // this.arrService.resetArray();
+  }
+
+  updateStrings() {
+    this.stringService.needle = this.inputs.get('needle').value;
+    this.stringService.stack = this.inputs.get('stack').value;
+    this.stringService.createStringsArrays();
   }
 
   pitchSize(event: any): void {
@@ -41,7 +53,7 @@ export class AlgorithmVisualizerComponent implements OnInit {
   }
 
   pitchSpeed(event: any): void {
-    this.arrService.animationSpeed = event.value;
+    this.stringService.animationSpeed = event.value;
   }
 
   displayInfo(pickedAlgo: AlgorithmEnum): void {
@@ -49,7 +61,7 @@ export class AlgorithmVisualizerComponent implements OnInit {
   }
 
   startSorting(): void {
-    this.arrService.sorting = true;
+    this.stringService.isSorting = true;
     if (this.selectedAlgorithm === AlgorithmEnum.BUBBLE) { this.bubbleSort(); }
     if (this.selectedAlgorithm === AlgorithmEnum.NAIVE) { this.naiveSearch(); }
   }

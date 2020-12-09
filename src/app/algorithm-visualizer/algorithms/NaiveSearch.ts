@@ -14,9 +14,9 @@ export class NaiveSearch {
     naiveSearch(stack: Letters[], needle: Letters[]) {
 
         for (let i = 0; i <= stack.length - needle.length; i++) {
-            let j = 0;
-          for (j; j < needle.length; j++) {
+          let j = 0;
 
+          for (j; j < needle.length; j++) {
                 if (stack[i + j].character != needle[j].character) {
                   this.animations.push({isMatch: false, stackIndex: i, needleIndex: j});
                   break;
@@ -38,15 +38,16 @@ export class NaiveSearch {
       const action: AnimationValues = this.animations.shift();
       if (action) {
         if (resetToWhite) {
-          console.log('setting to white!');
-          this.stringService.stackArr.map((chr) => (chr.colour = 'white'));
-          this.stringService.needleArr.map((chr) => (chr.colour = 'white'));
+          this.setToWhite();  
           resetToWhite = false;
         }
 
         if (action.isMatch) {
           this.stringService.needleArr[action.needleIndex].colour = '#b2ff59';
           this.stringService.stackArr[action.stackIndex + action.needleIndex].colour = '#b2ff59';
+          if (action.needleIndex == this.stringService.needleArr.length - 1) {
+            resetToWhite = true;
+          }
         }
         else { 
           this.stringService.needleArr[action.needleIndex].colour = 'red';
@@ -56,11 +57,16 @@ export class NaiveSearch {
       }
       else {
         clearInterval(timer);
+        this.stringService.isSorting = false;    
+        this.setToWhite();  
       }
-    }, 1000);
+    }, this.stringService.animationSpeed);
   }
 
-
+  setToWhite() {
+    this.stringService.stackArr.map((chr) => (chr.colour = 'white'));
+    this.stringService.needleArr.map((chr) => (chr.colour = 'white'));    
+  }
 
 }
 
@@ -70,4 +76,3 @@ interface AnimationValues {
   needleIndex: number;
 
 }
- 

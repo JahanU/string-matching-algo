@@ -10,18 +10,24 @@ export class StringService {
   needle: string;
   stackArr: Letters[];
   needleArr: Letters[];
+  isSorting: boolean = false;
+  animationSpeed: number = 1000;
 
   constructor() {
-    this.stackArr = []; 
-    this.needleArr = [];
-    this.createArrays();
+    this.reset();
+    this.createStringsArrays();
   }
 
-  createArrays() {
-    this.stack = "ABZZAZZZABC";
-    this.needle = "ABC";
+  reset() {
+    [this.stack, this.needle, this.stackArr, this.needleArr] = ['ABCDE','ABC',[],[]];
+  }
+
+  createStringsArrays() {
     let splitStack = this.stack.split(''); // Will always be unchanged!
     let splitNeedle = this.needle.split('');
+
+    this.stackArr = [];
+    this.needleArr = [];
 
     for (let i = 0; i < splitStack.length; i++) {
       this.stackArr.push({character: splitStack[i], colour: 'white', index: i});

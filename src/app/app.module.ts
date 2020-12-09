@@ -10,6 +10,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { MatSliderModule } from '@angular/material/slider';
 import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
+import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
@@ -27,6 +28,7 @@ const routes: Routes = [
     MatSliderModule,
     MatInputModule,
     BrowserAnimationsModule,
+    ReactiveFormsModule,
     BsDropdownModule.forRoot(),
     ProgressbarModule.forRoot(),
     RouterModule.forRoot(routes),

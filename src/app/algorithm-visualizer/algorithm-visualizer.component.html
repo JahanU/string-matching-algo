@@ -1,15 +1,15 @@
 <mat-toolbar class="array-container">
-  <button type="button" [disabled]="arrService.sorting" class="btn btn-primary" (click)="resetArray()">
+  <button type="button" [disabled]="stringService.isSorting" class="btn btn-primary" (click)="resetArray()">
     Generate New String
   </button>
   <div class="btn-group" dropdown [insideClick]="true">
     <button id="button-animated" dropdownToggle type="button" class="btn btn-primary dropdown-toggle"
-      aria-controls="dropdown-animated" [disabled]="arrService.sorting">
+      aria-controls="dropdown-animated" [disabled]="stringService.isSorting">
       {{ selectedAlgorithm }} <span class="caret"></span>
     </button>
     <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-animated"
     >
-            <!-- [disabled]="arrService.sorting"> -->
+            <!-- [disabled]="stringService.isSorting"> -->
       <li role="menuitem">
         <a class="dropdown-item" (click)="displayInfo(algoEnum.BUBBLE)">{{algoEnum.BUBBLE}}</a>
         <a class="dropdown-item" (click)="displayInfo(algoEnum.NAIVE)">{{algoEnum.NAIVE}}</a>
@@ -22,19 +22,18 @@
   </div>
 
   <button type="button" class="btn btn-danger" (click)="startSorting()"
-    [disabled]="arrService.isSorted || arrService.sorting"> Sort
+    [disabled]="stringService.isSorting || stringService.isSorting"> Sort
   </button>
 
   <small>String Size</small>
-  <mat-slider [disabled]="arrService.sorting" thumbLabel tickInterval="auto" min="4" max="200"
+  <mat-slider [disabled]="stringService.isSorting" thumbLabel tickInterval="auto" min="4" max="200"
     (input)="pitchSize($event)" value="{{ arrService.arrayLength }}"></mat-slider>
 
   <small>Iteration Speed </small>
-  <mat-slider [disabled]="arrService.sorting" id="speedSlider" thumbLabel tickInterval="auto"
+  <mat-slider [disabled]="stringService.isSorting" id="speedSlider" thumbLabel tickInterval="auto"
     [displayWith]="arrService.formatLabel" min="0" max="1000" (input)="pitchSpeed($event)"
-    value="{{ arrService.animationSpeed }}">
+    value="{{ stringService.animationSpeed }}">
   </mat-slider>
-  
 </mat-toolbar>
 
 
@@ -42,13 +41,14 @@
   <div class="row">
 
     <div class="array-container col-12">
-      <form class="example-form">
+      <form [formGroup]="inputs" (keyup)="updateStrings()" class="example-form">
+
         <mat-form-field class="inputField">
-          <input matInput placeholder="Needle" value="ABC">
+          <input formControlName="needle" matInput placeholder="Needle" value="ABC">
         </mat-form-field>
-      
+
         <mat-form-field class="inputField">
-          <input matInput placeholder="Haystack" value="ABCDE">
+          <input formControlName="stack" matInput placeholder="Haystack" value="ABCDE">
         </mat-form-field>
       </form>
 
