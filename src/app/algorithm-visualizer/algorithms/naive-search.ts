@@ -39,9 +39,9 @@ export class NaiveSearch {
       let resetToWhite = false; 
       const timer = setInterval(() => {
       const action: AnimationValues = this.animations.shift();
-      if (action) {
+      if (action) {       
         this.stringService.occurrencesCount = action.occurrencesCount;
-        
+ 
         if (resetToWhite) {
           this.setToWhite();  
           resetToWhite = false;
@@ -59,6 +59,7 @@ export class NaiveSearch {
           this.stringService.stackArr[action.stackIndex + action.needleIndex].colour = 'red';
           resetToWhite = true;
         }
+
       }
       else {
         clearInterval(timer);

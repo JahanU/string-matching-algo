@@ -40,13 +40,13 @@
     [disabled]="stringService.isSorting || stringService.isSorting"> Sort
   </button>
 
-  <small>String Size</small>
+  <!-- <small>String Size</small>
   <mat-slider [disabled]="stringService.isSorting" thumbLabel tickInterval="auto" min="4" max="200"
-    (input)="pitchSize($event)" value="{{ arrService.arrayLength }}"></mat-slider>
+    (input)="pitchSize($event)" value="5"></mat-slider> -->
 
   <small>Iteration Speed </small>
   <mat-slider [disabled]="stringService.isSorting" id="speedSlider" thumbLabel tickInterval="auto"
-    [displayWith]="arrService.formatLabel" min="0" max="1000" (input)="pitchSpeed($event)"
+    [displayWith]="stringService.formatLabel" min="0" max="1000" (input)="pitchSpeed($event)"
     value="{{ stringService.animationSpeed }}">
   </mat-slider>
 </mat-toolbar>
@@ -67,7 +67,7 @@
         </mat-form-field>
       </form>
 
-      <p>occureences: {stringService.occurrencesCount}}</p>
+      <p>occurrences: {{stringService.occurrencesCount}}</p>
 
       <div class="array-body array-bar" *ngFor="let letter of stringService.stackArr"
       [ngStyle]="{ 'background-color': letter.colour }">

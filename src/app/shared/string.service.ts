@@ -39,5 +39,13 @@ export class StringService {
     }
   }
 
+
+  formatLabel(value: number): string {
+    value /= 1000;
+    if (value.toString().length > 1)
+      return value.toString().substring(0, 4) + 's';
+    return value + 's';
+  }
+
 }
 
