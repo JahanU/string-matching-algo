@@ -6,7 +6,4 @@ export enum AlgorithmEnum {
   BM = 'Boyer-Moore',
   RK = 'Rabin-Karp',
   TWSM = 'Two-way String Matching'
-  // RED_BAR = 'Selected Index',
-  // ORANGE_BAR = 'Pivot Index',
-  // GREEN_BAR = 'Swapped Values'
 }

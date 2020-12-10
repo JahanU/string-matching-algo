@@ -5,6 +5,7 @@ import { Letters } from 'src/app/shared/models/Letters';
 
 export class NaiveSearch {
 
+
     animations: AnimationValues[] = [];
 
     constructor(
@@ -13,19 +14,21 @@ export class NaiveSearch {
 
     naiveSearch(stack: Letters[], needle: Letters[]) {
 
+      let matchCount: number = 0;
         for (let i = 0; i <= stack.length - needle.length; i++) {
           let j = 0;
 
           for (j; j < needle.length; j++) {
                 if (stack[i + j].character != needle[j].character) {
-                  this.animations.push({isMatch: false, stackIndex: i, needleIndex: j});
+                  this.animations.push({isMatch: false, occurrencesCount: matchCount, stackIndex: i, needleIndex: j});
                   break;
                 }
                 else {
-                  this.animations.push({isMatch: true, stackIndex: i, needleIndex: j});
+                  this.animations.push({isMatch: true, occurrencesCount: matchCount, stackIndex: i, needleIndex: j});
                 }
             }
             if (j == needle.length) {
+                matchCount++;
                 console.log('match found! At index: ', i);
             }
         }
@@ -37,6 +40,8 @@ export class NaiveSearch {
       const timer = setInterval(() => {
       const action: AnimationValues = this.animations.shift();
       if (action) {
+        this.stringService.occurrencesCount = action.occurrencesCount;
+        
         if (resetToWhite) {
           this.setToWhite();  
           resetToWhite = false;
@@ -72,6 +77,7 @@ export class NaiveSearch {
 
 interface AnimationValues {
   isMatch: boolean;
+  occurrencesCount: number; 
   stackIndex: number;
   needleIndex: number;
 

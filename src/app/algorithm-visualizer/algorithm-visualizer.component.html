@@ -67,6 +67,8 @@
         </mat-form-field>
       </form>
 
+      <p>occureences: {stringService.occurrencesCount}}</p>
+
       <div class="array-body array-bar" *ngFor="let letter of stringService.stackArr"
       [ngStyle]="{ 'background-color': letter.colour }">
         {{letter.character}}

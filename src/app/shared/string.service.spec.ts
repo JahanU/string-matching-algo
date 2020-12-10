@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-
 import { StringService } from './string.service';
 
 describe('StringService', () => {

@@ -12,6 +12,7 @@ export class StringService {
   needleArr: Letters[];
   isSorting: boolean = false;
   animationSpeed: number = 1000;
+  occurrencesCount: number = 0;
 
   constructor() {
     this.reset();
