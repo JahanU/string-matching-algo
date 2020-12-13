@@ -85,13 +85,13 @@ export class AlgorithmVisualizerComponent implements OnInit {
     bs.bubbleSortAnimation();
   }
 
-  naiveSearch(): void {
+  naiveSearch(): number {
     const ns = new NaiveSearch(this.stringService);
     let needleCopy = [...this.stringService.needleArr];
     let stackCopy = [...this.stringService.stackArr];
-    ns.naiveSearch(stackCopy, needleCopy);
+    let occurrencesCount = ns.naiveSearch(stackCopy, needleCopy);
     ns.naiveSearchAnimation();
-
+    return occurrencesCount;
   }
 
 }

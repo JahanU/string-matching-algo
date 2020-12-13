@@ -12,7 +12,10 @@ export class NaiveSearch {
         private readonly stringService: StringService,
     ) { }
 
-    naiveSearch(stack: Letters[], needle: Letters[]) {
+    naiveSearch(stack: Letters[], needle: Letters[]): number {
+
+      if (stack.length < needle.length)
+        return 0;
 
       let matchCount: number = 0;
         for (let i = 0; i <= stack.length - needle.length; i++) {
@@ -23,16 +26,14 @@ export class NaiveSearch {
                   this.animations.push({isMatch: false, occurrencesCount: matchCount, stackIndex: i, needleIndex: j});
                   break;
                 }
-                else {
-                  this.animations.push({isMatch: true, occurrencesCount: matchCount, stackIndex: i, needleIndex: j});
-                }
+                else 
+                  this.animations.push({isMatch: true, occurrencesCount: matchCount, stackIndex: i, needleIndex: j});   
             }
-            if (j == needle.length) {
+            if (j == needle.length) 
                 matchCount++;
-                console.log('match found! At index: ', i);
-            }
         }
 
+        return matchCount;
     }
 
     naiveSearchAnimation(): void {
@@ -41,12 +42,10 @@ export class NaiveSearch {
       const action: AnimationValues = this.animations.shift();
       if (action) {       
         this.stringService.occurrencesCount = action.occurrencesCount;
- 
         if (resetToWhite) {
           this.setToWhite();  
           resetToWhite = false;
         }
-
         if (action.isMatch) {
           this.stringService.needleArr[action.needleIndex].colour = '#b2ff59';
           this.stringService.stackArr[action.stackIndex + action.needleIndex].colour = '#b2ff59';
@@ -59,7 +58,6 @@ export class NaiveSearch {
           this.stringService.stackArr[action.stackIndex + action.needleIndex].colour = 'red';
           resetToWhite = true;
         }
-
       }
       else {
         clearInterval(timer);
