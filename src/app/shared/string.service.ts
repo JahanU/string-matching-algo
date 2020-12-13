@@ -1,5 +1,7 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Letters } from './models/Letters';
+import { map, delay } from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'
@@ -16,9 +18,12 @@ export class StringService {
   isSorting: boolean = false;
   animationSpeed: number = 500;
 
-  constructor() {
+  constructor(private httpClient: HttpClient) {
+
+  
     this.reset();
     this.createStringsArrays();
+
   }
 
   reset() {
@@ -26,11 +31,6 @@ export class StringService {
   }
 
   createStringsArrays() {
-    if (this.stack.length == 0 || this.needle.length == 0) {
-      this.stack = 'ABCDE';
-      this.needle = 'ABC';
-    }
-
     let splitStack = this.stack.split(''); 
     let splitNeedle = this.needle.split('');
     this.stackArr = [];
@@ -68,7 +68,8 @@ export class StringService {
   public set needle(value: string) {
     if (value.length <= 0)
       this._needle = 'ABC';
-    this._needle = value;  }
+    this._needle = value;  
+  }
 
 }
 

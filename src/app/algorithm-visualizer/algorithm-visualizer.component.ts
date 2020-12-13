@@ -65,10 +65,15 @@ export class AlgorithmVisualizerComponent implements OnInit {
   displayInput = (pickedInput: InputDataEnum) => this.selectedInput = pickedInput;
   
   updateInputData() { // Could use a Map and a key to get the stories, but since its small, no need!
-    if (this.selectedInput == InputDataEnum.DNA) { 
+    if (this.selectedInput == InputDataEnum.DNA) 
       this.inputForm.get('stack').setValue(InputDataSourceEnum.DNA);
-      this.updateStrings();
-    }
+
+    if (this.selectedInput == InputDataEnum.STORY) 
+      this.inputForm.get('stack').setValue(InputDataSourceEnum.STORY);
+
+    
+
+    this.updateStrings();
 
   }
 
