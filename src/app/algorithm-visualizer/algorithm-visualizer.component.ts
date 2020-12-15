@@ -46,8 +46,8 @@ export class AlgorithmVisualizerComponent implements OnInit {
   }
 
   updateStrings() {
-    this.stringService.needle = this.inputForm.get('needle').value;
-    this.stringService.stack = this.inputForm.get('stack').value;
+      this.stringService.needle = this.inputForm.get('needle').value;
+      this.stringService.stack = this.inputForm.get('stack').value;
     this.stringService.createStringsArrays();
   }
 

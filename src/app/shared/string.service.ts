@@ -17,29 +17,27 @@ export class StringService {
   animationSpeed: number = 500;
 
   constructor() {
-    this.reset();
+    [this.stack, this.needle, this.stackArr, this.needleArr] = ['ABCDE','ABC',[],[]];
     this.createStringsArrays();
   }
 
-  reset() {
-    [this.stack, this.needle, this.stackArr, this.needleArr] = ['ABCDE','ABC',[],[]];
-  }
 
   createStringsArrays() {
-    if (this.stack.length == 0 || this.needle.length == 0) {
-      this.stack = 'ABCDE';
-      this.needle = 'ABC';
+    // If the new stack message is different from the curr arr, update!
+    const currStack = this.stackArr.map((obj) => obj.character).join('');
+    if (currStack !== this.stack) { 
+      let splitStack = this.stack.split(''); 
+      this.stackArr = [];
+      for (let i = 0; i < splitStack.length; i++) 
+        this.stackArr.push({character: splitStack[i], colour: 'white', index: i});
     }
 
-    let splitStack = this.stack.split(''); 
-    let splitNeedle = this.needle.split('');
-    this.stackArr = [];
-    this.needleArr = [];
-    for (let i = 0; i < splitStack.length; i++) {
-      this.stackArr.push({character: splitStack[i], colour: 'white', index: i});
-    }
-    for (let i = 0; i < splitNeedle.length; i++) {
-      this.needleArr.push({character: splitNeedle[i], colour: 'white', index: i});
+    const currNeedle = this.needleArr.map((obj) => obj.character).join('');
+    if (currNeedle !== this.needle) { 
+      let needleStack = this.needle.split(''); 
+      this.needleArr = [];
+      for (let i = 0; i < needleStack.length; i++) 
+        this.needleArr.push({character: needleStack[i], colour: 'white', index: i});
     }
   }
 
@@ -57,8 +55,6 @@ export class StringService {
     return this._stack;
   }
   public set stack(value: string) {
-    if (value.length <= 0)
-      this._stack = 'ABCDE';
     this._stack = value;
   }
 
@@ -66,9 +62,8 @@ export class StringService {
     return this._needle;
   }
   public set needle(value: string) {
-    if (value.length <= 0)
-      this._needle = 'ABC';
-    this._needle = value;  }
+    this._needle = value; 
+  }
 
 }
 
