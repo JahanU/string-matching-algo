@@ -9,6 +9,7 @@ import { InputDataSourceEnum } from '../algorithm-visualizer/input-data-source.e
 import { BubbleSort } from './algorithms/bubble-sort';
 import { NaiveSearch } from './algorithms/naive-search';
 import { FormControl, FormGroup } from '@angular/forms';
+import { KMPSearch } from './algorithms/KMP-search';
 
 @Component({
   selector: 'app-algorithm-visualizer',
@@ -25,7 +26,7 @@ export class AlgorithmVisualizerComponent implements OnInit {
 
   algoEnum = AlgorithmEnum;
   inputEnum = InputDataEnum;
-  selectedAlgorithm: AlgorithmEnum = AlgorithmEnum.NAIVE;
+  selectedAlgorithm: AlgorithmEnum = AlgorithmEnum.KMP;
   selectedInput: InputDataEnum = InputDataEnum.SELECTED_INPUT;
 
   inputForm = new FormGroup({
@@ -78,8 +79,8 @@ export class AlgorithmVisualizerComponent implements OnInit {
   }
 
   startSorting(): void {
-    this.stringService.isSorting = true;
-    if (this.selectedAlgorithm === AlgorithmEnum.BUBBLE) { this.bubbleSort(); }
+    // this.stringService.isSorting = true;
+    if (this.selectedAlgorithm === AlgorithmEnum.KMP) { this.KMPSearch(); }
     if (this.selectedAlgorithm === AlgorithmEnum.NAIVE) { this.naiveSearch(); }
   }
 
@@ -99,4 +100,13 @@ export class AlgorithmVisualizerComponent implements OnInit {
     return occurrencesCount;
   }
 
+  KMPSearch(): number {
+    const KMP = new KMPSearch(this.stringService);
+    let needleCopy = [...this.stringService.needleArr];
+    let stackCopy = [...this.stringService.stackArr];
+    KMP.genSuffixArray(needleCopy);
+    let occurrencesCount = KMP.KMPSearch(stackCopy, needleCopy);
+    // ns.naiveSearchAnimation();
+    return occurrencesCount;
+  }
 }
