@@ -12,6 +12,7 @@ import { MatSliderModule } from '@angular/material/slider';
 import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
 
 const routes: Routes = [
   { path: 'algorithm', component: AlgorithmVisualizerComponent },
@@ -29,6 +30,7 @@ const routes: Routes = [
     MatInputModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
+    HttpClientModule,
     BsDropdownModule.forRoot(),
     ProgressbarModule.forRoot(),
     RouterModule.forRoot(routes),
