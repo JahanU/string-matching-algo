@@ -35,67 +35,74 @@ describe('AlgorithmVisualizerComponent', () => { // Top hierarchy
   */
 
   // Testing empty inputs
-  it('should return default values, occurrences = 1', () => {
-    stringService.createStringsArrays();
+  it('1) should return 0, occurrences = 0', () => {
     stringService.stack = '';
     stringService.needle = 'ABC';
     stringService.createStringsArrays();
-    let occurrences = component.naiveSearch();
-    expect(occurrences).toBe(1);
+    let occurrencesNaive = component.naiveSearch();
+    expect(occurrencesNaive).toBe(0);
+    let occurrencesKMP = component.KMPSearch();
+    expect(occurrencesKMP).toBe(0);
   });
 
-  it('should return default values, occurrences = 1', () => {
-    stringService.createStringsArrays();
+  it('2) should return 0, occurrences = 0', () => {
     stringService.stack = 'ABC';
     stringService.needle = '';
     stringService.createStringsArrays();
-    let occurrences = component.naiveSearch();
-    expect(occurrences).toBe(1);
+    let occurrencesNaive = component.naiveSearch();
+    expect(occurrencesNaive).toBe(0);
+    let occurrencesKMP = component.KMPSearch();
+    expect(occurrencesKMP).toBe(0);
   });
 
-  it('should return default values, occurrences = 1', () => {
-    stringService.createStringsArrays();
+  it('3) should return 0, occurrences = 0', () => {
     stringService.stack = '';
     stringService.needle = '';
     stringService.createStringsArrays();
-    let occurrences = component.naiveSearch();
-    expect(occurrences).toBe(1);
+    let occurrencesNaive = component.naiveSearch();
+    expect(occurrencesNaive).toBe(0);
+    let occurrencesKMP = component.KMPSearch();
+    expect(occurrencesKMP).toBe(0);
   });
 
 
-  it('should return correct occurrences = 0', () => {
-    stringService.createStringsArrays();
+  it('4) should return 0, occurrences = 0', () => {
     stringService.stack = 'AB';
     stringService.needle = 'ABC';
     stringService.createStringsArrays();
-    let occurrences = component.naiveSearch();
-    expect(occurrences).toBe(0);
+    let occurrencesNaive = component.naiveSearch();
+    expect(occurrencesNaive).toBe(0);
+    let occurrencesKMP = component.KMPSearch();
+    expect(occurrencesKMP).toBe(0);
   });
 
   it('should return correct occurrences = 1', () => {
-    stringService.createStringsArrays();
     stringService.stack = 'ABCDE';
     stringService.needle = 'ABC';
     stringService.createStringsArrays();
-    let occurrences = component.naiveSearch();
-    expect(occurrences).toBe(1);
+    let occurrencesNaive = component.naiveSearch();
+    expect(occurrencesNaive).toBe(1);
+    let occurrencesKMP = component.KMPSearch();
+    expect(occurrencesKMP).toBe(1);
   });
 
   it('should return correct occurrences = 2', () => {
-    stringService.createStringsArrays();
     stringService.stack = 'ABCABC';
     stringService.needle = 'ABC';
     stringService.createStringsArrays();
-    let occurrences = component.naiveSearch();
-    expect(occurrences).toBe(2);
+    let occurrencesNaive = component.naiveSearch();
+    expect(occurrencesNaive).toBe(2);
+    let occurrencesKMP = component.KMPSearch();
+    expect(occurrencesKMP).toBe(2);
   });
 
   it('should return correct occurrences = 6', () => {
-    stringService.createStringsArrays();
     stringService.stack = InputDataSourceEnum.DNA;
     stringService.needle = 'ATG';
     stringService.createStringsArrays();
-    let occurrences = component.naiveSearch();
-    expect(occurrences).toBe(6);
+    let occurrencesNaive = component.naiveSearch();
+    expect(occurrencesNaive).toBe(6);
+    let occurrencesKMP = component.KMPSearch();
+    expect(occurrencesKMP).toBe(6);
   });
 });
