@@ -16,6 +16,8 @@ export class NaiveSearch {
 
       if (stack.length < needle.length)
         return 0;
+      if (stack.length == 0 || needle.length == 0)
+        return 0;
 
       let matchCount: number = 0;
         for (let i = 0; i <= stack.length - needle.length; i++) {

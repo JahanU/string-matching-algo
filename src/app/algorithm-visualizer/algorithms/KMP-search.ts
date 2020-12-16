@@ -16,7 +16,6 @@ export class KMPSearch {
     genSuffixArray(needle: Letters[]) {
       let [left, right] = [0, 1];
       this.lps = new Array(needle.length).fill(0);
-      console.log(needle);
 
       while (right < this.lps.length) {
         // if left and right index match, increment!
@@ -34,61 +33,69 @@ export class KMPSearch {
             right++;
           }
         }
-      }
-      console.log(this.lps);
-      
+      }      
     }
 
     KMPSearch(stack: Letters[], needle: Letters[]): number {
-
+      
       if (stack.length < needle.length)
         return 0;
+      if (stack.length == 0 || needle.length == 0)
+        return 0;
       let matchCount: number = 0;
-      // j == left
-      // i == right
 
-      let [left, right] = [0, 1];
-      while (left < stack.length) {
-        console.log('in loop');
-        if (needle[left].character === stack[right].character) {
-          left++;
-          right++;
-          if (left == needle.length) { // 
-              matchCount++;
+      // ind traverses whole stack, n checks and traverses through needle
+      let [ind, n] = [0, 0]; 
+
+      while (ind < stack.length) {
+        if (stack[ind].character == needle[n].character) {
+          this.animations.push({isMatch: true, occurrencesCount: matchCount, stackIndex: ind, needleIndex: n});
+          ind++;
+          n++;
+
+          if (n == needle.length) {
+            matchCount++;
+            // this.animations.push({isMatch: true, occurrencesCount: matchCount, stackIndex: ind, needleIndex: n});
+            n = this.lps[n - 1];  
+            this.animations.push({isMatch: false, occurrencesCount: matchCount, stackIndex: ind, needleIndex: n});
           }
-          else if (right < stack.length && needle[left].character != stack[right].character) {
-            if (left !== 0)
-              left = this.lps[left - 1];
-          }
-          else
-            right++;
+        } 
+
+        else {
+          if (n != 0) 
+            n = this.lps[n - 1];
+          else 
+            ind++;
+          this.animations.push({isMatch: false, occurrencesCount: matchCount, stackIndex: ind, needleIndex: n});
         }
       }
-
-      console.log('KMP matches found: ', matchCount);
       return matchCount;
     }
 
     KMPSearchAnimation(): void {
       let resetToWhite = false; 
+      this.animations.pop();
+
       const timer = setInterval(() => {
       const action: AnimationValues = this.animations.shift();
       if (action) {       
         this.stringService.occurrencesCount = action.occurrencesCount;
+
         if (resetToWhite) {
           this.setToWhite();  
           resetToWhite = false;
         }
         if (action.isMatch) {
-          this.stringService.needleArr[action.needleIndex].colour = '#b2ff59';
-          this.stringService.stackArr[action.stackIndex + action.needleIndex].colour = '#b2ff59';
+            this.stringService.needleArr[action.needleIndex].colour = '#b2ff59';
+            this.stringService.stackArr[action.stackIndex].colour = '#b2ff59';
           if (action.needleIndex == this.stringService.needleArr.length - 1) {
             resetToWhite = true;
+            console.log('match!');
           }
         }
         else { 
           this.stringService.needleArr[action.needleIndex].colour = 'red';
-          this.stringService.stackArr[action.stackIndex + action.needleIndex].colour = 'red';
+          this.stringService.stackArr[action.stackIndex].colour = 'red';
           resetToWhite = true;
         }
       }
