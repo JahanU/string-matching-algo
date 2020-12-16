@@ -19,7 +19,7 @@ export class StringService {
   animationSpeed: number = 500;
 
   constructor() {
-    [this.stack, this.needle, this.stackArr, this.needleArr] = ['ABCDE','ABC',[],[]];
+    [this.stack, this.needle, this.stackArr, this.needleArr] = ['ABC ABCDABCDABD','ABCDABD',[],[]];
     this.createStringsArrays();
 
   }

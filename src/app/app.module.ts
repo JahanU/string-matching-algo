@@ -13,6 +13,7 @@ import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
+import { MatTableModule } from '@angular/material/table';
 
 const routes: Routes = [
   { path: 'algorithm', component: AlgorithmVisualizerComponent },
@@ -31,6 +32,7 @@ const routes: Routes = [
     BrowserAnimationsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    MatTableModule,
     BsDropdownModule.forRoot(),
     ProgressbarModule.forRoot(),
     RouterModule.forRoot(routes),

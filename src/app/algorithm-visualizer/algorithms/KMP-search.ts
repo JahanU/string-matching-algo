@@ -54,10 +54,9 @@ export class KMPSearch {
           n++;
 
           if (n == needle.length) {
-            matchCount++;
-            // this.animations.push({isMatch: true, occurrencesCount: matchCount, stackIndex: ind, needleIndex: n});
+            matchCount++; 
+            this.animations.push({isMatch: true, occurrencesCount: matchCount, stackIndex: ind - 1, needleIndex: n - 1});
             n = this.lps[n - 1];  
-            this.animations.push({isMatch: false, occurrencesCount: matchCount, stackIndex: ind, needleIndex: n});
           }
         } 
 
@@ -74,7 +73,7 @@ export class KMPSearch {
 
     KMPSearchAnimation(): void {
       let resetToWhite = false; 
-      this.animations.pop();
+      // this.animations.pop();
 
       const timer = setInterval(() => {
       const action: AnimationValues = this.animations.shift();
@@ -88,10 +87,11 @@ export class KMPSearch {
         if (action.isMatch) {
             this.stringService.needleArr[action.needleIndex].colour = '#b2ff59';
             this.stringService.stackArr[action.stackIndex].colour = '#b2ff59';
-          if (action.needleIndex == this.stringService.needleArr.length - 1) {
-            resetToWhite = true;
-            console.log('match!');
-          }
+
+          // if (action.needleIndex == this.stringService.needleArr.length) {
+          //   resetToWhite = true;
+          //   console.log('match!');
+          // }
         }
         else { 
           this.stringService.needleArr[action.needleIndex].colour = 'red';
