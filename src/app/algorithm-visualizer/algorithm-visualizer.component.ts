@@ -93,8 +93,8 @@ export class AlgorithmVisualizerComponent implements OnInit {
 
   naiveSearch(): number {
     const ns = new NaiveSearch(this.stringService);
-    let needleCopy = [...this.stringService.needleArr];
     let stackCopy = [...this.stringService.stackArr];
+    let needleCopy = [...this.stringService.needleArr];
     let occurrencesCount = ns.naiveSearch(stackCopy, needleCopy);
     ns.naiveSearchAnimation();
     return occurrencesCount;
@@ -102,11 +102,11 @@ export class AlgorithmVisualizerComponent implements OnInit {
 
   KMPSearch(): number {
     const KMP = new KMPSearch(this.stringService);
-    let needleCopy = [...this.stringService.needleArr];
     let stackCopy = [...this.stringService.stackArr];
+    let needleCopy = [...this.stringService.needleArr];
     KMP.genSuffixArray(needleCopy);
     let occurrencesCount = KMP.KMPSearch(stackCopy, needleCopy);
-    // ns.naiveSearchAnimation();
+    KMP.KMPSearchAnimation();
     return occurrencesCount;
   }
 }
