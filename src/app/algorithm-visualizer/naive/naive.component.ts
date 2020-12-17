@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges } from '@angular/core';
+import { Component, OnInit, OnChanges, Input } from '@angular/core';
 import { StringService } from 'src/app/shared/string.service';
 import { Letters } from 'src/app/shared/models/Letters';
 
@@ -10,44 +10,60 @@ import { Letters } from 'src/app/shared/models/Letters';
 export class NaiveComponent implements OnInit {
 
   animations: AnimationValues[] = [];
-  stackArr: Letters[] = []; // Take value from parent, @input
-  needleArr: Letters[] = [];
-  
+  @Input() stackArr: Letters[] = []; // Take value from parent, @input
+  @Input() needleArr: Letters[] = [];
+  stackAnimation: Letters[] = [];
+  needleAnimationation: Letters[] = [];
+
   constructor(public stringService: StringService) { }
 
-  ngOnInit(): void {
-    this.stackArr = this.stringService.stackArr;
-    this.needleArr = this.stringService.needleArr;
-  }
+  ngOnInit(): void {  }
   
+  ngOnChanges(changes: OnChanges): void {
+    if (this.stackArr.length > 0) {
+        this.stackAnimation = [...this.stackArr];
+    }
+    if (this.needleArr.length > 0) {
+      this.needleAnimationation = [...this.needleArr];
+    }
+
+    alert('on change');
+    alert(this.stackArr.length + ' ' + this.needleArr.length);
+    alert(this.stackAnimation.length + ' ' + this.needleAnimationation.length);
+    this.startNaiveSearch();
+
+  }
   startNaiveSearch() {
-    this.stackArr = [...this.stringService.stackArr];
-    this.needleArr = [...this.stringService.needleArr];
+    alert('on search');
+    alert(this.stackArr.length);
+    alert(this.stackAnimation.length);
     this.naiveSearch();
     this.naiveSearchAnimation();
   }
 
   naiveSearch(): number {
-    if (this.stackArr.length < this.needleArr.length) return 0;
-    if (this.stackArr.length == 0 || this.needleArr.length == 0) return 0;
+    if (this.stackAnimation.length < this.needleAnimationation.length) return 0;
+    if (this.stackAnimation.length == 0 || this.needleAnimationation.length == 0) return 0;
+
+    alert('in naiveSearch');
 
     let matchCount: number = 0;
-      for (let i = 0; i <= this.stackArr.length - this.needleArr.length; i++) {
+      for (let i = 0; i <= this.stackAnimation.length - this.needleAnimationation.length; i++) {
         let j = 0;
 
-        for (j; j < this.needleArr.length; j++) {
-              if (this.stackArr[i + j].character != this.needleArr[j].character) {
+        for (j; j < this.needleAnimationation.length; j++) {
+              if (this.stackAnimation[i + j].character != this.needleAnimationation[j].character) {
                 this.animations.push({isMatch: false, occurrencesCount: matchCount, stackIndex: i, needleIndex: j});
                 break;
               }
               else 
                 this.animations.push({isMatch: true, occurrencesCount: matchCount, stackIndex: i, needleIndex: j});   
           }
-          if (j == this.needleArr.length) 
+          if (j == this.needleAnimationation.length) 
               matchCount++;
       }
 
-      console.log('matches: ', matchCount);
+      alert(matchCount);
       return matchCount;
   }
 

@@ -8,8 +8,8 @@ import { map, delay } from "rxjs/operators";
 })
 export class StringService {
 
-  private _stack: string;
-  private _needle: string;
+  stack: string;
+  needle: string;
 
   stackArr: Letters[];
   needleArr: Letters[];
@@ -49,19 +49,6 @@ export class StringService {
     return value + 's';
   }
 
-  public get stack(): string {
-    return this._stack;
-  }
-  public set stack(value: string) {
-    this._stack = value;
-  }
-
-  public get needle(): string {
-    return this._needle;
-  }
-  public set needle(value: string) {
-    this._needle = value; 
-  }
 
 }
 

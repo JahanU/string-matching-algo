@@ -65,7 +65,7 @@
       </form>
 
       <div *ngIf="selectedAlgorithm == algorithmEnum.NAIVE">
-        <app-naive></app-naive> 
+        <app-naive [needleArr]="needleArr" [stackArr]="stackArr"> </app-naive> 
       </div>
 <!-- 
       <p>occurrences: {{stringService.occurrencesCount}}</p>

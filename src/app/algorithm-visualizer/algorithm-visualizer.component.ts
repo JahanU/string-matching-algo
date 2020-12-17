@@ -31,6 +31,7 @@ export class AlgorithmVisualizerComponent implements OnInit {
   inputDataEnum = InputDataEnum; // init
   selectedAlgorithm: AlgorithmEnum = AlgorithmEnum.NAIVE; // default
   selectedInput: InputDataEnum = InputDataEnum.SELECTED_INPUT; // default
+  message = "ParentToChild";
 
   inputForm = new FormGroup({
     needle: new FormControl(this.stringService.needle),
@@ -44,12 +45,16 @@ export class AlgorithmVisualizerComponent implements OnInit {
 
   ngOnInit(): void {
     this.stringService;
+    this.stackArr = this.stringService.stackArr;
+    this.needleArr = this.stringService.needleArr;
   }
 
   updateStrings() {
-    this.stringService.needle = this.inputForm.get('needle').value;
+    this.stringService.needle = this.inputForm.get('needle').value; // update service strings
     this.stringService.stack = this.inputForm.get('stack').value;
-    this.stringService.createStringsArrays();
+    this.stringService.createStringsArrays(); // create array in service
+    this.needleArr = this.stringService.needleArr; // get array from service to this parent class
+    this.stackArr = this.stringService.stackArr;
     /* 1)
     update selected child components using @input
     or child component copies service?
@@ -73,23 +78,14 @@ export class AlgorithmVisualizerComponent implements OnInit {
   }
 
   selectAlgo(algoName: AlgorithmEnum): any {
-    console.log('user picked algo: ', algoName);
     this.selectedAlgorithm = algoName;
-
-    if (algoName == AlgorithmEnum.NAIVE) { 
-     // this.naiveSearch(); // show naive component!
-    }
   }
 
   startSearching(): void {
     // this.stringService.isSorting = true;
     if (this.selectedAlgorithm === AlgorithmEnum.NAIVE) { 
       const ns = new NaiveComponent(this.stringService);
-
-      console.log(this.stringService.needleArr);
-      console.log(this.stringService.stackArr);
-      ns.startNaiveSearch();
-        }
+    }
     
     if (this.selectedAlgorithm === AlgorithmEnum.KMP) { 
       this.KMPSearch();
