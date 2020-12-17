@@ -11,12 +11,12 @@
     >
             <!-- [disabled]="stringService.isSorting"> -->
       <li role="menuitem">
-        <a class="dropdown-item" (click)="displayAlgo(algoEnum.NAIVE)">{{algoEnum.NAIVE}}</a>
-        <a class="dropdown-item" (click)="displayAlgo(algoEnum.KMP)">{{algoEnum.KMP}}</a>
-        <a class="dropdown-item" (click)="displayAlgo(algoEnum.BM)">{{algoEnum.BM}}</a>
-        <a class="dropdown-item" (click)="displayAlgo(algoEnum.RK)">{{algoEnum.RK}}</a>
-        <a class="dropdown-item" (click)="displayAlgo(algoEnum.TWSM)">{{algoEnum.TWSM}}</a>
-        <a class="dropdown-item" (click)="displayAlgo(algoEnum.TWSM)">All</a>
+        <a class="dropdown-item" (click)="selectAlgo(algorithmEnum.NAIVE)">{{algorithmEnum.NAIVE}}</a>
+        <a class="dropdown-item" (click)="selectAlgo(algorithmEnum.KMP)">{{algorithmEnum.KMP}}</a>
+        <a class="dropdown-item" (click)="selectAlgo(algorithmEnum.BM)">{{algorithmEnum.BM}}</a>
+        <a class="dropdown-item" (click)="selectAlgo(algorithmEnum.RK)">{{algorithmEnum.RK}}</a>
+        <a class="dropdown-item" (click)="selectAlgo(algorithmEnum.TWSM)">{{algorithmEnum.TWSM}}</a>
+        <a class="dropdown-item" (click)="selectAlgo(algorithmEnum.TWSM)">All</a>
 
       </li>
     </ul>
@@ -28,16 +28,16 @@
     </button>
     <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-animated"
     >
-            <!-- [disabled]="stringService.isSorting"> -->
-      <li role="menuitem" (click)="updateInputData($event)" >
-        <a class="dropdown-item" (click)="displayInput(inputEnum.DNA)">{{inputEnum.DNA}}</a>
-        <a class="dropdown-item" (click)="displayInput(inputEnum.STORY)">{{inputEnum.STORY}}</a>
+
+    <li role="menuitem" (click)="updateInputData($event)" >
+        <a class="dropdown-item" (click)="displayInput(inputDataEnum.DNA)">{{inputDataEnum.DNA}}</a>
+        <a class="dropdown-item" (click)="displayInput(inputDataEnum.STORY)">{{inputDataEnum.STORY}}</a>
       </li>
     </ul>
   </div>
 
-  <button type="button" class="btn btn-danger" (click)="startSorting()"
-    [disabled]="stringService.isSorting || stringService.isSorting"> Sort
+  <button type="button" class="btn btn-danger" (click)="startSearching()"
+    [disabled]="stringService.isSorting"> Sort
   </button>
 
   <small>Iteration Speed </small>
@@ -51,40 +51,6 @@
 <div class="container-fluid">
   <div class="row">
 
-    <div class="col-3">
-      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-    
-        <!--- Note that these columns can be defined in any order.
-              The actual rendered columns are set as a property on the row definition" -->
-      
-        <!-- Position Column -->
-        <ng-container matColumnDef="position">
-          <th mat-header-cell *matHeaderCellDef> No. </th>
-          <td mat-cell *matCellDef="let element"> {{element.position}} </td>
-        </ng-container>
-      
-        <!-- Name Column -->
-        <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef> Name </th>
-          <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-        </ng-container>
-      
-        <!-- Weight Column -->
-        <ng-container matColumnDef="weight">
-          <th mat-header-cell *matHeaderCellDef> Weight </th>
-          <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
-        </ng-container>
-      
-        <!-- Symbol Column -->
-        <ng-container matColumnDef="symbol">
-          <th mat-header-cell *matHeaderCellDef> Symbol </th>
-          <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
-        </ng-container>
-      
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
-    </div>
 
     <div class="array-container col-9">
       <form [formGroup]="inputForm" (keyup)="updateStrings()" class="example-form">
@@ -98,6 +64,10 @@
         </mat-form-field>
       </form>
 
+      <div *ngIf="selectedAlgorithm == algorithmEnum.NAIVE">
+        <app-naive></app-naive> 
+      </div>
+<!-- 
       <p>occurrences: {{stringService.occurrencesCount}}</p>
 
       <div class="array-body array-bar" *ngFor="let letter of stringService.stackArr"
@@ -108,7 +78,9 @@
       <div class="array-body array-bar" *ngFor="let letter of stringService.needleArr"
       [ngStyle]="{ 'background-color': letter.colour }">
         {{letter.character}}
-      </div>
+      </div> 
+-->
+
     </div>
 
   </div>

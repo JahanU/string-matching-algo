@@ -1,1 +1,13 @@
-<p>naive works!</p>
+<p>occurrences: {{stringService.occurrencesCount}}</p>
+
+<div class="array-body array-bar" *ngFor="let letter of stackArr"
+    [ngStyle]="{ 'background-color': letter.colour }">
+    {{letter.character}}
+</div>
+
+<br>
+
+<div class="array-body array-bar" *ngFor="let letter of needleArr"
+    [ngStyle]="{ 'background-color': letter.colour }">
+    {{letter.character}}
+</div>  

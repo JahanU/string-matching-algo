@@ -19,11 +19,9 @@ export class StringService {
   animationSpeed: number = 500;
 
   constructor() {
-    [this.stack, this.needle, this.stackArr, this.needleArr] = ['ABC ABCDABCDABD','ABCDABD',[],[]];
+    [this.stack, this.needle, this.stackArr, this.needleArr] = ['ABCDE','ABC',[],[]];
     this.createStringsArrays();
-
   }
-
 
   createStringsArrays() {
     // If the new stack message is different from the curr arr, update!
@@ -44,15 +42,12 @@ export class StringService {
     }
   }
 
-
   formatLabel(value: number): string {
     value /= 1000;
     if (value.toString().length > 1)
       return value.toString().substring(0, 4) + 's';
     return value + 's';
   }
-
-
 
   public get stack(): string {
     return this._stack;

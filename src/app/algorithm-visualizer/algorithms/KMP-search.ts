@@ -1,4 +1,3 @@
-import { ArraysService } from 'src/app/shared/arrays.service';
 import { ArrayBars } from 'src/app/shared/models/ArrayBars';
 import { StringService } from 'src/app/shared/string.service';
 import { Letters } from 'src/app/shared/models/Letters';
