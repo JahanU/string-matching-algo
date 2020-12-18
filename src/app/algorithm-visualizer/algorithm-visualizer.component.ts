@@ -1,17 +1,13 @@
-import { Component, OnInit, OnChanges } from '@angular/core';
+import { Component, OnInit, OnChanges, Input } from '@angular/core';
 import { StringService } from '../shared/string.service';
 
 import { BsDropdownConfig } from 'ngx-bootstrap/dropdown';
 import { AlgorithmEnum } from '../shared/algorithm.enum';
 import { InputDataEnum } from '../shared/input-data.enum';
 import { InputDataSourceEnum } from '../algorithm-visualizer/input-data-source.enum';
-import { NaiveSearch } from './algorithms/naive-search';
 import { FormControl, FormGroup } from '@angular/forms';
-import { KMPSearch } from './algorithms/KMP-search';
 import { NaiveComponent } from './naive/naive.component';
 import { Letters } from '../shared/models/Letters';
-
-
 
 @Component({
   selector: 'app-algorithm-visualizer',
@@ -31,15 +27,16 @@ export class AlgorithmVisualizerComponent implements OnInit {
   inputDataEnum = InputDataEnum; // init
   selectedAlgorithm: AlgorithmEnum = AlgorithmEnum.NAIVE; // default
   selectedInput: InputDataEnum = InputDataEnum.SELECTED_INPUT; // default
-  message = "ParentToChild";
+  
+  stackArr: Letters[] = []; // Take from service! child can access from parent or parent send to class
+  needleArr: Letters[] = [];
+  isSorting: boolean = false;
 
   inputForm = new FormGroup({
     needle: new FormControl(this.stringService.needle),
     stack: new FormControl(this.stringService.stack),
   });
   
-  stackArr: Letters[] = []; // Take from service! child can access from parent
-  needleArr: Letters[] = [];
 
   constructor(public stringService: StringService) { }
 
@@ -64,7 +61,6 @@ export class AlgorithmVisualizerComponent implements OnInit {
     // allows them to perform animation and display!
     */
   }
-
   pitchSpeed = (event: any) => this.stringService.animationSpeed = event.value;
   displayInput = (pickedInput: InputDataEnum) => this.selectedInput = pickedInput;
   
@@ -82,9 +78,9 @@ export class AlgorithmVisualizerComponent implements OnInit {
   }
 
   startSearching(): void {
-    // this.stringService.isSorting = true;
+    this.isSorting = true;
     if (this.selectedAlgorithm === AlgorithmEnum.NAIVE) { 
-      const ns = new NaiveComponent(this.stringService);
+      new NaiveComponent(this.stringService);
     }
     
     if (this.selectedAlgorithm === AlgorithmEnum.KMP) { 
@@ -94,13 +90,13 @@ export class AlgorithmVisualizerComponent implements OnInit {
 
 
 
-  KMPSearch(): number {
-    const KMP = new KMPSearch(this.stringService);
-    let stackCopy = [...this.stringService.stackArr];
-    let needleCopy = [...this.stringService.needleArr];
-    KMP.genSuffixArray(needleCopy);
-    let occurrencesCount = KMP.KMPSearch(stackCopy, needleCopy);
-    KMP.KMPSearchAnimation();
-    return occurrencesCount;
+  KMPSearch(): void {
+    // const KMP = new KMPSearch(this.stringService);
+    // let stackCopy = [...this.stringService.stackArr];
+    // let needleCopy = [...this.stringService.needleArr];
+    // KMP.genSuffixArray(needleCopy);
+    // let occurrencesCount = KMP.KMPSearch(stackCopy, needleCopy);
+    // KMP.KMPSearchAnimation();
+    // return occurrencesCount;
   }
 }

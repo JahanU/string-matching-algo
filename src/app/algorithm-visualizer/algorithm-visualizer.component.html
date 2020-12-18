@@ -4,12 +4,11 @@
   </button> -->
   <div class="btn-group" dropdown [insideClick]="true">
     <button id="button-animated" dropdownToggle type="button" class="btn btn-primary dropdown-toggle"
-      aria-controls="dropdown-animated" [disabled]="stringService.isSorting">
+      aria-controls="dropdown-animated" [disabled]="isSorting">
       {{ selectedAlgorithm }} <span class="caret"></span>
     </button>
     <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-animated"
     >
-            <!-- [disabled]="stringService.isSorting"> -->
       <li role="menuitem">
         <a class="dropdown-item" (click)="selectAlgo(algorithmEnum.NAIVE)">{{algorithmEnum.NAIVE}}</a>
         <a class="dropdown-item" (click)="selectAlgo(algorithmEnum.KMP)">{{algorithmEnum.KMP}}</a>
@@ -23,7 +22,7 @@
   </div>
   <div class="btn-group" dropdown [insideClick]="true">
     <button id="button-animated" dropdownToggle type="button" class="btn btn-primary dropdown-toggle"
-      aria-controls="dropdown-animated" [disabled]="stringService.isSorting">
+      aria-controls="dropdown-animated" [disabled]="isSorting">
       {{ selectedInput }} <span class="caret"></span>
     </button>
     <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-animated"
@@ -37,11 +36,11 @@
   </div>
 
   <button type="button" class="btn btn-danger" (click)="startSearching()"
-    [disabled]="stringService.isSorting"> Sort
+    [disabled]="isSorting"> Sort
   </button>
 
   <small>Iteration Speed </small>
-  <mat-slider [disabled]="stringService.isSorting" id="speedSlider" thumbLabel tickInterval="auto"
+  <mat-slider [disabled]="isSorting" id="speedSlider" thumbLabel tickInterval="auto"
     [displayWith]="stringService.formatLabel" min="0" max="1000" (input)="pitchSpeed($event)"
     value="{{ stringService.animationSpeed }}">
   </mat-slider>
@@ -65,9 +64,12 @@
       </form>
 
       <div *ngIf="selectedAlgorithm == algorithmEnum.NAIVE">
-        <app-naive [needleArr]="needleArr" [stackArr]="stackArr"> </app-naive> 
+        <app-naive [needleArr]="needleArr" [stackArr]="stackArr" [isSorting]="isSorting" (naiveEvent)="isSorting=$event"> </app-naive> 
       </div>
-<!-- 
+      <div *ngIf="selectedAlgorithm == algorithmEnum.KMP">
+        <app-kmp [needleArr]="needleArr" [stackArr]="stackArr" [isSorting]="isSorting" (naiveEvent)="isSorting=$event"> </app-kmp> 
+      </div>
+      <!-- 
       <p>occurrences: {{stringService.occurrencesCount}}</p>
 
       <div class="array-body array-bar" *ngFor="let letter of stringService.stackArr"

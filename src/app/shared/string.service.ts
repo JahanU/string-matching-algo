@@ -15,7 +15,7 @@ export class StringService {
   needleArr: Letters[];
   occurrencesCount: number = 0;
 
-  isSorting: boolean = false;
+  // isSorting: boolean = false;
   animationSpeed: number = 500;
 
   constructor() {
