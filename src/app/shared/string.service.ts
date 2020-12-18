@@ -8,22 +8,20 @@ import { map, delay } from "rxjs/operators";
 })
 export class StringService {
 
-  private _stack: string;
-  private _needle: string;
+  stack: string;
+  needle: string;
 
   stackArr: Letters[];
   needleArr: Letters[];
   occurrencesCount: number = 0;
 
-  isSorting: boolean = false;
+  // isSorting: boolean = false;
   animationSpeed: number = 500;
 
   constructor() {
-    [this.stack, this.needle, this.stackArr, this.needleArr] = ['ABC ABCDABCDABD','ABCDABD',[],[]];
+    [this.stack, this.needle, this.stackArr, this.needleArr] = ['ABCDE','ABC',[],[]];
     this.createStringsArrays();
-
   }
-
 
   createStringsArrays() {
     // If the new stack message is different from the curr arr, update!
@@ -44,7 +42,6 @@ export class StringService {
     }
   }
 
-
   formatLabel(value: number): string {
     value /= 1000;
     if (value.toString().length > 1)
@@ -52,21 +49,6 @@ export class StringService {
     return value + 's';
   }
 
-
-
-  public get stack(): string {
-    return this._stack;
-  }
-  public set stack(value: string) {
-    this._stack = value;
-  }
-
-  public get needle(): string {
-    return this._needle;
-  }
-  public set needle(value: string) {
-    this._needle = value; 
-  }
 
 }
 

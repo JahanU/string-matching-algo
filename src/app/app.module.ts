@@ -14,6 +14,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { MatTableModule } from '@angular/material/table';
+import { NaiveComponent } from './algorithm-visualizer/naive/naive.component';
+import { KMPComponent } from './algorithm-visualizer/kmp/kmp.component';
 
 const routes: Routes = [
   { path: 'algorithm', component: AlgorithmVisualizerComponent },
@@ -21,7 +23,7 @@ const routes: Routes = [
 ]
 
 @NgModule({
-  declarations: [AppComponent, AlgorithmVisualizerComponent],
+  declarations: [AppComponent, AlgorithmVisualizerComponent, NaiveComponent, KMPComponent],
   imports: [
     BrowserModule,
     MatToolbarModule,
