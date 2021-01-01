@@ -8,6 +8,7 @@ import { InputDataSourceEnum } from '../algorithm-visualizer/input-data-source.e
 import { FormControl, FormGroup } from '@angular/forms';
 import { NaiveComponent } from './naive/naive.component';
 import { Letters } from '../shared/models/Letters';
+import { KMPComponent } from './kmp/kmp.component';
 
 @Component({
   selector: 'app-algorithm-visualizer',
@@ -25,7 +26,7 @@ export class AlgorithmVisualizerComponent implements OnInit {
 
   algorithmEnum = AlgorithmEnum; // init
   inputDataEnum = InputDataEnum; // init
-  selectedAlgorithm: AlgorithmEnum = AlgorithmEnum.NAIVE; // default
+  selectedAlgorithm: AlgorithmEnum = AlgorithmEnum.KMP; // default
   selectedInput: InputDataEnum = InputDataEnum.SELECTED_INPUT; // default
   
   stackArr: Letters[] = []; // Take from service! child can access from parent or parent send to class
@@ -84,19 +85,9 @@ export class AlgorithmVisualizerComponent implements OnInit {
     }
     
     if (this.selectedAlgorithm === AlgorithmEnum.KMP) { 
-      this.KMPSearch();
+      new KMPComponent(this.stringService);
+
     }
   }
 
-
-
-  KMPSearch(): void {
-    // const KMP = new KMPSearch(this.stringService);
-    // let stackCopy = [...this.stringService.stackArr];
-    // let needleCopy = [...this.stringService.needleArr];
-    // KMP.genSuffixArray(needleCopy);
-    // let occurrencesCount = KMP.KMPSearch(stackCopy, needleCopy);
-    // KMP.KMPSearchAnimation();
-    // return occurrencesCount;
-  }
 }

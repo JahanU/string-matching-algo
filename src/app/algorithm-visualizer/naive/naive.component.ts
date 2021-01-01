@@ -9,7 +9,7 @@ import { Letters } from 'src/app/shared/models/Letters';
 })
 export class NaiveComponent implements OnInit {
 
-  @Output() public naiveEvent = new EventEmitter();
+  @Output() public naiveEvent = new EventEmitter(); // Emit when animation is done
   @Input() stackArr: Letters[] = []; // Take value from parent
   @Input() needleArr: Letters[] = [];
   @Input() isSorting: boolean = false;
@@ -22,7 +22,7 @@ export class NaiveComponent implements OnInit {
   ngOnInit(): void {  }
   
   ngOnChanges(changes: OnChanges): void { // whenever parent values change, this updates!
-    if (this.isSorting)
+    if (this.isSorting) // Parent triggers to start sorting
       this.startNaiveSearch();
 
   }

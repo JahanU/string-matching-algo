@@ -12,4 +12,20 @@
     {{letter.character}}
 </div>  
 
-<h2> table here! </h2>
+
+<table mat-table [dataSource]="ELEMENT_DATA" class="mat-elevation-z8">
+
+    <ng-container matColumnDef="index">
+      <th mat-header-cell *matHeaderCellDef> Index. </th>
+      <td mat-cell *matCellDef="let element"> {{element.index}} </td>
+    </ng-container>
+  
+    <ng-container matColumnDef="failValue">
+      <th mat-header-cell *matHeaderCellDef> FailValue. </th>
+      <td mat-cell *matCellDef="let element"> {{element.failValue}} </td>
+    </ng-container>
+  
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>

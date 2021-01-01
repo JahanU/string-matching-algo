@@ -1,7 +1,6 @@
 <mat-toolbar class="array-container">
-  <!-- <button type="button" [disabled]="stringService.isSorting" class="btn btn-primary" (click)="resetArray()">
-    Generate New String
-  </button> -->
+
+
   <div class="btn-group" dropdown [insideClick]="true">
     <button id="button-animated" dropdownToggle type="button" class="btn btn-primary dropdown-toggle"
       aria-controls="dropdown-animated" [disabled]="isSorting">
@@ -67,8 +66,11 @@
         <app-naive [needleArr]="needleArr" [stackArr]="stackArr" [isSorting]="isSorting" (naiveEvent)="isSorting=$event"> </app-naive> 
       </div>
       <div *ngIf="selectedAlgorithm == algorithmEnum.KMP">
-        <app-kmp [needleArr]="needleArr" [stackArr]="stackArr" [isSorting]="isSorting" (naiveEvent)="isSorting=$event"> </app-kmp> 
+        <app-kmp [needleArr]="needleArr" [stackArr]="stackArr" [isSorting]="isSorting" (kmpEvent)="isSorting=$event"> </app-kmp> 
       </div>
+
+
+
       <!-- 
       <p>occurrences: {{stringService.occurrencesCount}}</p>
 
@@ -82,6 +84,7 @@
         {{letter.character}}
       </div> 
 -->
+
 
     </div>
 

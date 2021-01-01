@@ -9,7 +9,9 @@ import { Letters } from 'src/app/shared/models/Letters';
 })
 export class KMPComponent implements OnInit {
 
-  @Output() public naiveEvent = new EventEmitter();
+  displayedColumns: string[] = ['index', 'failValue' ];
+
+  @Output() public kmpEvent = new EventEmitter();
   @Input() stackArr: Letters[] = []; // Take value from parent
   @Input() needleArr: Letters[] = [];
   @Input() isSorting: boolean = false;
@@ -18,6 +20,9 @@ export class KMPComponent implements OnInit {
   occurrencesCount: number = 0;
 
   lps: number[] = []; // Longest proper prefix (the DFA (KMP automoton))
+  ELEMENT_DATA: any[] = [
+    {index: 1, failValue: 1}
+  ];
 
   constructor(
     private readonly stringService: StringService,
@@ -28,6 +33,10 @@ export class KMPComponent implements OnInit {
   ngOnChanges(changes: OnChanges): void { // whenever parent values change, this updates!
     if (this.isSorting)
       this.startKMPSearch();
+
+    else { 
+      this.genSuffixArray();
+    }
 
   }
   startKMPSearch() {
@@ -56,6 +65,14 @@ export class KMPComponent implements OnInit {
           right++;
         }
       }
+    }
+    this.createFailureTable();
+  }
+
+  createFailureTable(): any {
+    this.ELEMENT_DATA = [];
+    for (let i = 0; i < this.lps.length; i++) {
+      this.ELEMENT_DATA.push({ index: i, failValue: this.lps[i] });
     }
   }
 
@@ -93,7 +110,7 @@ export class KMPComponent implements OnInit {
 
   KMPSearchAnimation(): void {
     let resetToWhite = false;
-    // this.animations.pop();
+    this.animations.pop();
 
     const timer = setInterval(() => {
       const action: AnimationValues = this.animations.shift();
@@ -122,7 +139,7 @@ export class KMPComponent implements OnInit {
       else {
         clearInterval(timer);
         this.isSorting = false;
-        this.naiveEvent.emit(this.isSorting);
+        this.kmpEvent.emit(this.isSorting);
         this.setToWhite();
       }
     }, this.stringService.animationSpeed);
