@@ -9,7 +9,6 @@ import { Letters } from 'src/app/shared/models/Letters';
 })
 export class KMPComponent implements OnInit {
 
-  displayedColumns: string[] = ['index', 'failValue' ];
 
   @Output() public kmpEvent = new EventEmitter();
   @Input() stackArr: Letters[] = []; // Take value from parent
@@ -20,9 +19,8 @@ export class KMPComponent implements OnInit {
   occurrencesCount: number = 0;
 
   lps: number[] = []; // Longest proper prefix (the DFA (KMP automoton))
-  ELEMENT_DATA: any[] = [
-    {index: 1, failValue: 1}
-  ];
+  displayedColumns: string[] = [ 'index', 'failValue' ];
+  ELEMENT_DATA: failArray[] = [  ];
 
   constructor(
     private readonly stringService: StringService,
@@ -69,7 +67,7 @@ export class KMPComponent implements OnInit {
     this.createFailureTable();
   }
 
-  createFailureTable(): any {
+  createFailureTable(): void {
     this.ELEMENT_DATA = [];
     for (let i = 0; i < this.lps.length; i++) {
       this.ELEMENT_DATA.push({ index: i, failValue: this.lps[i] });
@@ -156,4 +154,9 @@ interface AnimationValues {
   occurrencesCount: number;
   stackIndex: number;
   needleIndex: number;
+}
+
+interface failArray {
+  index: number;
+  failValue: number; 
 }
