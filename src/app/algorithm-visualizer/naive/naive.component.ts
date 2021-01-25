@@ -1,6 +1,7 @@
 import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angular/core';
 import { StringService } from 'src/app/shared/string.service';
 import { Letters } from 'src/app/shared/models/Letters';
+import { Colours } from 'src/app/shared/colours.enum';
 
 @Component({
   selector: 'app-naive',
@@ -51,6 +52,8 @@ export class NaiveComponent implements OnInit {
           if (j == this.needleArr.length) 
               matchCount++;
       }
+
+      console.log('match: ' + matchCount);
       return matchCount;
   }
 
@@ -67,15 +70,15 @@ export class NaiveComponent implements OnInit {
           resetToWhite = false;
         }
         if (action.isMatch) {
-          this.needleArr[action.needleIndex].colour = '#b2ff59';
-          this.stackArr[action.stackIndex + action.needleIndex].colour = '#b2ff59';
+          this.needleArr[action.needleIndex].colour = Colours.GREEN;
+          this.stackArr[action.stackIndex + action.needleIndex].colour = Colours.GREEN;
           if (action.needleIndex == this.needleArr.length - 1) {
             resetToWhite = true;
           }
         }
         else { 
-          this.needleArr[action.needleIndex].colour = 'red';
-          this.stackArr[action.stackIndex + action.needleIndex].colour = 'red';
+          this.needleArr[action.needleIndex].colour = Colours.RED;
+          this.stackArr[action.stackIndex + action.needleIndex].colour = Colours.RED;
           resetToWhite = true;
         }
       }
@@ -89,8 +92,8 @@ export class NaiveComponent implements OnInit {
   }
 
   setToWhite() {
-    this.stackArr.map((chr) => (chr.colour = 'white'));
-    this.needleArr.map((chr) => (chr.colour = 'white'));    
+    this.stackArr.map((chr) => (chr.colour = Colours.WHITE));
+    this.needleArr.map((chr) => (chr.colour = Colours.WHITE));
   }
 
 }

@@ -9,16 +9,17 @@
     <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-animated"
     >
       <li role="menuitem">
-        <a class="dropdown-item" (click)="selectAlgo(algorithmEnum.NAIVE)">{{algorithmEnum.NAIVE}}</a>
-        <a class="dropdown-item" (click)="selectAlgo(algorithmEnum.KMP)">{{algorithmEnum.KMP}}</a>
-        <a class="dropdown-item" (click)="selectAlgo(algorithmEnum.BM)">{{algorithmEnum.BM}}</a>
-        <a class="dropdown-item" (click)="selectAlgo(algorithmEnum.RK)">{{algorithmEnum.RK}}</a>
-        <a class="dropdown-item" (click)="selectAlgo(algorithmEnum.TWSM)">{{algorithmEnum.TWSM}}</a>
-        <a class="dropdown-item" (click)="selectAlgo(algorithmEnum.TWSM)">All</a>
-
+        <a class="dropdown-item" (click)=selectAlgo(algorithmEnum.NAIVE)>{{algorithmEnum.NAIVE}}</a>
+        <a class="dropdown-item" (click)=selectAlgo(algorithmEnum.KMP)>{{algorithmEnum.KMP}}</a>
+        <a class="dropdown-item" (click)=selectAlgo(algorithmEnum.BM)>{{algorithmEnum.BM}}</a>
+        <a class="dropdown-item" (click)=selectAlgo(algorithmEnum.RK)>{{algorithmEnum.RK}}</a>
+        <a class="dropdown-item" (click)=selectAlgo(algorithmEnum.TWSM)>{{algorithmEnum.TWSM}}</a>
+        <a class="dropdown-item" (click)=selectAlgo(algorithmEnum.TWSM)>All</a>
       </li>
     </ul>
   </div>
+
+
   <div class="btn-group" dropdown [insideClick]="true">
     <button id="button-animated" dropdownToggle type="button" class="btn btn-primary dropdown-toggle"
       aria-controls="dropdown-animated" [disabled]="isSorting">
@@ -34,6 +35,7 @@
     </ul>
   </div>
 
+
   <button type="button" class="btn btn-danger" (click)="startSearching()"
     [disabled]="isSorting"> Sort
   </button>
@@ -48,8 +50,6 @@
 
 <div class="container-fluid">
   <div class="row">
-
-
     <div class="array-container col-9">
       <form [formGroup]="inputForm" (keyup)="updateStrings()" class="example-form">
 
@@ -70,24 +70,7 @@
       </div>
 
 
-
-      <!-- 
-      <p>occurrences: {{stringService.occurrencesCount}}</p>
-
-      <div class="array-body array-bar" *ngFor="let letter of stringService.stackArr"
-      [ngStyle]="{ 'background-color': letter.colour }">
-        {{letter.character}}
-      </div>
-      <br>
-      <div class="array-body array-bar" *ngFor="let letter of stringService.needleArr"
-      [ngStyle]="{ 'background-color': letter.colour }">
-        {{letter.character}}
-      </div> 
--->
-
-
     </div>
-
   </div>
 </div>
 

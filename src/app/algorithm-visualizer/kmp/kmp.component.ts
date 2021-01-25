@@ -1,6 +1,7 @@
 import { Component, OnInit, Output, EventEmitter, Input, OnChanges } from '@angular/core';
 import { StringService } from 'src/app/shared/string.service';
 import { Letters } from 'src/app/shared/models/Letters';
+import { Colours } from '../../shared/colours.enum';
 
 @Component({
   selector: 'app-kmp',
@@ -8,7 +9,6 @@ import { Letters } from 'src/app/shared/models/Letters';
   styleUrls: ['./kmp.component.scss']
 })
 export class KMPComponent implements OnInit {
-
 
   @Output() public kmpEvent = new EventEmitter();
   @Input() stackArr: Letters[] = []; // Take value from parent
@@ -20,7 +20,7 @@ export class KMPComponent implements OnInit {
 
   lps: number[] = []; // Longest proper prefix (the DFA (KMP automoton))
   displayedColumns: string[] = [ 'index', 'failValue' ];
-  ELEMENT_DATA: failArray[] = [  ];
+  ELEMENT_DATA: failArray[] = [];
 
   constructor(
     private readonly stringService: StringService,
@@ -31,12 +31,10 @@ export class KMPComponent implements OnInit {
   ngOnChanges(changes: OnChanges): void { // whenever parent values change, this updates!
     if (this.isSorting)
       this.startKMPSearch();
-
-    else { 
+    else 
       this.genSuffixArray();
-    }
-
   }
+
   startKMPSearch() {
     this.genSuffixArray();
     this.KMPSearch();
@@ -80,36 +78,43 @@ export class KMPComponent implements OnInit {
     if (this.stackArr.length == 0 || this.needleArr.length == 0) return 0;
 
     let matchCount: number = 0;
-    let [ind, n] = [0, 0]; // ind traverses whole stack, n checks and traverses through needle
+    let [ind, needle] = [0, 0]; // ind traverses whole stack, n checks and traverses through needle
 
     while (ind < this.stackArr.length) {
-      if (this.stackArr[ind].character == this.needleArr[n].character) {
-        this.animations.push({ isMatch: true, occurrencesCount: matchCount, stackIndex: ind, needleIndex: n });
-        ind++;
-        n++;
+      if (this.stackArr[ind].character == this.needleArr[needle].character) {
+        this.animations.push({ isMatch: true, occurrencesCount: matchCount, stackIndex: ind, needleIndex: needle });
 
-        if (n == this.needleArr.length) {
+        console.log(ind, needle);
+        ind++;
+        needle++;
+
+        if (needle == this.needleArr.length) {
           matchCount++;
-          this.animations.push({ isMatch: true, occurrencesCount: matchCount, stackIndex: ind - 1, needleIndex: n - 1 });
-          n = this.lps[n - 1];
+          this.animations.push({ isMatch: true, occurrencesCount: matchCount, stackIndex: ind - 1, needleIndex: needle - 1 });
+          console.log('MATCH: ', ind, needle);
+          needle = this.lps[needle - 1];
         }
       }
 
       else {
-        if (n != 0)
-          n = this.lps[n - 1];
+        if (needle != 0)
+          needle = this.lps[needle - 1];
         else
           ind++;
-        this.animations.push({ isMatch: false, occurrencesCount: matchCount, stackIndex: ind, needleIndex: n });
+        this.animations.push({ isMatch: false, occurrencesCount: matchCount, stackIndex: ind, needleIndex: needle });
       }
     }
+
+    
     return matchCount;
   }
 
   KMPSearchAnimation(): void {
     let resetToWhite = false;
-    this.animations.pop();
 
+    this.animations.push({ isMatch: false, occurrencesCount: null, stackIndex: 0, needleIndex: 0});
+    this.animations.pop();
+    
     const timer = setInterval(() => {
       const action: AnimationValues = this.animations.shift();
       if (action) {
@@ -120,17 +125,21 @@ export class KMPComponent implements OnInit {
           resetToWhite = false;
         }
         if (action.isMatch) {
-          this.needleArr[action.needleIndex].colour = '#b2ff59';
-          this.stackArr[action.stackIndex].colour = '#b2ff59';
+          this.occurrencesCount = action.occurrencesCount;
+          this.needleArr[action.needleIndex].colour = Colours.GREEN;
+          this.stackArr[action.stackIndex].colour = Colours.GREEN;
 
-          // if (action.needleIndex == this.stringService.needleArr.length) {
-          //   resetToWhite = true;
-          //   console.log('match!');
-          // }
+          if (action.needleIndex > 0) {
+            for (let c = 0; c < action.needleIndex; c++) {
+              this.needleArr[c].colour = Colours.GREEN;; // From index 0 to failValue index
+              this.stackArr[action.stackIndex - (c + 1)].colour = Colours.GREEN; // From current stack index, decrement from fail index value
+            }
+          }
+
         }
         else {
-          this.needleArr[action.needleIndex].colour = 'red';
-          this.stackArr[action.stackIndex].colour = 'red';
+          this.needleArr[action.needleIndex].colour = Colours.RED;
+          this.stackArr[action.stackIndex].colour = Colours.RED;;
           resetToWhite = true;
         }
       }
@@ -144,8 +153,8 @@ export class KMPComponent implements OnInit {
   }
 
   setToWhite() {
-    this.stackArr.map((chr) => (chr.colour = 'white'));
-    this.needleArr.map((chr) => (chr.colour = 'white'));
+    this.stackArr.map((chr) => (chr.colour = Colours.WHITE));
+    this.needleArr.map((chr) => (chr.colour = Colours.WHITE));
   }
 }
 
