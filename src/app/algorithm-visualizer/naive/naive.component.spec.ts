@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { StringService } from 'src/app/shared/string.service';
-import { InputDataSourceEnum } from '../input-data-source.enum';
+import { InputDataSourceEnum } from '../../shared/input-data-source.enum';
 import { NaiveComponent } from './naive.component';
 
 describe('NaiveComponent', () => {

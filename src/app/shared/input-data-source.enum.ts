@@ -6,30 +6,11 @@ export enum InputDataSourceEnum {
     GACTGTGTTGCCGCCATCTTGAAGGACTCCATCCAGACAAGCATCATAAACCGGACCTCT
     GTGGGGAGCTTGCAGGGACTGGCTGTGGACATGGACTCTGTGGTACTAAATGAAGTCCTG
     GGGCTGACTCTCATTGTCTGGATTGACTGA`,
-    
+    DNA_NEEDLE = 'ATG',
+    STORY_NEEDLE = 'Tom',
     STORY = `The Project Gutenberg EBook of The Adventures of Tom Sawyer, Complete
-    by Mark Twain (Samuel Clemens)
-
-    Title: The Adventures of Tom Sawyer, Complete
-
-    Author: Mark Twain (Samuel Clemens)
-
-    Release Date: July 1, 2004 [EBook #74]
-
-    Language: English
-
-    Character set encoding: ASCII
-
-    Produced by David Widger. The previous edition was update by Jose
-    Menendez.
-
-                      THE ADVENTURES OF TOM SAWYER
-                                    BY
-                                MARK TWAIN
-                        (Samuel Langhorne Clemens)
-
-                              P R E F A C E
-
+    by Mark Twain (Samuel Clemens) THE ADVENTURES OF TOM SAWYER BY MARK TWAIN (Samuel Langhorne Clemens)
+                            
     MOST of the adventures recorded in this book really occurred; one or
     two were experiences of my own, the rest those of boys who were
     schoolmates of mine. Huck Finn is drawn from life; Tom Sawyer also, but
@@ -47,26 +28,16 @@ export enum InputDataSourceEnum {
     they once were themselves, and of how they felt and thought and talked,
     and what queer enterprises they sometimes engaged in.
 
-                                                                THE AUTHOR.
+    THE AUTHOR.
     HARTFORD, 1876.
-                              T O M   S A W Y E R
-
-
-
+    T O M   S A W Y E R
     CHAPTER I
-
     "TOM!"
-
     No answer.
-
     "TOM!"
-
     No answer.
-
     "What's gone with that boy,  I wonder? You TOM!"
-
     No answer.
-
     The old lady pulled her spectacles down and looked over them about the
     room; then she put them up and looked out under them. She seldom or
     never looked THROUGH them for so small a thing as a boy; they were her
@@ -250,90 +221,5 @@ export enum InputDataSourceEnum {
     to him to grow. Neither boy spoke. If one moved, the other moved--but
     only sidewise, in a circle; they kept face to face and eye to eye all
     the time. Finally Tom said:
-
-    "I can lick you!"
-
-    "I'd like to see you try it."
-
-    "Well, I can do it."
-
-    "No you can't, either."
-
-    "Yes I can."
-
-    "No you can't."
-
-    "I can."
-
-    "You can't."
-
-    "Can!"
-
-    "Can't!"
-
-    An uncomfortable pause. Then Tom said:
-
-    "What's your name?"
-
-    "'Tisn't any of your business, maybe."
-
-    "Well I 'low I'll MAKE it my business."
-
-    "Well why don't you?"
-
-    "If you say much, I will."
-
-    "Much--much--MUCH. There now."
-
-    "Oh, you think you're mighty smart, DON'T you? I could lick you with
-    one hand tied behind me, if I wanted to."
-
-    "Well why don't you DO it? You SAY you can do it."
-
-    "Well I WILL, if you fool with me."
-
-    "Oh yes--I've seen whole families in the same fix."
-
-    "Smarty! You think you're SOME, now, DON'T you? Oh, what a hat!"
-
-    "You can lump that hat if you don't like it. I dare you to knock it
-    off--and anybody that'll take a dare will suck eggs."
-
-    "You're a liar!"
-
-    "You're another."
-
-    "You're a fighting liar and dasn't take it up."
-
-    "Aw--take a walk!"
-
-    "Say--if you give me much more of your sass I'll take and bounce a
-    rock off'n your head."
-
-    "Oh, of COURSE you will."
-
-    "Well I WILL."
-
-    "Well why don't you DO it then? What do you keep SAYING you will for?
-    Why don't you DO it? It's because you're afraid."
-
-    "I AIN'T afraid."
-
-    "You are."
-
-    "I ain't."
-
-    "You are."
-
-    Another pause, and more eying and sidling around each other. Presently
-    they were shoulder to shoulder. Tom said:
-
-    "Get away from here!"
-
-    "Go away yourself!"
-
-    "I won't."
-
-    "I won't either."
     `
 }

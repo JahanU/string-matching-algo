@@ -43,11 +43,11 @@ export class NaiveComponent implements OnInit {
 
         for (j; j < this.needleArr.length; j++) {
               if (this.stackArr[i + j].character != this.needleArr[j].character) {
-                this.animations.push({isMatch: false, occurrencesCount: matchCount, stackIndex: i, needleIndex: j});
+                this.animations.push({isMatch: false, occurrencesCount: matchCount, stackIndex: i+j, needleIndex: j});
                 break;
               }
               else 
-                this.animations.push({isMatch: true, occurrencesCount: matchCount, stackIndex: i, needleIndex: j});   
+                this.animations.push({isMatch: true, occurrencesCount: matchCount, stackIndex: i+j, needleIndex: j});   
           }
           if (j == this.needleArr.length) 
               matchCount++;
@@ -71,14 +71,14 @@ export class NaiveComponent implements OnInit {
         }
         if (action.isMatch) {
           this.needleArr[action.needleIndex].colour = Colours.GREEN;
-          this.stackArr[action.stackIndex + action.needleIndex].colour = Colours.GREEN;
+          this.stackArr[action.stackIndex].colour = Colours.GREEN;
           if (action.needleIndex == this.needleArr.length - 1) {
             resetToWhite = true;
           }
         }
         else { 
           this.needleArr[action.needleIndex].colour = Colours.RED;
-          this.stackArr[action.stackIndex + action.needleIndex].colour = Colours.RED;
+          this.stackArr[action.stackIndex].colour = Colours.RED;
           resetToWhite = true;
         }
       }

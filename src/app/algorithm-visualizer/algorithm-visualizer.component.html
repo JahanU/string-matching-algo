@@ -68,7 +68,9 @@
       <div *ngIf="selectedAlgorithm == algorithmEnum.KMP">
         <app-kmp [needleArr]="needleArr" [stackArr]="stackArr" [isSorting]="isSorting" (kmpEvent)="isSorting=$event"> </app-kmp> 
       </div>
-
+      <div *ngIf="selectedAlgorithm == algorithmEnum.BM">
+        <app-bm [needleArr]="needleArr" [stackArr]="stackArr" [isSorting]="isSorting" (bmEvent)="isSorting=$event"> </app-bm> 
+      </div>
 
     </div>
   </div>

@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { InputDataSourceEnum } from '../input-data-source.enum';
+import { InputDataSourceEnum } from '../../shared/input-data-source.enum';
 import { StringService } from 'src/app/shared/string.service';
 import { KMPComponent } from './kmp.component';
 

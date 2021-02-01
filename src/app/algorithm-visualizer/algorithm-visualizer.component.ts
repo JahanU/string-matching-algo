@@ -4,11 +4,12 @@ import { StringService } from '../shared/string.service';
 import { BsDropdownConfig } from 'ngx-bootstrap/dropdown';
 import { AlgorithmEnum } from '../shared/algorithm.enum';
 import { InputDataEnum } from '../shared/input-data.enum';
-import { InputDataSourceEnum } from '../algorithm-visualizer/input-data-source.enum';
+import { InputDataSourceEnum } from '../shared/input-data-source.enum';
 import { FormControl, FormGroup } from '@angular/forms';
 import { NaiveComponent } from './naive/naive.component';
 import { Letters } from '../shared/models/Letters';
 import { KMPComponent } from './kmp/kmp.component';
+import { BMComponent } from './bm/bm.component';
 
 @Component({
   selector: 'app-algorithm-visualizer',
@@ -26,7 +27,7 @@ export class AlgorithmVisualizerComponent implements OnInit {
 
   algorithmEnum = AlgorithmEnum; // init
   inputDataEnum = InputDataEnum; // init
-  selectedAlgorithm: AlgorithmEnum = AlgorithmEnum.KMP; // default
+  selectedAlgorithm: AlgorithmEnum = AlgorithmEnum.NAIVE; // default
   selectedInput: InputDataEnum = InputDataEnum.SELECTED_INPUT; // default
   
   stackArr: Letters[] = []; // Take from service! child can access from parent or parent send to class
@@ -66,11 +67,14 @@ export class AlgorithmVisualizerComponent implements OnInit {
   displayInput = (pickedInput: InputDataEnum) => this.selectedInput = pickedInput;
   
   updateInputData() { 
-    if (this.selectedInput == InputDataEnum.DNA) 
+    if (this.selectedInput == InputDataEnum.DNA) {
       this.inputForm.get('stack').setValue(InputDataSourceEnum.DNA);
-    if (this.selectedInput == InputDataEnum.STORY) 
+      this.inputForm.get('needle').setValue(InputDataSourceEnum.DNA_NEEDLE);
+    }
+    if (this.selectedInput == InputDataEnum.STORY) {
       this.inputForm.get('stack').setValue(InputDataSourceEnum.STORY);
-
+      this.inputForm.get('needle').setValue(InputDataSourceEnum.STORY_NEEDLE);
+    }
     this.updateStrings();
   }
 
@@ -86,7 +90,10 @@ export class AlgorithmVisualizerComponent implements OnInit {
     
     if (this.selectedAlgorithm === AlgorithmEnum.KMP) { 
       new KMPComponent(this.stringService);
+    }
 
+    if (this.selectedAlgorithm === AlgorithmEnum.BM) {
+      new BMComponent(this.stringService);
     }
   }
 
