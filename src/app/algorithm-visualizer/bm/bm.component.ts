@@ -1,3 +1,4 @@
+import { OnChanges } from '@angular/core';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Colours } from 'src/app/shared/colours.enum';
 import { Letters } from 'src/app/shared/models/Letters';
@@ -22,7 +23,7 @@ export class BMComponent implements OnInit {
   @Input() stackArr: Letters[] = []; // Take value from parent
   @Input() needleArr: Letters[] = [];
   radix: number;
-  right: number[]; // // the bad-character skip array
+  badChars: number[]; // // the bad-character skip array
 
   animations: AnimationValues[] = [];
   occurrencesCount: number = 0;
@@ -33,51 +34,66 @@ export class BMComponent implements OnInit {
     console.log('In BM!');
   }
 
-  ngOnInit(): void {
-    
-    this.setBadCharArray();
+  ngOnInit(): void {}
+
+
+  ngOnChanges(changes: OnChanges): void { // whenever parent values change, this updates!
+    if (this.isSorting)
+      this.startBMSearch();
+    else 
+      this.genBadCharArray();
+  }
+
+
+  startBMSearch() {
+    this.genBadCharArray();
     this.BMSearch();
     this.bmSearchAnimation();
   }
- 
     /*
      * Preprocesses the pattern string. 1
      * @param pat the pattern string
      */
-  setBadCharArray() {
+  genBadCharArray() {
     
-    this.right = new Array(this.radix);
-    this.right.fill(-1, 0, this.radix);
+    this.badChars = new Array(this.radix);
+    this.badChars.fill(-1, 0, this.radix);
 
     for (let j = 0; j < this.needleArr.length; j++) {
-      this.right[this.needleArr[j].character.charCodeAt(0)] = j;
+      this.badChars[this.needleArr[j].character.charCodeAt(0)] = j;
     }
   }
 
   BMSearch() {
-    const n = this.needleArr.length;
-    const s = this.stackArr.length;
-    let skip;
+    const m = this.needleArr.length;
+    const n = this.stackArr.length;
+    let s = 0;
     let matchCount = 0;
 
-    for (let i = 0; i <= s - n; i += skip) { // From 0, to (stack.length - needle.length), inc by amount we skipped
-        skip = 0;
-        for (let j = n-1; j >= 0; j--) { // from length of Needle, to 0, dec by 1
-            if (this.needleArr[j].character != this.stackArr[i+j].character) { // if no match - needle last element != curr word in stack (e.g. (i + j))
-              this.animations.push({isMatch: false, occurrencesCount: matchCount, stackIndex: (i + j), needleIndex: j});
-              skip = Math.max(1, j - this.right[this.stackArr[i+j].character.charCodeAt(0)]); // skip the max amount, e.g. the bad character index
-                break;
-            }
-            else { // letters matched, push animation onto stack
-              this.animations.push({isMatch: true, occurrencesCount: matchCount, stackIndex: (i + j), needleIndex: j});
-            }
+    if (this.stackArr.length < this.needleArr.length) return 0;
+    if (this.stackArr.length == 0 || this.needleArr.length == 0) return 0;
 
-            if (skip === 0) return i;
-      
+    while (s <= (n - m)) {
+        let j = (m - 1);
+
+        while (j >= 0 && this.needleArr[j].character == this.stackArr[s+j].character) {
+          this.animations.push({ isMatch: true, occurrencesCount: matchCount, stackIndex: (s+j), needleIndex: j });
+          j--;
+        }
+
+        if (j < 0) {
+          console.log('match found! at index: ' + s);
+          matchCount++;
+          this.animations.push({ isMatch: true, occurrencesCount: matchCount, stackIndex: (s+j), needleIndex: j });
+          s += (s+m < n)? m-this.badChars[this.stackArr[s+m].character.charCodeAt(0)] : 1;
+        }
+        else {
+          this.animations.push({ isMatch: false, occurrencesCount: matchCount, stackIndex: (s+j), needleIndex: j }); 
+          s += Math.max(1, j - this.badChars[this.stackArr[s+j].character.charCodeAt(0)]);
         }
     }
 
-    return matchCount; 
+    return matchCount;
   }
 
 
@@ -96,7 +112,7 @@ export class BMComponent implements OnInit {
         if (action.isMatch) {
           this.needleArr[action.needleIndex].colour = Colours.GREEN;
           this.stackArr[action.stackIndex].colour = Colours.GREEN;
-          if (action.needleIndex == this.needleArr.length - 1) {
+          if (action.needleIndex == 0) {
             resetToWhite = true;
           }
         }

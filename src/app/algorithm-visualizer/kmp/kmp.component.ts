@@ -36,7 +36,7 @@ export class KMPComponent implements OnInit {
   }
 
   startKMPSearch() {
-    this.genSuffixArray();
+    // this.genSuffixArray();
     this.KMPSearch();
     this.KMPSearchAnimation();
   }
