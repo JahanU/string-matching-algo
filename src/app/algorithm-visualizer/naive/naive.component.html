@@ -1,12 +1,12 @@
+<h4>Naive</h4>
 <p>occurrences: {{occurrencesCount}}</p>
+<p> Steps left: {{this.animations.length}}</p>
 
 <div class="array-body array-bar" *ngFor="let letter of stackArr"
     [ngStyle]="{ 'background-color': letter.colour }">
     {{letter.character}}
 </div>
-
 <br>
-
 <div class="array-body array-bar" *ngFor="let letter of needleArr"
     [ngStyle]="{ 'background-color': letter.colour }">
     {{letter.character}}

@@ -6,10 +6,7 @@ import { AlgorithmEnum } from '../shared/algorithm.enum';
 import { InputDataEnum } from '../shared/input-data.enum';
 import { InputDataSourceEnum } from '../shared/input-data-source.enum';
 import { FormControl, FormGroup } from '@angular/forms';
-import { NaiveComponent } from './naive/naive.component';
 import { Letters } from '../shared/models/Letters';
-import { KMPComponent } from './kmp/kmp.component';
-import { BMComponent } from './bm/bm.component';
 
 @Component({
   selector: 'app-algorithm-visualizer',
@@ -27,7 +24,7 @@ export class AlgorithmVisualizerComponent implements OnInit {
 
   algorithmEnum = AlgorithmEnum; // init
   inputDataEnum = InputDataEnum; // init
-  selectedAlgorithm: AlgorithmEnum = AlgorithmEnum.BM; // default
+  selectedAlgorithm: AlgorithmEnum = AlgorithmEnum.ALL; // default
   selectedInput: InputDataEnum = InputDataEnum.SELECTED_INPUT; // default
   
   stackArr: Letters[] = []; // Take from service! child can access from parent or parent send to class
@@ -39,9 +36,8 @@ export class AlgorithmVisualizerComponent implements OnInit {
     stack: new FormControl(this.stringService.stack),
   });
   
-
   constructor(public stringService: StringService) { }
-
+  
   ngOnInit(): void {
     this.stringService;
     this.stackArr = this.stringService.stackArr;
@@ -51,18 +47,11 @@ export class AlgorithmVisualizerComponent implements OnInit {
   updateStrings() {
     this.stringService.needle = this.inputForm.get('needle').value; // update service strings
     this.stringService.stack = this.inputForm.get('stack').value;
-    this.stringService.createStringsArrays(); // create array in service
+    this.stringService.updateStringsArray(); // create array in service
     this.needleArr = this.stringService.needleArr; // get array from service to this parent class
     this.stackArr = this.stringService.stackArr;
-    /* 1)
-    update selected child components using @input
-    or child component copies service?
-
-    2)
-    when all being displayed, each child gets a copy of needle and stack.
-    // allows them to perform animation and display!
-    */
   }
+
   pitchSpeed = (event: any) => this.stringService.animationSpeed = event.value;
   displayInput = (pickedInput: InputDataEnum) => this.selectedInput = pickedInput;
   
@@ -84,17 +73,10 @@ export class AlgorithmVisualizerComponent implements OnInit {
 
   startSearching(): void {
     this.isSorting = true;
-    if (this.selectedAlgorithm === AlgorithmEnum.NAIVE) { 
-      new NaiveComponent(this.stringService);
-    }
-    
-    if (this.selectedAlgorithm === AlgorithmEnum.KMP) { 
-      new KMPComponent(this.stringService);
-    }
+  }
 
-    if (this.selectedAlgorithm === AlgorithmEnum.BM) {
-      new BMComponent(this.stringService);
-    }
+  handleIsSorting(event: any) { // event/message from child back to parent
+    this.isSorting = event;
   }
 
 }

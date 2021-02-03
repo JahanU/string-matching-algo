@@ -14,7 +14,7 @@
         <a class="dropdown-item" (click)=selectAlgo(algorithmEnum.BM)>{{algorithmEnum.BM}}</a>
         <a class="dropdown-item" (click)=selectAlgo(algorithmEnum.RK)>{{algorithmEnum.RK}}</a>
         <a class="dropdown-item" (click)=selectAlgo(algorithmEnum.TWSM)>{{algorithmEnum.TWSM}}</a>
-        <a class="dropdown-item" (click)=selectAlgo(algorithmEnum.TWSM)>All</a>
+        <a class="dropdown-item" (click)=selectAlgo(algorithmEnum.ALL)>{{algorithmEnum.ALL}}</a>
       </li>
     </ul>
   </div>
@@ -63,14 +63,32 @@
       </form>
 
       <div *ngIf="selectedAlgorithm == algorithmEnum.NAIVE">
-        <app-naive [needleArr]="needleArr" [stackArr]="stackArr" [isSorting]="isSorting" (naiveEvent)="isSorting=$event"> </app-naive> 
+        <app-naive [needleArrFromP]="needleArr" [stackArrFromP]="stackArr" [isSorting]="isSorting" (naiveEvent)="handleIsSorting($event)"> </app-naive> 
       </div>
+
       <div *ngIf="selectedAlgorithm == algorithmEnum.KMP">
-        <app-kmp [needleArr]="needleArr" [stackArr]="stackArr" [isSorting]="isSorting" (kmpEvent)="isSorting=$event"> </app-kmp> 
+        <app-kmp [needleArrFromP]="needleArr" [stackArrFromP]="stackArr" [isSorting]="isSorting" (kmpEvent)="handleIsSorting($event)"> </app-kmp> 
       </div>
+
       <div *ngIf="selectedAlgorithm == algorithmEnum.BM">
-        <app-bm [needleArr]="needleArr" [stackArr]="stackArr" [isSorting]="isSorting" (bmEvent)="isSorting=$event"> </app-bm> 
+        <app-bm [needleArrFromP]="needleArr" [stackArrFromP]="stackArr" [isSorting]="isSorting" (bmEvent)="handleIsSorting($event)"> </app-bm> 
       </div>
+
+      <div *ngIf="selectedAlgorithm == algorithmEnum.ALL">
+        <app-all-algorithms [needleArrFromP]="needleArr" [stackArrFromP]="stackArr" [isSorting]="isSorting" (allEvent)="handleIsSorting($event)"> </app-all-algorithms> 
+      </div>
+
+
+      <!-- <div class="row col-12" *ngIf="selectedAlgorithm == algorithmEnum.ALL">
+        <div class="col-6">
+          <app-naive [needleArrFromP]="needleArr" [stackArrFromP]="stackArr" [isSorting]="isSorting" (naiveEvent)="handleIsSorting($event)"> </app-naive> 
+        </div>
+        <div class="col-6">
+          <app-bm [needleArrFromP]="needleArr" [stackArrFromP]="stackArr" [isSorting]="isSorting" (bmEvent)="handleIsSorting($event)"> </app-bm> 
+        </div>
+      </div> -->
+      
+
 
     </div>
   </div>

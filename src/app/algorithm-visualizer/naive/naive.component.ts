@@ -10,11 +10,13 @@ import { Colours } from 'src/app/shared/colours.enum';
 })
 export class NaiveComponent implements OnInit {
 
-  @Output() public naiveEvent = new EventEmitter(); // Emit when animation is done
-  @Input() stackArr: Letters[] = []; // Take value from parent
-  @Input() needleArr: Letters[] = [];
   @Input() isSorting: boolean = false;
+  @Output() public naiveEvent = new EventEmitter(); // Emit when animation is done
+  @Input() stackArrFromP: Letters[] = []; // Take value from parent
+  @Input() needleArrFromP: Letters[] = [];
   
+  stackArr: Letters[] = [];
+  needleArr: Letters[] = [];
   animations: AnimationValues[] = [];
   occurrencesCount: number = 0;
 
@@ -25,8 +27,16 @@ export class NaiveComponent implements OnInit {
   ngOnChanges(changes: OnChanges): void { // whenever parent values change, this updates!
     if (this.isSorting) // Parent triggers to start sorting
       this.startNaiveSearch();
-
+    else {
+      this.cloneService();
+    }
   }
+
+  cloneService() {
+    this.stackArr = JSON.parse(JSON.stringify(this.stackArrFromP))
+    this.needleArr = JSON.parse(JSON.stringify(this.needleArrFromP))
+  }
+
   startNaiveSearch() {
     this.naiveSearch();
     this.naiveSearchAnimation();
@@ -52,8 +62,6 @@ export class NaiveComponent implements OnInit {
           if (j == this.needleArr.length) 
               matchCount++;
       }
-
-      console.log('match: ' + matchCount);
       return matchCount;
   }
 
@@ -81,12 +89,14 @@ export class NaiveComponent implements OnInit {
           this.stackArr[action.stackIndex].colour = Colours.RED;
           resetToWhite = true;
         }
+
       }
       else {
         clearInterval(timer);
         this.isSorting = false;  
         this.naiveEvent.emit(this.isSorting);  
         this.setToWhite();  
+        console.log('NAIVE done'); 
       }
     }, this.stringService.animationSpeed);
   }

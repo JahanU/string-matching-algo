@@ -10,16 +10,19 @@ import { Colours } from '../../shared/colours.enum';
 })
 export class KMPComponent implements OnInit {
 
-  @Output() public kmpEvent = new EventEmitter();
-  @Input() stackArr: Letters[] = []; // Take value from parent
-  @Input() needleArr: Letters[] = [];
   @Input() isSorting: boolean = false;
+  @Output() public kmpEvent = new EventEmitter();
+  @Input() stackArrFromP: Letters[] = []; // Take value from parent
+  @Input() needleArrFromP: Letters[] = [];
 
+  stackArr: Letters[] = []; // Take value from parent
+  needleArr: Letters[] = [];
   animations: AnimationValues[] = [];
   occurrencesCount: number = 0;
 
   lps: number[] = []; // Longest proper prefix (the DFA (KMP automoton))
-  displayedColumns: string[] = [ 'index', 'failValue' ];
+
+  displayedColumns: string[] = [ 'character', 'index', 'failValue' ];
   ELEMENT_DATA: failArray[] = [];
 
   constructor(
@@ -31,14 +34,20 @@ export class KMPComponent implements OnInit {
   ngOnChanges(changes: OnChanges): void { // whenever parent values change, this updates!
     if (this.isSorting)
       this.startKMPSearch();
-    else 
+    else {
+      this.cloneService();
       this.genSuffixArray();
+    }
   }
 
   startKMPSearch() {
-    // this.genSuffixArray();
     this.KMPSearch();
     this.KMPSearchAnimation();
+  }
+
+  cloneService() {
+    this.stackArr = JSON.parse(JSON.stringify(this.stackArrFromP))
+    this.needleArr = JSON.parse(JSON.stringify(this.needleArrFromP))
   }
 
   genSuffixArray() {
@@ -68,12 +77,11 @@ export class KMPComponent implements OnInit {
   createFailureTable(): void {
     this.ELEMENT_DATA = [];
     for (let i = 0; i < this.lps.length; i++) {
-      this.ELEMENT_DATA.push({ index: i, failValue: this.lps[i] });
+      this.ELEMENT_DATA.push({ character: this.needleArr[i].character, index: i, failValue: this.lps[i] });
     }
   }
 
   KMPSearch(): number {
-
     if (this.stackArr.length < this.needleArr.length) return 0;
     if (this.stackArr.length == 0 || this.needleArr.length == 0) return 0;
 
@@ -91,7 +99,6 @@ export class KMPComponent implements OnInit {
         if (needle == this.needleArr.length) {
           matchCount++;
           this.animations.push({ isMatch: true, occurrencesCount: matchCount, stackIndex: ind - 1, needleIndex: needle - 1 });
-          console.log('MATCH: ', ind, needle);
           needle = this.lps[needle - 1];
         }
       }
@@ -111,10 +118,6 @@ export class KMPComponent implements OnInit {
 
   KMPSearchAnimation(): void {
     let resetToWhite = false;
-
-    this.animations.push({ isMatch: false, occurrencesCount: null, stackIndex: 0, needleIndex: 0});
-    this.animations.pop();
-    
     const timer = setInterval(() => {
       const action: AnimationValues = this.animations.shift();
       if (action) {
@@ -131,11 +134,10 @@ export class KMPComponent implements OnInit {
 
           if (action.needleIndex > 0) {
             for (let c = 0; c < action.needleIndex; c++) {
-              this.needleArr[c].colour = Colours.GREEN;; // From index 0 to failValue index
+              this.needleArr[c].colour = Colours.GREEN; // From index 0 to failValue index
               this.stackArr[action.stackIndex - (c + 1)].colour = Colours.GREEN; // From current stack index, decrement from fail index value
             }
           }
-
         }
         else {
           this.needleArr[action.needleIndex].colour = Colours.RED;
@@ -156,7 +158,9 @@ export class KMPComponent implements OnInit {
     this.stackArr.map((chr) => (chr.colour = Colours.WHITE));
     this.needleArr.map((chr) => (chr.colour = Colours.WHITE));
   }
+
 }
+
 
 interface AnimationValues {
   isMatch: boolean;
@@ -166,6 +170,7 @@ interface AnimationValues {
 }
 
 interface failArray {
+  character: string;
   index: number;
   failValue: number; 
 }

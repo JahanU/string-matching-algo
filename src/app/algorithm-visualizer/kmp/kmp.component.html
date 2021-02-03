@@ -1,12 +1,12 @@
+<h4>Knuth–Morris–Pratt</h4>
 <p>occurrences: {{occurrencesCount}}</p>
+<p> Steps left: {{this.animations.length}}</p>
 
 <div class="array-body array-bar" *ngFor="let letter of stackArr"
     [ngStyle]="{ 'background-color': letter.colour }">
     {{letter.character}}
 </div>
-
 <br>
-
 <div class="array-body array-bar" *ngFor="let letter of needleArr"
     [ngStyle]="{ 'background-color': letter.colour }">
     {{letter.character}}
@@ -14,6 +14,11 @@
 
 
 <table mat-table [dataSource]="ELEMENT_DATA" class="mat-elevation-z8">
+
+  <ng-container matColumnDef="character">
+    <th mat-header-cell *matHeaderCellDef> Character. </th>
+    <td mat-cell *matCellDef="let element"> {{element.character}} </td>
+  </ng-container>
 
     <ng-container matColumnDef="index">
       <th mat-header-cell *matHeaderCellDef> Index. </th>

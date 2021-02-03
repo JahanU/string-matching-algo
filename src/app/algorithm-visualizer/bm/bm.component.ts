@@ -18,32 +18,43 @@ export class BMComponent implements OnInit {
 //  *  (does not implement the strong good suffix rule)
 //  * 
 
-  @Output() public bmEvent = new EventEmitter();
   @Input() isSorting: boolean = false;
-  @Input() stackArr: Letters[] = []; // Take value from parent
-  @Input() needleArr: Letters[] = [];
-  radix: number;
-  badChars: number[]; // // the bad-character skip array
-
+  @Output() public bmEvent = new EventEmitter();
+  @Input() stackArrFromP: Letters[] = []; // Take value from parent
+  @Input() needleArrFromP: Letters[] = [];
+  
+  stackArr: Letters[] = []; 
+  needleArr: Letters[] = [];
   animations: AnimationValues[] = [];
   occurrencesCount: number = 0;
 
-  
+  radix: number;
+  badChars: number[]; // // the bad-character skip array
+  badCharsMap = new Map();
+
+  displayedColumns: string[] = [ 'shift', 'character' ];
+  ELEMENT_DATA: badCharacter[] = [];
+
   constructor(private readonly stringService: StringService) { 
     this.radix = 256;
-    console.log('In BM!');
+    this.badCharsMap = new Map<string, number>();
   }
 
   ngOnInit(): void {}
 
-
   ngOnChanges(changes: OnChanges): void { // whenever parent values change, this updates!
     if (this.isSorting)
       this.startBMSearch();
-    else 
+    else { 
+      this.cloneService();
       this.genBadCharArray();
+    }
   }
 
+  cloneService() {
+    this.stackArr = JSON.parse(JSON.stringify(this.stackArrFromP))
+    this.needleArr = JSON.parse(JSON.stringify(this.needleArrFromP))
+  }
 
   startBMSearch() {
     this.genBadCharArray();
@@ -55,12 +66,20 @@ export class BMComponent implements OnInit {
      * @param pat the pattern string
      */
   genBadCharArray() {
-    
     this.badChars = new Array(this.radix);
     this.badChars.fill(-1, 0, this.radix);
 
     for (let j = 0; j < this.needleArr.length; j++) {
       this.badChars[this.needleArr[j].character.charCodeAt(0)] = j;
+      this.badCharsMap.set(this.needleArr[j].character, j);
+    }
+    this.createBadCharsTable();
+  }
+
+  createBadCharsTable(): void {
+    this.ELEMENT_DATA = [];
+    for (let [k, v] of this.badCharsMap) {
+      this.ELEMENT_DATA.push({ character: k, shift: v });
     }
   }
 
@@ -82,7 +101,7 @@ export class BMComponent implements OnInit {
         }
 
         if (j < 0) {
-          console.log('match found! at index: ' + s);
+          // console.log('match found! at index: ' + s);
           matchCount++;
           this.animations.push({ isMatch: true, occurrencesCount: matchCount, stackIndex: (s+j), needleIndex: j });
           s += (s+m < n)? m-this.badChars[this.stackArr[s+m].character.charCodeAt(0)] : 1;
@@ -92,14 +111,13 @@ export class BMComponent implements OnInit {
           s += Math.max(1, j - this.badChars[this.stackArr[s+j].character.charCodeAt(0)]);
         }
     }
-
     return matchCount;
   }
 
 
   bmSearchAnimation(): void {    
     let resetToWhite = false; 
-    const timer = setInterval(() => {
+    const timerBM = setInterval(() => {
       const action: AnimationValues = this.animations.shift();
       if (action) {       
         this.occurrencesCount = action.occurrencesCount;
@@ -123,10 +141,10 @@ export class BMComponent implements OnInit {
         }
       }
       else { // animations finished 
-        clearInterval(timer);
+        clearInterval(timerBM);
         this.isSorting = false;  
         this.bmEvent.emit(this.isSorting);  
-        this.setToWhite();  
+        this.setToWhite(); 
       }
     }, this.stringService.animationSpeed);
   }
@@ -135,13 +153,17 @@ export class BMComponent implements OnInit {
     this.stackArr.map((chr) => (chr.colour = Colours.WHITE));
     this.needleArr.map((chr) => (chr.colour = Colours.WHITE));
   }
+
 }
-
-
 
 interface AnimationValues {
   isMatch: boolean;
   occurrencesCount: number;
   stackIndex: number;
   needleIndex: number;
+}
+
+interface badCharacter {
+  character: string;
+  shift: number; 
 }

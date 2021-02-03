@@ -10,20 +10,19 @@ export class StringService {
 
   stack: string;
   needle: string;
-
   stackArr: Letters[];
   needleArr: Letters[];
   occurrencesCount: number = 0;
 
   // isSorting: boolean = false;
-  animationSpeed: number = 500;
+  animationSpeed: number = 200;
 
   constructor() {
     [this.stack, this.needle, this.stackArr, this.needleArr] = ['ABC ABCDABCDABD','ABCDABD',[],[]];
-    this.createStringsArrays();
+    this.updateStringsArray();
   }
 
-  createStringsArrays() {
+  updateStringsArray() {
     // If the new stack message is different from the curr arr, update!
     const currStack = this.stackArr.map((obj) => obj.character).join('');
     if (currStack !== this.stack) { 
