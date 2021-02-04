@@ -16,14 +16,18 @@ export class AllAlgorithmsComponent implements OnInit {
   @Input() needleArrFromP: Letters[] = []; // Take value from parent
   @Input() stackArrFromP: Letters[] = [];
   
+  allAnimationsCompleteCount: number = 0;
+
   constructor(public stringService: StringService) { }
 
   ngOnInit(): void {
     console.log('in ALL');
   }
   handleIsSorting(event: any) { // event/message from child back to parent
-    console.log('IN AllComponent HANDLE: ', event);
-    this.allEvent.emit(event);  
+    this.allAnimationsCompleteCount++;
+    
+    if (this.allAnimationsCompleteCount == 3)
+      this.allEvent.emit(event);  
   }
 
 }

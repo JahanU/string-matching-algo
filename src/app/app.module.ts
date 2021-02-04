@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatCardModule } from '@angular/material/card';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AlgorithmVisualizerComponent } from './algorithm-visualizer/algorithm-visualizer.component';
@@ -37,6 +38,7 @@ const routes: Routes = [
     ReactiveFormsModule,
     HttpClientModule,
     MatTableModule,
+    MatCardModule,
     BsDropdownModule.forRoot(),
     ProgressbarModule.forRoot(),
     RouterModule.forRoot(routes),

@@ -1,13 +1,12 @@
 <mat-toolbar class="array-container">
 
-
   <div class="btn-group" dropdown [insideClick]="true">
     <button id="button-animated" dropdownToggle type="button" class="btn btn-primary dropdown-toggle"
       aria-controls="dropdown-animated" [disabled]="isSorting">
       {{ selectedAlgorithm }} <span class="caret"></span>
     </button>
-    <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-animated"
-    >
+
+    <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-animated">
       <li role="menuitem">
         <a class="dropdown-item" (click)=selectAlgo(algorithmEnum.NAIVE)>{{algorithmEnum.NAIVE}}</a>
         <a class="dropdown-item" (click)=selectAlgo(algorithmEnum.KMP)>{{algorithmEnum.KMP}}</a>
@@ -25,8 +24,7 @@
       aria-controls="dropdown-animated" [disabled]="isSorting">
       {{ selectedInput }} <span class="caret"></span>
     </button>
-    <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-animated"
-    >
+    <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-animated">
 
     <li role="menuitem" (click)="updateInputData($event)" >
         <a class="dropdown-item" (click)="displayInput(inputDataEnum.DNA)">{{inputDataEnum.DNA}}</a>
@@ -46,7 +44,6 @@
     value="{{ stringService.animationSpeed }}">
   </mat-slider>
 </mat-toolbar>
-
 
 <div class="container-fluid">
   <div class="row">
@@ -77,17 +74,6 @@
       <div *ngIf="selectedAlgorithm == algorithmEnum.ALL">
         <app-all-algorithms [needleArrFromP]="needleArr" [stackArrFromP]="stackArr" [isSorting]="isSorting" (allEvent)="handleIsSorting($event)"> </app-all-algorithms> 
       </div>
-
-
-      <!-- <div class="row col-12" *ngIf="selectedAlgorithm == algorithmEnum.ALL">
-        <div class="col-6">
-          <app-naive [needleArrFromP]="needleArr" [stackArrFromP]="stackArr" [isSorting]="isSorting" (naiveEvent)="handleIsSorting($event)"> </app-naive> 
-        </div>
-        <div class="col-6">
-          <app-bm [needleArrFromP]="needleArr" [stackArrFromP]="stackArr" [isSorting]="isSorting" (bmEvent)="handleIsSorting($event)"> </app-bm> 
-        </div>
-      </div> -->
-      
 
 
     </div>

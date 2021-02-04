@@ -18,7 +18,7 @@ export class BMComponent implements OnInit {
 //  *  (does not implement the strong good suffix rule)
 //  * 
 
-  @Input() isSorting: boolean = false;
+  @Input() isSorting: boolean;
   @Output() public bmEvent = new EventEmitter();
   @Input() stackArrFromP: Letters[] = []; // Take value from parent
   @Input() needleArrFromP: Letters[] = [];
@@ -27,6 +27,7 @@ export class BMComponent implements OnInit {
   needleArr: Letters[] = [];
   animations: AnimationValues[] = [];
   occurrencesCount: number = 0;
+  animationMaxLimit: number = 0;
 
   radix: number;
   badChars: number[]; // // the bad-character skip array
@@ -38,6 +39,7 @@ export class BMComponent implements OnInit {
   constructor(private readonly stringService: StringService) { 
     this.radix = 256;
     this.badCharsMap = new Map<string, number>();
+    this.badChars = new Array(this.radix);
   }
 
   ngOnInit(): void {}
@@ -46,18 +48,17 @@ export class BMComponent implements OnInit {
     if (this.isSorting)
       this.startBMSearch();
     else { 
-      this.cloneService();
+      this.cloneArraysFromService();
       this.genBadCharArray();
     }
   }
 
-  cloneService() {
+  cloneArraysFromService() {
     this.stackArr = JSON.parse(JSON.stringify(this.stackArrFromP))
     this.needleArr = JSON.parse(JSON.stringify(this.needleArrFromP))
   }
 
   startBMSearch() {
-    this.genBadCharArray();
     this.BMSearch();
     this.bmSearchAnimation();
   }
@@ -66,8 +67,8 @@ export class BMComponent implements OnInit {
      * @param pat the pattern string
      */
   genBadCharArray() {
-    this.badChars = new Array(this.radix);
     this.badChars.fill(-1, 0, this.radix);
+    this.badCharsMap = new Map<string, number>();
 
     for (let j = 0; j < this.needleArr.length; j++) {
       this.badChars[this.needleArr[j].character.charCodeAt(0)] = j;
@@ -111,6 +112,7 @@ export class BMComponent implements OnInit {
           s += Math.max(1, j - this.badChars[this.stackArr[s+j].character.charCodeAt(0)]);
         }
     }
+    this.animationMaxLimit = this.animations.length;
     return matchCount;
   }
 
@@ -142,8 +144,9 @@ export class BMComponent implements OnInit {
       }
       else { // animations finished 
         clearInterval(timerBM);
-        this.isSorting = false;  
-        this.bmEvent.emit(this.isSorting);  
+        // this.isSorting = false;  
+        // this.bmEvent.emit(this.isSorting); 
+        this.bmEvent.emit(false);   
         this.setToWhite(); 
       }
     }, this.stringService.animationSpeed);

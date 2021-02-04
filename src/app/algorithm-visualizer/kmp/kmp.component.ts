@@ -10,7 +10,7 @@ import { Colours } from '../../shared/colours.enum';
 })
 export class KMPComponent implements OnInit {
 
-  @Input() isSorting: boolean = false;
+  @Input() isSorting: boolean;
   @Output() public kmpEvent = new EventEmitter();
   @Input() stackArrFromP: Letters[] = []; // Take value from parent
   @Input() needleArrFromP: Letters[] = [];
@@ -19,6 +19,7 @@ export class KMPComponent implements OnInit {
   needleArr: Letters[] = [];
   animations: AnimationValues[] = [];
   occurrencesCount: number = 0;
+  animationMaxLimit: number = 0;
 
   lps: number[] = []; // Longest proper prefix (the DFA (KMP automoton))
 
@@ -35,7 +36,7 @@ export class KMPComponent implements OnInit {
     if (this.isSorting)
       this.startKMPSearch();
     else {
-      this.cloneService();
+      this.cloneArraysFromService();
       this.genSuffixArray();
     }
   }
@@ -45,7 +46,7 @@ export class KMPComponent implements OnInit {
     this.KMPSearchAnimation();
   }
 
-  cloneService() {
+  cloneArraysFromService() {
     this.stackArr = JSON.parse(JSON.stringify(this.stackArrFromP))
     this.needleArr = JSON.parse(JSON.stringify(this.needleArrFromP))
   }
@@ -112,7 +113,7 @@ export class KMPComponent implements OnInit {
       }
     }
 
-    
+    this.animationMaxLimit = this.animations.length;
     return matchCount;
   }
 
@@ -147,8 +148,9 @@ export class KMPComponent implements OnInit {
       }
       else {
         clearInterval(timer);
-        this.isSorting = false;
-        this.kmpEvent.emit(this.isSorting);
+        // this.isSorting = false;
+        // this.kmpEvent.emit(this.isSorting);
+        this.kmpEvent.emit(false);
         this.setToWhite();
       }
     }, this.stringService.animationSpeed);

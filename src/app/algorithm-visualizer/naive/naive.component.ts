@@ -10,7 +10,7 @@ import { Colours } from 'src/app/shared/colours.enum';
 })
 export class NaiveComponent implements OnInit {
 
-  @Input() isSorting: boolean = false;
+  @Input() isSorting: boolean;
   @Output() public naiveEvent = new EventEmitter(); // Emit when animation is done
   @Input() stackArrFromP: Letters[] = []; // Take value from parent
   @Input() needleArrFromP: Letters[] = [];
@@ -19,6 +19,7 @@ export class NaiveComponent implements OnInit {
   needleArr: Letters[] = [];
   animations: AnimationValues[] = [];
   occurrencesCount: number = 0;
+  animationMaxLimit: number = 0;
 
   constructor(public stringService: StringService) { }
 
@@ -28,11 +29,11 @@ export class NaiveComponent implements OnInit {
     if (this.isSorting) // Parent triggers to start sorting
       this.startNaiveSearch();
     else {
-      this.cloneService();
+      this.cloneArraysFromService();
     }
   }
 
-  cloneService() {
+  cloneArraysFromService() {
     this.stackArr = JSON.parse(JSON.stringify(this.stackArrFromP))
     this.needleArr = JSON.parse(JSON.stringify(this.needleArrFromP))
   }
@@ -62,6 +63,8 @@ export class NaiveComponent implements OnInit {
           if (j == this.needleArr.length) 
               matchCount++;
       }
+
+      this.animationMaxLimit = this.animations.length;
       return matchCount;
   }
 
@@ -93,10 +96,10 @@ export class NaiveComponent implements OnInit {
       }
       else {
         clearInterval(timer);
-        this.isSorting = false;  
-        this.naiveEvent.emit(this.isSorting);  
+        // this.isSorting = false;  
+        // this.naiveEvent.emit(this.isSorting);  
+        this.naiveEvent.emit(false);  
         this.setToWhite();  
-        console.log('NAIVE done'); 
       }
     }, this.stringService.animationSpeed);
   }

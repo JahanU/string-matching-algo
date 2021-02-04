@@ -24,7 +24,7 @@ export class AlgorithmVisualizerComponent implements OnInit {
 
   algorithmEnum = AlgorithmEnum; // init
   inputDataEnum = InputDataEnum; // init
-  selectedAlgorithm: AlgorithmEnum = AlgorithmEnum.ALL; // default
+  selectedAlgorithm: AlgorithmEnum = AlgorithmEnum.NAIVE; // default
   selectedInput: InputDataEnum = InputDataEnum.SELECTED_INPUT; // default
   
   stackArr: Letters[] = []; // Take from service! child can access from parent or parent send to class
