@@ -17,19 +17,21 @@ export class KMPComponent implements OnInit {
 
   stackArr: Letters[] = []; // Take value from parent
   needleArr: Letters[] = [];
+
   animations: AnimationValues[] = [];
   occurrencesCount: number = 0;
   animationMaxLimit: number = 0;
+  timeTaken: string = "00:00:00";
 
   lps: number[] = []; // Longest proper prefix (the DFA (KMP automoton))
 
-  displayedColumns: string[] = [ 'character', 'index', 'failValue' ];
+  displayedColumns: string[] = ['character', 'index', 'failValue'];
   ELEMENT_DATA: failArray[] = [];
 
   constructor(
     private readonly stringService: StringService,
   ) { }
-  
+
   ngOnInit(): void { }
 
   ngOnChanges(changes: OnChanges): void { // whenever parent values change, this updates!
@@ -119,6 +121,8 @@ export class KMPComponent implements OnInit {
 
   KMPSearchAnimation(): void {
     let resetToWhite = false;
+    this.timeTakenInMilli();
+
     const timer = setInterval(() => {
       const action: AnimationValues = this.animations.shift();
       if (action) {
@@ -148,9 +152,8 @@ export class KMPComponent implements OnInit {
       }
       else {
         clearInterval(timer);
-        // this.isSorting = false;
-        // this.kmpEvent.emit(this.isSorting);
-        this.kmpEvent.emit(false);
+        this.isSorting = false;
+        this.kmpEvent.emit(this.isSorting);
         this.setToWhite();
       }
     }, this.stringService.animationSpeed);
@@ -161,6 +164,18 @@ export class KMPComponent implements OnInit {
     this.needleArr.map((chr) => (chr.colour = Colours.WHITE));
   }
 
+  timeTakenInMilli() {
+    const startTime = Date.now();
+    const timer = setInterval(() => {
+      if (this.isSorting) {
+        const elapsedTime = Date.now() - startTime;
+        this.timeTaken = this.stringService.timeToString(elapsedTime);
+      }
+      else {
+        clearInterval(timer);
+      }
+    }, 10);
+  }
 }
 
 
@@ -174,5 +189,5 @@ interface AnimationValues {
 interface failArray {
   character: string;
   index: number;
-  failValue: number; 
+  failValue: number;
 }

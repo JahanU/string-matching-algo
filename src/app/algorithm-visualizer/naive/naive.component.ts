@@ -12,19 +12,21 @@ export class NaiveComponent implements OnInit {
 
   @Input() isSorting: boolean;
   @Output() public naiveEvent = new EventEmitter(); // Emit when animation is done
-  @Input() stackArrFromP: Letters[] = []; // Take value from parent
-  @Input() needleArrFromP: Letters[] = [];
-  
+  @Input() parentStack: Letters[] = []; // Take value from parent
+  @Input() parentNeedle: Letters[] = [];
+
   stackArr: Letters[] = [];
   needleArr: Letters[] = [];
+
   animations: AnimationValues[] = [];
   occurrencesCount: number = 0;
   animationMaxLimit: number = 0;
+  timeTaken: string = "00:00:00";
 
   constructor(public stringService: StringService) { }
 
-  ngOnInit(): void {  }
-  
+  ngOnInit(): void { }
+
   ngOnChanges(changes: OnChanges): void { // whenever parent values change, this updates!
     if (this.isSorting) // Parent triggers to start sorting
       this.startNaiveSearch();
@@ -34,8 +36,8 @@ export class NaiveComponent implements OnInit {
   }
 
   cloneArraysFromService() {
-    this.stackArr = JSON.parse(JSON.stringify(this.stackArrFromP))
-    this.needleArr = JSON.parse(JSON.stringify(this.needleArrFromP))
+    this.stackArr = JSON.parse(JSON.stringify(this.parentStack))
+    this.needleArr = JSON.parse(JSON.stringify(this.parentNeedle))
   }
 
   startNaiveSearch() {
@@ -48,36 +50,38 @@ export class NaiveComponent implements OnInit {
     if (this.stackArr.length == 0 || this.needleArr.length == 0) return 0;
 
     let matchCount: number = 0;
-    
+
     for (let i = 0; i <= this.stackArr.length - this.needleArr.length; i++) {
-        let j = 0;
+      let j = 0;
 
-        for (j; j < this.needleArr.length; j++) {
-              if (this.stackArr[i + j].character != this.needleArr[j].character) {
-                this.animations.push({isMatch: false, occurrencesCount: matchCount, stackIndex: i+j, needleIndex: j});
-                break;
-              }
-              else 
-                this.animations.push({isMatch: true, occurrencesCount: matchCount, stackIndex: i+j, needleIndex: j});   
-          }
-          if (j == this.needleArr.length) 
-              matchCount++;
+      for (j; j < this.needleArr.length; j++) {
+        if (this.stackArr[i + j].character != this.needleArr[j].character) {
+          this.animations.push({ isMatch: false, occurrencesCount: matchCount, stackIndex: i + j, needleIndex: j });
+          break;
+        }
+        else
+          this.animations.push({ isMatch: true, occurrencesCount: matchCount, stackIndex: i + j, needleIndex: j });
       }
+      if (j == this.needleArr.length)
+        matchCount++;
+    }
 
-      this.animationMaxLimit = this.animations.length;
-      return matchCount;
+    this.animationMaxLimit = this.animations.length;
+    return matchCount;
   }
 
 
-  naiveSearchAnimation(): void {    
-    let resetToWhite = false; 
+  naiveSearchAnimation(): void {
+    let resetToWhite = false;
+    this.timeTakenInMilli();
+
     const timer = setInterval(() => {
       const action: AnimationValues = this.animations.shift();
-      if (action) {       
+      if (action) {
         this.occurrencesCount = action.occurrencesCount;
 
         if (resetToWhite) {
-          this.setToWhite();  
+          this.setToWhite();
           resetToWhite = false;
         }
         if (action.isMatch) {
@@ -87,19 +91,17 @@ export class NaiveComponent implements OnInit {
             resetToWhite = true;
           }
         }
-        else { 
+        else {
           this.needleArr[action.needleIndex].colour = Colours.RED;
           this.stackArr[action.stackIndex].colour = Colours.RED;
           resetToWhite = true;
         }
-
       }
       else {
         clearInterval(timer);
-        // this.isSorting = false;  
-        // this.naiveEvent.emit(this.isSorting);  
-        this.naiveEvent.emit(false);  
-        this.setToWhite();  
+        this.isSorting = false;
+        this.naiveEvent.emit(this.isSorting);
+        this.setToWhite();
       }
     }, this.stringService.animationSpeed);
   }
@@ -109,11 +111,24 @@ export class NaiveComponent implements OnInit {
     this.needleArr.map((chr) => (chr.colour = Colours.WHITE));
   }
 
+  timeTakenInMilli() {
+    const startTime = Date.now();
+    const timer = setInterval(() => {
+      if (this.isSorting) {
+        const elapsedTime = Date.now() - startTime;
+        this.timeTaken = this.stringService.timeToString(elapsedTime);
+      }
+      else {
+        clearInterval(timer);
+      }
+    }, 10);
+  }
+
 }
 
 interface AnimationValues {
   isMatch: boolean;
-  occurrencesCount: number; 
+  occurrencesCount: number;
   stackIndex: number;
   needleIndex: number;
 }

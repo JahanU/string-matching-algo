@@ -47,7 +47,7 @@
 
 <div class="container-fluid">
   <div class="row">
-    <div class="array-container col-9">
+    <div class="array-container col-12">
       <form [formGroup]="inputForm" (keyup)="updateStrings()" class="example-form">
 
         <mat-form-field class="inputField">
@@ -60,7 +60,7 @@
       </form>
 
       <div *ngIf="selectedAlgorithm == algorithmEnum.NAIVE">
-        <app-naive [needleArrFromP]="needleArr" [stackArrFromP]="stackArr" [isSorting]="isSorting" (naiveEvent)="handleIsSorting($event)"> </app-naive> 
+        <app-naive [parentNeedle]="needleArr" [parentStack]="stackArr" [isSorting]="isSorting" (naiveEvent)="handleIsSorting($event)"> </app-naive> 
       </div>
 
       <div *ngIf="selectedAlgorithm == algorithmEnum.KMP">

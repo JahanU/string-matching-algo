@@ -11,43 +11,45 @@ import { StringService } from 'src/app/shared/string.service';
 })
 export class BMComponent implements OnInit {
 
-// https://algs4.cs.princeton.edu/53substring/BoyerMoore.java.html
-//  *  Reads in two strings, the pattern and the input text, and
-//  *  searches for the pattern in the input text using the
-//  *  bad-character rule part of the Boyer-Moore algorithm.
-//  *  (does not implement the strong good suffix rule)
-//  * 
+  // https://algs4.cs.princeton.edu/53substring/BoyerMoore.java.html
+  //  *  Reads in two strings, the pattern and the input text, and
+  //  *  searches for the pattern in the input text using the
+  //  *  bad-character rule part of the Boyer-Moore algorithm.
+  //  *  (does not implement the strong good suffix rule)
+  //  * 
 
   @Input() isSorting: boolean;
   @Output() public bmEvent = new EventEmitter();
   @Input() stackArrFromP: Letters[] = []; // Take value from parent
   @Input() needleArrFromP: Letters[] = [];
-  
-  stackArr: Letters[] = []; 
+
+  stackArr: Letters[] = [];
   needleArr: Letters[] = [];
+
   animations: AnimationValues[] = [];
   occurrencesCount: number = 0;
   animationMaxLimit: number = 0;
+  timeTaken: string = "00:00:00";
 
   radix: number;
   badChars: number[]; // // the bad-character skip array
   badCharsMap = new Map();
 
-  displayedColumns: string[] = [ 'shift', 'character' ];
+  displayedColumns: string[] = ['shift', 'character'];
   ELEMENT_DATA: badCharacter[] = [];
 
-  constructor(private readonly stringService: StringService) { 
+  constructor(private readonly stringService: StringService) {
     this.radix = 256;
     this.badCharsMap = new Map<string, number>();
     this.badChars = new Array(this.radix);
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   ngOnChanges(changes: OnChanges): void { // whenever parent values change, this updates!
     if (this.isSorting)
       this.startBMSearch();
-    else { 
+    else {
       this.cloneArraysFromService();
       this.genBadCharArray();
     }
@@ -62,10 +64,10 @@ export class BMComponent implements OnInit {
     this.BMSearch();
     this.bmSearchAnimation();
   }
-    /*
-     * Preprocesses the pattern string. 1
-     * @param pat the pattern string
-     */
+  /*
+   * Preprocesses the pattern string. 1
+   * @param pat the pattern string
+   */
   genBadCharArray() {
     this.badChars.fill(-1, 0, this.radix);
     this.badCharsMap = new Map<string, number>();
@@ -94,38 +96,40 @@ export class BMComponent implements OnInit {
     if (this.stackArr.length == 0 || this.needleArr.length == 0) return 0;
 
     while (s <= (n - m)) {
-        let j = (m - 1);
+      let j = (m - 1);
 
-        while (j >= 0 && this.needleArr[j].character == this.stackArr[s+j].character) {
-          this.animations.push({ isMatch: true, occurrencesCount: matchCount, stackIndex: (s+j), needleIndex: j });
-          j--;
-        }
+      while (j >= 0 && this.needleArr[j].character == this.stackArr[s + j].character) {
+        this.animations.push({ isMatch: true, occurrencesCount: matchCount, stackIndex: (s + j), needleIndex: j });
+        j--;
+      }
 
-        if (j < 0) {
-          // console.log('match found! at index: ' + s);
-          matchCount++;
-          this.animations.push({ isMatch: true, occurrencesCount: matchCount, stackIndex: (s+j), needleIndex: j });
-          s += (s+m < n)? m-this.badChars[this.stackArr[s+m].character.charCodeAt(0)] : 1;
-        }
-        else {
-          this.animations.push({ isMatch: false, occurrencesCount: matchCount, stackIndex: (s+j), needleIndex: j }); 
-          s += Math.max(1, j - this.badChars[this.stackArr[s+j].character.charCodeAt(0)]);
-        }
+      if (j < 0) {
+        // console.log('match found! at index: ' + s);
+        matchCount++;
+        this.animations.push({ isMatch: true, occurrencesCount: matchCount, stackIndex: (s + j), needleIndex: j });
+        s += (s + m < n) ? m - this.badChars[this.stackArr[s + m].character.charCodeAt(0)] : 1;
+      }
+      else {
+        this.animations.push({ isMatch: false, occurrencesCount: matchCount, stackIndex: (s + j), needleIndex: j });
+        s += Math.max(1, j - this.badChars[this.stackArr[s + j].character.charCodeAt(0)]);
+      }
     }
     this.animationMaxLimit = this.animations.length;
     return matchCount;
   }
 
 
-  bmSearchAnimation(): void {    
-    let resetToWhite = false; 
+  bmSearchAnimation(): void {
+    let resetToWhite = false;
+    this.timeTakenInMilli();
+
     const timerBM = setInterval(() => {
       const action: AnimationValues = this.animations.shift();
-      if (action) {       
+      if (action) {
         this.occurrencesCount = action.occurrencesCount;
 
         if (resetToWhite) {
-          this.setToWhite();  
+          this.setToWhite();
           resetToWhite = false;
         }
 
@@ -136,7 +140,7 @@ export class BMComponent implements OnInit {
             resetToWhite = true;
           }
         }
-        else { 
+        else {
           this.needleArr[action.needleIndex].colour = Colours.RED;
           this.stackArr[action.stackIndex].colour = Colours.RED;
           resetToWhite = true;
@@ -144,10 +148,9 @@ export class BMComponent implements OnInit {
       }
       else { // animations finished 
         clearInterval(timerBM);
-        // this.isSorting = false;  
-        // this.bmEvent.emit(this.isSorting); 
-        this.bmEvent.emit(false);   
-        this.setToWhite(); 
+        this.isSorting = false;
+        this.bmEvent.emit(this.isSorting);
+        this.setToWhite();
       }
     }, this.stringService.animationSpeed);
   }
@@ -155,6 +158,19 @@ export class BMComponent implements OnInit {
   setToWhite() {
     this.stackArr.map((chr) => (chr.colour = Colours.WHITE));
     this.needleArr.map((chr) => (chr.colour = Colours.WHITE));
+  }
+
+  timeTakenInMilli() {
+    const startTime = Date.now();
+    const timer = setInterval(() => {
+      if (this.isSorting) {
+        const elapsedTime = Date.now() - startTime;
+        this.timeTaken = this.stringService.timeToString(elapsedTime);
+      }
+      else {
+        clearInterval(timer);
+      }
+    }, 10);
   }
 
 }
@@ -168,5 +184,5 @@ interface AnimationValues {
 
 interface badCharacter {
   character: string;
-  shift: number; 
+  shift: number;
 }

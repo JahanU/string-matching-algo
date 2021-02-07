@@ -1,13 +1,17 @@
 <div class="container-fluid col-10">
 
-    <mat-card class="col-12">Naive
-        <mat-card-subtitle>	occurrences = {{occurrencesCount}} </mat-card-subtitle>
+    <mat-card class="col-12">
+        Naive
+        <mat-card-subtitle> 
+        occurrences = {{occurrencesCount}}  <br>
+        {{timeTaken}} 
+        </mat-card-subtitle>
     </mat-card>
 
 
     <div class="mb-2 d-flex align-items-center">
-        <progressbar type="primary" [striped]="true" [animate]="true" *ngIf="isSorting == false" max={{1}} [value]="stackArrFromP.length">
-            <i>{{needleArrFromP.length}} / {{stackArrFromP.length}}  </i>
+        <progressbar type="primary" [striped]="true" [animate]="true" *ngIf="isSorting == false" max={{1}} [value]="parentStack.length">
+            <i>{{parentNeedle.length}} / {{parentStack.length}}  </i>
         </progressbar>
 
         <progressbar type="danger" [striped]="true" [animate]="true" *ngIf="isSorting" max={{animationMaxLimit}} [value]="animations.length">
