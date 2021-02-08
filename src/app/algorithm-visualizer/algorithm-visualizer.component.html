@@ -64,15 +64,19 @@
       </div>
 
       <div *ngIf="selectedAlgorithm == algorithmEnum.KMP">
-        <app-kmp [needleArrFromP]="needleArr" [stackArrFromP]="stackArr" [isSorting]="isSorting" (kmpEvent)="handleIsSorting($event)"> </app-kmp> 
+        <app-kmp [parentNeedle]="needleArr" [parentStack]="stackArr" [isSorting]="isSorting" (kmpEvent)="handleIsSorting($event)"> </app-kmp> 
       </div>
 
       <div *ngIf="selectedAlgorithm == algorithmEnum.BM">
-        <app-bm [needleArrFromP]="needleArr" [stackArrFromP]="stackArr" [isSorting]="isSorting" (bmEvent)="handleIsSorting($event)"> </app-bm> 
+        <app-bm [parentNeedle]="needleArr" [parentStack]="stackArr" [isSorting]="isSorting" (bmEvent)="handleIsSorting($event)"> </app-bm> 
+      </div>
+
+      <div *ngIf="selectedAlgorithm == algorithmEnum.RK">
+        <app-rk [parentNeedle]="needleArr" [parentStack]="stackArr" [isSorting]="isSorting" (rkEvent)="handleIsSorting($event)"> </app-rk> 
       </div>
 
       <div *ngIf="selectedAlgorithm == algorithmEnum.ALL">
-        <app-all-algorithms [needleArrFromP]="needleArr" [stackArrFromP]="stackArr" [isSorting]="isSorting" (allEvent)="handleIsSorting($event)"> </app-all-algorithms> 
+        <app-all-algorithms [parentNeedle]="needleArr" [parentStack]="stackArr" [isSorting]="isSorting" (allEvent)="handleIsSorting($event)"> </app-all-algorithms> 
       </div>
 
 

@@ -1,14 +1,14 @@
 <div class="row col-12">
 
     <div class="col-3">
-        <app-naive [parentNeedle]="needleArrFromP" [parentStack]="stackArrFromP" [isSorting]="isSorting" (naiveEvent)="handleIsSorting($event)"> </app-naive> 
+        <app-naive [parentNeedle]="parentNeedle" [parentStack]="parentStack" [isSorting]="isSorting" (naiveEvent)="handleIsSorting($event)"> </app-naive> 
     </div>
 
     <div class="col-3">
-        <app-bm [needleArrFromP]="needleArrFromP" [stackArrFromP]="stackArrFromP" [isSorting]="isSorting" (bmEvent)="handleIsSorting($event)"> </app-bm> 
+        <app-bm [parentNeedle]="parentNeedle" [parentStack]="parentStack" [isSorting]="isSorting" (bmEvent)="handleIsSorting($event)"> </app-bm> 
     </div>
 
     <div class="col-3">
-        <app-kmp [needleArrFromP]="needleArrFromP" [stackArrFromP]="stackArrFromP" [isSorting]="isSorting" (kmpEvent)="handleIsSorting($event)"> </app-kmp> 
+        <app-kmp [parentNeedle]="parentNeedle" [parentStack]="parentStack" [isSorting]="isSorting" (kmpEvent)="handleIsSorting($event)"> </app-kmp> 
     </div>
 </div>

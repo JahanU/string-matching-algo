@@ -1,17 +1,17 @@
-import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angular/core';
-import { StringService } from 'src/app/shared/string.service';
-import { Letters } from 'src/app/shared/models/Letters';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { Colours } from 'src/app/shared/colours.enum';
+import { Letters } from 'src/app/shared/models/Letters';
+import { StringService } from 'src/app/shared/string.service';
 
 @Component({
-  selector: 'app-naive',
-  templateUrl: './naive.component.html',
-  styleUrls: ['./naive.component.scss']
+  selector: 'app-rk',
+  templateUrl: './rk.component.html',
+  styleUrls: ['./rk.component.scss']
 })
-export class NaiveComponent implements OnInit {
+export class RkComponent implements OnInit {
 
   @Input() isSorting: boolean;
-  @Output() public naiveEvent = new EventEmitter(); // Emit when animation is done
+  @Output() public rkEvent = new EventEmitter(); // Emit when animation is done
   @Input() parentStack: Letters[] = []; // Take value from parent
   @Input() parentNeedle: Letters[] = [];
 
@@ -23,13 +23,22 @@ export class NaiveComponent implements OnInit {
   animationMaxLimit: number = 0;
   timeTaken: string = "00:00:00";
 
+
+  // private String pat;      // the pattern  // needed only for Las Vegas
+  // private long patHash;    // pattern hash value
+  // private int m;           // pattern length
+  // private long q;          // a large prime, small enough to avoid long overflow
+  // private int R;           // radix
+  // private long RM;         // R^(M-1) % Q
+  
   constructor(public stringService: StringService) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+  }
 
   ngOnChanges(changes: OnChanges): void { // whenever parent values change, this updates!
     if (this.isSorting) // Parent triggers to start sorting
-      this.startNaiveSearch();
+      this.rkSearch();
     else {
       this.cloneArraysFromService();
     }
@@ -40,37 +49,29 @@ export class NaiveComponent implements OnInit {
     this.needleArr = this.stringService.deepCloneArray(this.parentNeedle);
   }
 
-  startNaiveSearch() {
-    this.naiveSearch();
-    this.naiveSearchAnimation();
+  startRKSearch() {
+    this.rkSearch();
+    this.rkAnimation();
   }
 
-  naiveSearch(): number {
+  rkSearch(): number {
     if (this.stackArr.length < this.needleArr.length) return 0;
     if (this.stackArr.length == 0 || this.needleArr.length == 0) return 0;
+
     let matchCount: number = 0;
 
-    for (let i = 0; i <= this.stackArr.length - this.needleArr.length; i++) {
-      let j = 0;
 
-      for (j; j < this.needleArr.length; j++) {
-        if (this.stackArr[i + j].character != this.needleArr[j].character) {
-          this.animations.push({ isMatch: false, occurrencesCount: matchCount, stackIndex: i + j, needleIndex: j });
-          break;
-        }
-        else
-          this.animations.push({ isMatch: true, occurrencesCount: matchCount, stackIndex: i + j, needleIndex: j });
-      }
-      if (j == this.needleArr.length)
-        matchCount++;
-    }
+    // TODO
+
+
+
 
     this.animationMaxLimit = this.animations.length;
     return matchCount;
   }
 
 
-  naiveSearchAnimation(): void {
+  rkAnimation(): void {
     let resetToWhite = false;
     this.timeTakenInMilli();
 

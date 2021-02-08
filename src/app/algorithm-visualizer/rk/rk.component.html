@@ -1,0 +1,32 @@
+<div class="container-fluid col-10">
+
+    <mat-card class="col-12">
+        Rabin-Karp
+        <mat-card-subtitle> 
+        occurrences = {{occurrencesCount}}  <br>
+        {{timeTaken}} 
+        </mat-card-subtitle>
+    </mat-card>
+
+
+    <div class="mb-2 d-flex align-items-center">
+        <progressbar type="primary" [striped]="true" [animate]="true" *ngIf="isSorting == false" max={{1}} [value]="parentStack.length">
+            <i>{{parentStack.length}} / {{parentNeedle.length}}  </i>
+        </progressbar>
+    
+        <progressbar type="danger" [striped]="true" [animate]="true" *ngIf="isSorting" max={{animationMaxLimit}} [value]="animations.length">
+            <i>{{animations.length}} / {{animationMaxLimit}} </i>
+        </progressbar>
+    </div>
+
+    <div class="array-body array-bar" *ngFor="let letter of stackArr"
+        [ngStyle]="{ 'background-color': letter.colour }">
+        {{letter.character}}
+    </div>
+    <hr>
+    <div class="array-body array-bar" *ngFor="let letter of needleArr"
+        [ngStyle]="{ 'background-color': letter.colour }">
+        {{letter.character}}
+    </div>  
+
+</div>

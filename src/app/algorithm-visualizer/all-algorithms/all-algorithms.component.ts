@@ -13,8 +13,8 @@ export class AllAlgorithmsComponent implements OnInit {
 
   @Output() public allEvent = new EventEmitter();
   @Input() isSorting: boolean = false;
-  @Input() needleArrFromP: Letters[] = []; // Take value from parent
-  @Input() stackArrFromP: Letters[] = [];
+  @Input() parentStack: Letters[] = [];
+  @Input() parentNeedle: Letters[] = []; // Take value from parent
   
   allAnimationsCompleteCount: number = 0;
 

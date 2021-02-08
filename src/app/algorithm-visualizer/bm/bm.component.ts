@@ -20,8 +20,8 @@ export class BMComponent implements OnInit {
 
   @Input() isSorting: boolean;
   @Output() public bmEvent = new EventEmitter();
-  @Input() stackArrFromP: Letters[] = []; // Take value from parent
-  @Input() needleArrFromP: Letters[] = [];
+  @Input() parentStack: Letters[] = []; // Take value from parent
+  @Input() parentNeedle: Letters[] = [];
 
   stackArr: Letters[] = [];
   needleArr: Letters[] = [];
@@ -56,8 +56,8 @@ export class BMComponent implements OnInit {
   }
 
   cloneArraysFromService() {
-    this.stackArr = JSON.parse(JSON.stringify(this.stackArrFromP))
-    this.needleArr = JSON.parse(JSON.stringify(this.needleArrFromP))
+    this.stackArr = this.stringService.deepCloneArray(this.parentStack);
+    this.needleArr = this.stringService.deepCloneArray(this.parentNeedle);
   }
 
   startBMSearch() {
