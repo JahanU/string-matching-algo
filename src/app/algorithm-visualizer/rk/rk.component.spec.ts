@@ -154,4 +154,20 @@ it('9 - should return correct: occurrences = 1', () => {
   const matches = component.rkSearch();
   expect(matches).toBe(1);
 });
+
+it('9 - should return correct: occurrences = 1', () => {
+  component.needleArr = [ 
+    {character: 'A', colour: 'white', index: 1},
+  ];
+
+  component.stackArr = [ 
+    {character: 'A', colour: 'white', index: 0},
+    {character: 'A', colour: 'white', index: 1},
+    {character: 'A', colour: 'white', index: 2},
+    {character: 'A', colour: 'white', index: 3},
+  ];
+  component.setNeedleHash();
+  const matches = component.rkSearch();
+  expect(matches).toBe(4);
+});
 });

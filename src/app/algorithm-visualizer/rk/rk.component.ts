@@ -1,4 +1,3 @@
-import { Xliff } from '@angular/compiler';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { Colours } from 'src/app/shared/colours.enum';
 import { Letters } from 'src/app/shared/models/Letters';
@@ -15,7 +14,6 @@ export class RkComponent implements OnInit {
   @Output() public rkEvent = new EventEmitter(); // Emit when animation is done
   @Input() parentStack: Letters[] = []; // Take value from parent
   @Input() parentNeedle: Letters[] = [];
-
 
   stackArr: Letters[] = [];
   needleArr: Letters[] = []; // Needed only for Las Vegas
@@ -37,14 +35,13 @@ export class RkComponent implements OnInit {
     this.RM = 1; // precompute R^(m-1) % q for use in removing leading digit
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {  }
 
   ngOnChanges(changes: OnChanges): void { // whenever parent values change, this updates!
     if (this.isSorting) // Parent triggers to start sorting
       this.startRKSearch();
     else {
       this.cloneArraysFromService();
-      this.setNeedleHash();
     }
   }
 
@@ -64,7 +61,6 @@ export class RkComponent implements OnInit {
      * Preprocesses the pattern string.
      *
      */
-
   setNeedleHash() {
     for (let i = 1; i <= this.needleArr.length - 1; i++) {
       this.RM = (this.R * this.RM) % this.prime;
@@ -79,13 +75,13 @@ export class RkComponent implements OnInit {
     let h = 0;
     for (let i = 0; i < wordLength; i++)
       h = (this.R * h + pat[i].character.charCodeAt(0)) % this.prime;
+      
     return h;
   }
 
     // Las Vegas version: does pat[] match txt[i..i-m+1] ?
   check(i: number) {
     for (let j = 0; j < this.needleArr.length; j++) {
-      console.log(this.needleArr[j].character, ' + ', this.stackArr[i + j].character);
       if (this.needleArr[j].character != this.stackArr[i + j].character) {
         this.animations.push({ isMatch: false, occurrencesCount: this.matchCount, stackIndex: (i + j), needleIndex: j });
         return false; 
@@ -93,6 +89,8 @@ export class RkComponent implements OnInit {
       else 
         this.animations.push({ isMatch: true, occurrencesCount: this.matchCount, stackIndex: (i + j), needleIndex: j });
     }
+
+    console.log('complete match');
     return true;
   }
 
@@ -102,26 +100,27 @@ export class RkComponent implements OnInit {
     if (this.stackArr.length == 0 || this.needleArr.length == 0) return 0;
 
     let txtHash = this.hash(this.stackArr, this.needleArr.length);
+    console.log(this.needleArr, this.stackArr);
 
       // check for match at offset 0
-      console.log(this.patHash, txtHash);
-        if ((this.patHash == txtHash) && this.check(0)) 
+        if ((this.patHash == txtHash) && this.check(0)) {
+          console.log('match!');
           this.matchCount++;
-        
+        }
+
         // check for hash match; if hash match, check for exact match
         for (let i = this.needleArr.length; i < this.stackArr.length; i++) {
-          this.animations.push({ isMatch: false, occurrencesCount: this.matchCount, stackIndex: i, needleIndex: j });
 
-          
           // Remove leading digit, add trailing digit, check for match. 
           txtHash = (txtHash + this.prime - this.RM * this.stackArr[i - this.needleArr.length].character.charCodeAt(0) % this.prime) % this.prime; 
           txtHash = (txtHash * this.R + this.stackArr[i].character.charCodeAt(0)) % this.prime; 
 
           // match
-          let offset = i - this.needleArr.length + 1;
-          console.log(this.patHash, txtHash);
-          if ((this.patHash == txtHash) && this.check(offset))
+          const offset = i - this.needleArr.length + 1;
+          if ((this.patHash == txtHash) && this.check(offset)) {
+            console.log('match!');
             this.matchCount++;
+          }
       }
 
 

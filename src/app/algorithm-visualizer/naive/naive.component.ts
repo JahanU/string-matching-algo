@@ -19,6 +19,7 @@ export class NaiveComponent implements OnInit {
   needleArr: Letters[] = [];
 
   animations: AnimationValues[] = [];
+  matchCount: number = 0;
   occurrencesCount: number = 0;
   animationMaxLimit: number = 0;
   timeTaken: string = "00:00:00";
@@ -48,31 +49,32 @@ export class NaiveComponent implements OnInit {
   naiveSearch(): number {
     if (this.stackArr.length < this.needleArr.length) return 0;
     if (this.stackArr.length == 0 || this.needleArr.length == 0) return 0;
-    let matchCount: number = 0;
+    this.matchCount = 0;
 
     for (let i = 0; i <= this.stackArr.length - this.needleArr.length; i++) {
       let j = 0;
 
       for (j; j < this.needleArr.length; j++) {
         if (this.stackArr[i + j].character != this.needleArr[j].character) {
-          this.animations.push({ isMatch: false, occurrencesCount: matchCount, stackIndex: i + j, needleIndex: j });
+          this.animations.push({ isMatch: false, occurrencesCount: this.matchCount, stackIndex: i + j, needleIndex: j });
           break;
         }
         else
-          this.animations.push({ isMatch: true, occurrencesCount: matchCount, stackIndex: i + j, needleIndex: j });
+          this.animations.push({ isMatch: true, occurrencesCount: this.matchCount, stackIndex: i + j, needleIndex: j });
       }
       if (j == this.needleArr.length)
-        matchCount++;
+        this.matchCount++;
     }
 
     this.animationMaxLimit = this.animations.length;
-    return matchCount;
+    return this.matchCount;
   }
 
 
   naiveSearchAnimation(): void {
     let resetToWhite = false;
     this.timeTakenInMilli();
+    this.animations.push({ isMatch: false, occurrencesCount: this.matchCount, stackIndex: null, needleIndex: null}); // If match is found at the last animation, we push this so that the occurence var can update
 
     const timer = setInterval(() => {
       const action: AnimationValues = this.animations.shift();
