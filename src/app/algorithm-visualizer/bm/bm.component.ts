@@ -134,10 +134,11 @@ export class BMComponent implements OnInit {
         }
 
         if (action.isMatch) {
-          this.needleArr[action.needleIndex].colour = Colours.GREEN;
-          this.stackArr[action.stackIndex].colour = Colours.GREEN;
+          this.needleArr[action.needleIndex].colour = Colours.SELECTED;
+          this.stackArr[action.stackIndex].colour = Colours.SELECTED;
           if (action.needleIndex == 0) {
             resetToWhite = true;
+            this.setToGreen(action.stackIndex);
           }
         }
         else {
@@ -156,9 +157,18 @@ export class BMComponent implements OnInit {
   }
 
   setToWhite() {
-    this.stackArr.map((chr) => (chr.colour = Colours.WHITE));
-    this.needleArr.map((chr) => (chr.colour = Colours.WHITE));
+    this.stackArr.forEach((chr) => (chr.colour = Colours.WHITE));
+    this.needleArr.forEach((chr) => (chr.colour = Colours.WHITE));
   }
+  setToGreen(stackIndex: number) {
+    const needleLen = this.needleArr.length - 1;
+  
+    for (let i = stackIndex; i <= (stackIndex + needleLen); i++) 
+      this.stackArr[i].colour = Colours.GREEN;
+
+    this.needleArr.forEach((chr) => (chr.colour = Colours.GREEN));
+  }
+
 
   timeTakenInMilli() {
     const startTime = Date.now();

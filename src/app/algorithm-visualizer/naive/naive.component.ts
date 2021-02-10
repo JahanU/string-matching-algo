@@ -2,6 +2,7 @@ import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angu
 import { StringService } from 'src/app/shared/string.service';
 import { Letters } from 'src/app/shared/models/Letters';
 import { Colours } from 'src/app/shared/colours.enum';
+import { collapseTextChangeRangesAcrossMultipleVersions } from 'typescript';
 
 @Component({
   selector: 'app-naive',
@@ -86,10 +87,11 @@ export class NaiveComponent implements OnInit {
           resetToWhite = false;
         }
         if (action.isMatch) {
-          this.needleArr[action.needleIndex].colour = Colours.GREEN;
-          this.stackArr[action.stackIndex].colour = Colours.GREEN;
+          this.needleArr[action.needleIndex].colour = Colours.SELECTED;
+          this.stackArr[action.stackIndex].colour = Colours.SELECTED;
           if (action.needleIndex == this.needleArr.length - 1) {
             resetToWhite = true;
+            this.setToGreen(action.stackIndex);
           }
         }
         else {
@@ -109,8 +111,17 @@ export class NaiveComponent implements OnInit {
   }
 
   setToWhite() {
-    this.stackArr.map((chr) => (chr.colour = Colours.WHITE));
-    this.needleArr.map((chr) => (chr.colour = Colours.WHITE));
+    this.stackArr.forEach((chr) => (chr.colour = Colours.WHITE));
+    this.needleArr.forEach((chr) => (chr.colour = Colours.WHITE));
+  }
+  setToGreen(stackIndex: number) {
+    const needleLen = this.needleArr.length - 1;
+    stackIndex -= needleLen; // Go back to the first index, since now we know this is a perf match!
+  
+    for (let i = stackIndex; i <= (stackIndex + needleLen); i++) 
+      this.stackArr[i].colour = Colours.GREEN;
+
+    this.needleArr.forEach((chr) => (chr.colour = Colours.GREEN));
   }
 
   timeTakenInMilli() {

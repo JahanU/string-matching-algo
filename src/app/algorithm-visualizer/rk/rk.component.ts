@@ -62,6 +62,7 @@ export class RkComponent implements OnInit {
      *
      */
   setNeedleHash() {
+    this.RM = 1;
     for (let i = 1; i <= this.needleArr.length - 1; i++) {
       this.RM = (this.R * this.RM) % this.prime;
     }
@@ -75,7 +76,7 @@ export class RkComponent implements OnInit {
     let h = 0;
     for (let i = 0; i < wordLength; i++)
       h = (this.R * h + pat[i].character.charCodeAt(0)) % this.prime;
-      
+
     return h;
   }
 
@@ -89,8 +90,6 @@ export class RkComponent implements OnInit {
       else 
         this.animations.push({ isMatch: true, occurrencesCount: this.matchCount, stackIndex: (i + j), needleIndex: j });
     }
-
-    console.log('complete match');
     return true;
   }
 
@@ -100,16 +99,14 @@ export class RkComponent implements OnInit {
     if (this.stackArr.length == 0 || this.needleArr.length == 0) return 0;
 
     let txtHash = this.hash(this.stackArr, this.needleArr.length);
-    console.log(this.needleArr, this.stackArr);
 
       // check for match at offset 0
-        if ((this.patHash == txtHash) && this.check(0)) {
-          console.log('match!');
+        if ((this.patHash == txtHash) && this.check(0))
           this.matchCount++;
-        }
 
         // check for hash match; if hash match, check for exact match
         for (let i = this.needleArr.length; i < this.stackArr.length; i++) {
+          this.animations.push({ isMatch: false, occurrencesCount: this.matchCount, stackIndex: i, needleIndex: null });
 
           // Remove leading digit, add trailing digit, check for match. 
           txtHash = (txtHash + this.prime - this.RM * this.stackArr[i - this.needleArr.length].character.charCodeAt(0) % this.prime) % this.prime; 
@@ -117,14 +114,10 @@ export class RkComponent implements OnInit {
 
           // match
           const offset = i - this.needleArr.length + 1;
-          if ((this.patHash == txtHash) && this.check(offset)) {
-            console.log('match!');
+          if ((this.patHash == txtHash) && this.check(offset)) 
             this.matchCount++;
-          }
       }
 
-
-    console.log('MatchCount: ', this.matchCount);
     this.animationMaxLimit = this.animations.length;
     return this.matchCount;
   }

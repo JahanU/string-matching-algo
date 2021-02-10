@@ -2,6 +2,7 @@ import { Component, OnInit, Output, EventEmitter, Input, OnChanges } from '@angu
 import { StringService } from 'src/app/shared/string.service';
 import { Letters } from 'src/app/shared/models/Letters';
 import { Colours } from '../../shared/colours.enum';
+import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-kmp',
@@ -94,8 +95,6 @@ export class KMPComponent implements OnInit {
     while (ind < this.stackArr.length) {
       if (this.stackArr[ind].character == this.needleArr[needle].character) {
         this.animations.push({ isMatch: true, occurrencesCount: matchCount, stackIndex: ind, needleIndex: needle });
-
-        console.log(ind, needle);
         ind++;
         needle++;
 
@@ -132,21 +131,25 @@ export class KMPComponent implements OnInit {
           this.setToWhite();
           resetToWhite = false;
         }
-        if (action.isMatch) {
-          this.occurrencesCount = action.occurrencesCount;
-          this.needleArr[action.needleIndex].colour = Colours.GREEN;
-          this.stackArr[action.stackIndex].colour = Colours.GREEN;
 
-          if (action.needleIndex > 0) {
+        if (action.isMatch) {
+          this.needleArr[action.needleIndex].colour = Colours.SELECTED;
+          this.stackArr[action.stackIndex].colour = Colours.SELECTED;
+
+          if (action.needleIndex > 0) { // Traverse back from the prefix~
             for (let c = 0; c < action.needleIndex; c++) {
-              this.needleArr[c].colour = Colours.GREEN; // From index 0 to failValue index
-              this.stackArr[action.stackIndex - (c + 1)].colour = Colours.GREEN; // From current stack index, decrement from fail index value
+              this.needleArr[c].colour = Colours.SELECTED; // From index 0 to failValue index
+              this.stackArr[action.stackIndex - (c + 1)].colour = Colours.SELECTED; // From current stack index, decrement from fail index value
             }
           }
+
+          if (action.needleIndex == this.needleArr.length - 1) 
+            this.setToGreen(action.stackIndex);
+
         }
         else {
           this.needleArr[action.needleIndex].colour = Colours.RED;
-          this.stackArr[action.stackIndex].colour = Colours.RED;;
+          this.stackArr[action.stackIndex].colour = Colours.RED;
           resetToWhite = true;
         }
       }
@@ -160,8 +163,18 @@ export class KMPComponent implements OnInit {
   }
 
   setToWhite() {
-    this.stackArr.map((chr) => (chr.colour = Colours.WHITE));
-    this.needleArr.map((chr) => (chr.colour = Colours.WHITE));
+    this.stackArr.forEach((chr) => (chr.colour = Colours.WHITE));
+    this.needleArr.forEach((chr) => (chr.colour = Colours.WHITE));
+  }
+  
+  setToGreen(stackIndex: number) {
+    const needleLen = this.needleArr.length - 1;
+    stackIndex -= needleLen; // Go back to the first index, since now we know this is a perf match!
+  
+    for (let i = stackIndex; i <= (stackIndex + needleLen); i++) 
+      this.stackArr[i].colour = Colours.GREEN;
+
+    this.needleArr.forEach((chr) => (chr.colour = Colours.GREEN));
   }
 
   timeTakenInMilli() {
