@@ -1,3 +1,4 @@
+import { Xliff } from '@angular/compiler';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { Colours } from 'src/app/shared/colours.enum';
 import { Letters } from 'src/app/shared/models/Letters';
@@ -15,32 +16,35 @@ export class RkComponent implements OnInit {
   @Input() parentStack: Letters[] = []; // Take value from parent
   @Input() parentNeedle: Letters[] = [];
 
+
   stackArr: Letters[] = [];
-  needleArr: Letters[] = [];
+  needleArr: Letters[] = []; // Needed only for Las Vegas
+  matchCount: number = 0;
 
   animations: AnimationValues[] = [];
   occurrencesCount: number = 0;
   animationMaxLimit: number = 0;
   timeTaken: string = "00:00:00";
 
-
-  // private String pat;      // the pattern  // needed only for Las Vegas
-  // private long patHash;    // pattern hash value
-  // private int m;           // pattern length
-  // private long q;          // a large prime, small enough to avoid long overflow
-  // private int R;           // radix
-  // private long RM;         // R^(M-1) % Q
+  patHash: number;    // pattern hash value
+  prime: number;      // a large prime, small enough to avoid long overflow
+  R: number;          // radix
+  RM: number;         // R^(M-1) % Q
   
-  constructor(public stringService: StringService) { }
-
-  ngOnInit(): void {
+  constructor(public stringService: StringService) { 
+    this.R = 256;
+    this.prime = 199;
+    this.RM = 1; // precompute R^(m-1) % q for use in removing leading digit
   }
+
+  ngOnInit(): void {}
 
   ngOnChanges(changes: OnChanges): void { // whenever parent values change, this updates!
     if (this.isSorting) // Parent triggers to start sorting
-      this.rkSearch();
+      this.startRKSearch();
     else {
       this.cloneArraysFromService();
+      this.setNeedleHash();
     }
   }
 
@@ -50,24 +54,80 @@ export class RkComponent implements OnInit {
   }
 
   startRKSearch() {
+    this.matchCount = 0;
+    this.setNeedleHash();
     this.rkSearch();
     this.rkAnimation();
   }
+
+    /**
+     * Preprocesses the pattern string.
+     *
+     */
+
+  setNeedleHash() {
+    for (let i = 1; i <= this.needleArr.length - 1; i++) {
+      this.RM = (this.R * this.RM) % this.prime;
+    }
+    this.patHash = this.hash(this.needleArr, this.needleArr.length);
+    console.log('pattern hash: ', this.patHash);
+
+  }
+  
+   // Compute hash for key[0..m-1]. 
+  hash(pat: Letters[], wordLength: number): number {
+    let h = 0;
+    for (let i = 0; i < wordLength; i++)
+      h = (this.R * h + pat[i].character.charCodeAt(0)) % this.prime;
+    return h;
+  }
+
+    // Las Vegas version: does pat[] match txt[i..i-m+1] ?
+  check(i: number) {
+    for (let j = 0; j < this.needleArr.length; j++) {
+      console.log(this.needleArr[j].character, ' + ', this.stackArr[i + j].character);
+      if (this.needleArr[j].character != this.stackArr[i + j].character) {
+        this.animations.push({ isMatch: false, occurrencesCount: this.matchCount, stackIndex: (i + j), needleIndex: j });
+        return false; 
+      }
+      else 
+        this.animations.push({ isMatch: true, occurrencesCount: this.matchCount, stackIndex: (i + j), needleIndex: j });
+    }
+    return true;
+  }
+
 
   rkSearch(): number {
     if (this.stackArr.length < this.needleArr.length) return 0;
     if (this.stackArr.length == 0 || this.needleArr.length == 0) return 0;
 
-    let matchCount: number = 0;
+    let txtHash = this.hash(this.stackArr, this.needleArr.length);
+
+      // check for match at offset 0
+      console.log(this.patHash, txtHash);
+        if ((this.patHash == txtHash) && this.check(0)) 
+          this.matchCount++;
+        
+        // check for hash match; if hash match, check for exact match
+        for (let i = this.needleArr.length; i < this.stackArr.length; i++) {
+          this.animations.push({ isMatch: false, occurrencesCount: this.matchCount, stackIndex: i, needleIndex: j });
+
+          
+          // Remove leading digit, add trailing digit, check for match. 
+          txtHash = (txtHash + this.prime - this.RM * this.stackArr[i - this.needleArr.length].character.charCodeAt(0) % this.prime) % this.prime; 
+          txtHash = (txtHash * this.R + this.stackArr[i].character.charCodeAt(0)) % this.prime; 
+
+          // match
+          let offset = i - this.needleArr.length + 1;
+          console.log(this.patHash, txtHash);
+          if ((this.patHash == txtHash) && this.check(offset))
+            this.matchCount++;
+      }
 
 
-    // TODO
-
-
-
-
+    console.log('MatchCount: ', this.matchCount);
     this.animationMaxLimit = this.animations.length;
-    return matchCount;
+    return this.matchCount;
   }
 
 
@@ -94,13 +154,12 @@ export class RkComponent implements OnInit {
         else {
           this.needleArr[action.needleIndex].colour = Colours.RED;
           this.stackArr[action.stackIndex].colour = Colours.RED;
-          resetToWhite = true;
         }
       }
       else {
         clearInterval(timer);
         this.isSorting = false;
-        this.naiveEvent.emit(this.isSorting);
+        this.rkEvent.emit(this.isSorting);
         this.setToWhite();
       }
 

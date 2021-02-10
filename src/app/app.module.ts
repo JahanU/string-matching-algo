@@ -19,6 +19,7 @@ import { NaiveComponent } from './algorithm-visualizer/naive/naive.component';
 import { KMPComponent } from './algorithm-visualizer/kmp/kmp.component';
 import { BMComponent } from './algorithm-visualizer/bm/bm.component';
 import { AllAlgorithmsComponent } from './algorithm-visualizer/all-algorithms/all-algorithms.component';
+import { RkComponent } from './algorithm-visualizer/rk/rk.component';
 
 const routes: Routes = [
   { path: 'algorithm', component: AlgorithmVisualizerComponent },
@@ -26,7 +27,7 @@ const routes: Routes = [
 ]
 
 @NgModule({
-  declarations: [AppComponent, AlgorithmVisualizerComponent, NaiveComponent, KMPComponent, BMComponent, AllAlgorithmsComponent],
+  declarations: [AppComponent, AlgorithmVisualizerComponent, NaiveComponent, KMPComponent, BMComponent, AllAlgorithmsComponent, RkComponent],
   imports: [
     BrowserModule,
     MatToolbarModule,

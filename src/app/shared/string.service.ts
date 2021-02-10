@@ -47,6 +47,10 @@ export class StringService {
     return value + 's';
   }
 
+  deepCloneArray(array: Letters[]) {
+    return JSON.parse(JSON.stringify(array))
+  }
+
 
   timeToString(time) {
     const diffInHrs = time / 3600000;
