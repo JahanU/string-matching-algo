@@ -11,4 +11,8 @@
     <div class="col-3">
         <app-kmp [parentNeedle]="parentNeedle" [parentStack]="parentStack" [isSorting]="isSorting" (kmpEvent)="handleIsSorting($event)"> </app-kmp> 
     </div>
+
+    <div class="col-3">
+        <app-rk [parentNeedle]="parentNeedle" [parentStack]="parentStack" [isSorting]="isSorting" (rkEvent)="handleIsSorting($event)"> </app-rk> 
+    </div>
 </div>

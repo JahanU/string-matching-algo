@@ -36,7 +36,7 @@
 
 
   <button type="button" class="btn btn-danger" (click)="startSearching()"
-    [disabled]="isSorting"> Sort
+    [disabled]="isSorting || needleArr.length > stackArr.length"> Sort
   </button>
 
   <small>Iteration Speed </small>
