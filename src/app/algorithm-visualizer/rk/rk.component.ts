@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { throwToolbarMixedModesError } from '@angular/material/toolbar';
 import { Colours } from 'src/app/shared/colours.enum';
 import { Letters } from 'src/app/shared/models/Letters';
 import { StringService } from 'src/app/shared/string.service';
@@ -53,6 +54,7 @@ export class RkComponent implements OnInit {
   startRKSearch() {
     this.matchCount = 0;
     this.setNeedleHash();
+    this.animations = [];
     this.rkSearch();
     this.rkAnimation();
   }
@@ -67,29 +69,30 @@ export class RkComponent implements OnInit {
       this.RM = (this.R * this.RM) % this.prime;
     }
     this.patHash = this.hash(this.needleArr, this.needleArr.length);
-    console.log('pattern hash: ', this.patHash);
-
   }
   
    // Compute hash for key[0..m-1]. 
-  hash(pat: Letters[], wordLength: number): number {
+  hash(text: Letters[], wordLength: number): number {
     let h = 0;
-    for (let i = 0; i < wordLength; i++)
-      h = (this.R * h + pat[i].character.charCodeAt(0)) % this.prime;
-
+    for (let i = 0; i < wordLength; i++) {
+      h = (this.R * h + text[i].character.charCodeAt(0)) % this.prime;
+      this.animations.push({ isMatch: isMatchEnum.HASHING, occurrencesCount: this.matchCount, stackIndex: i, needleIndex: i });
+    }
     return h;
   }
 
-    // Las Vegas version: does pat[] match txt[i..i-m+1] ?
+    // Las Vegas version: does pat[] match txt[i..i-m+1]
   check(i: number) {
     for (let j = 0; j < this.needleArr.length; j++) {
       if (this.needleArr[j].character != this.stackArr[i + j].character) {
-        this.animations.push({ isMatch: false, occurrencesCount: this.matchCount, stackIndex: (i + j), needleIndex: j });
+        this.animations.push({ isMatch: isMatchEnum.FAILED, occurrencesCount: this.matchCount, stackIndex: (i + j), needleIndex: j });
         return false; 
       }
       else 
-        this.animations.push({ isMatch: true, occurrencesCount: this.matchCount, stackIndex: (i + j), needleIndex: j });
+        this.animations.push({ isMatch: isMatchEnum.SELECTED_INDEX_MATCH, occurrencesCount: this.matchCount, stackIndex: (i + j), needleIndex: j });
     }
+
+    this.animations.push({ isMatch: isMatchEnum.COMPLETE, occurrencesCount: this.matchCount, stackIndex: i, needleIndex: null });
     return true;
   }
 
@@ -101,22 +104,25 @@ export class RkComponent implements OnInit {
     let txtHash = this.hash(this.stackArr, this.needleArr.length);
 
       // check for match at offset 0
-        if ((this.patHash == txtHash) && this.check(0))
+        if ((this.patHash == txtHash) && this.check(0)) 
           this.matchCount++;
-
+        else { // If no match, then we pop the first element, otherwise we keep the first element as this is a perf match!
+          this.animations.push({ isMatch: isMatchEnum.POP, occurrencesCount: this.matchCount, stackIndex: 0, needleIndex: 0 });
+        }
         // check for hash match; if hash match, check for exact match
         for (let i = this.needleArr.length; i < this.stackArr.length; i++) {
-          this.animations.push({ isMatch: false, occurrencesCount: this.matchCount, stackIndex: i, needleIndex: null });
 
           // Remove leading digit, add trailing digit, check for match. 
           txtHash = (txtHash + this.prime - this.RM * this.stackArr[i - this.needleArr.length].character.charCodeAt(0) % this.prime) % this.prime; 
           txtHash = (txtHash * this.R + this.stackArr[i].character.charCodeAt(0)) % this.prime; 
+          this.animations.push({ isMatch: isMatchEnum.HASHING, occurrencesCount: null, stackIndex: i, needleIndex: i });
 
           // match
           const offset = i - this.needleArr.length + 1;
+          this.animations.push({ isMatch: isMatchEnum.POP, occurrencesCount: this.matchCount, stackIndex: offset, needleIndex: 0 });
           if ((this.patHash == txtHash) && this.check(offset)) 
             this.matchCount++;
-      }
+        }
 
     this.animationMaxLimit = this.animations.length;
     return this.matchCount;
@@ -126,27 +132,45 @@ export class RkComponent implements OnInit {
   rkAnimation(): void {
     let resetToWhite = false;
     this.timeTakenInMilli();
-
+    
     const timer = setInterval(() => {
       const action: AnimationValues = this.animations.shift();
+
       if (action) {
         this.occurrencesCount = action.occurrencesCount;
+        console.log(action.isMatch);
+        console.log(this.stackArr[action.stackIndex].character);
 
         if (resetToWhite) {
           this.setToWhite();
           resetToWhite = false;
         }
-        if (action.isMatch) {
-          this.needleArr[action.needleIndex].colour = Colours.GREEN;
-          this.stackArr[action.stackIndex].colour = Colours.GREEN;
-          if (action.needleIndex == this.needleArr.length - 1) {
-            resetToWhite = true;
-          }
-        }
-        else {
-          this.needleArr[action.needleIndex].colour = Colours.RED;
+
+        if (isMatchEnum.FAILED === action.isMatch) {
           this.stackArr[action.stackIndex].colour = Colours.RED;
+          this.needleArr[action.needleIndex].colour = Colours.RED;
+          resetToWhite = true;
         }
+
+        if (isMatchEnum.HASHING === action.isMatch) {
+          this.stackArr[action.stackIndex].colour = Colours.SELECTED;
+          this.needleArr[action.needleIndex].colour = Colours.SELECTED;
+        }
+
+        if (isMatchEnum.POP == action.isMatch) {
+          this.stackArr[action.stackIndex].colour = Colours.WHITE;
+        }
+        
+        if (isMatchEnum.SELECTED_INDEX_MATCH == action.isMatch) {
+          this.stackArr[action.stackIndex].colour = Colours.GREEN; 
+          this.needleArr[action.needleIndex].colour = Colours.GREEN; 
+        }
+
+        if (isMatchEnum.COMPLETE == action.isMatch) {
+          this.setToGreen(action.stackIndex);
+          resetToWhite = true;
+        }
+
       }
       else {
         clearInterval(timer);
@@ -159,8 +183,17 @@ export class RkComponent implements OnInit {
   }
 
   setToWhite() {
-    this.stackArr.map((chr) => (chr.colour = Colours.WHITE));
-    this.needleArr.map((chr) => (chr.colour = Colours.WHITE));
+    this.stackArr.forEach((chr) => (chr.colour = Colours.WHITE));
+    this.needleArr.forEach((chr) => (chr.colour = Colours.WHITE));
+  }
+
+  setToGreen(stackIndex: number) {
+    const needleLen = this.needleArr.length - 1;
+  
+    for (let i = stackIndex; i <= (stackIndex + needleLen); i++) // from stack index to (stackIndex + needleIndex) -> covers the whole distance of the stack!
+      this.stackArr[i].colour = Colours.GREEN;
+
+    this.needleArr.forEach((chr) => (chr.colour = Colours.GREEN));
   }
 
   timeTakenInMilli() {
@@ -179,9 +212,17 @@ export class RkComponent implements OnInit {
 }
 
 interface AnimationValues {
-  isMatch: boolean;
+  isMatch: isMatchEnum;
   occurrencesCount: number;
   stackIndex: number;
   needleIndex: number;
+}
+
+export enum isMatchEnum {
+  FAILED = 'FAILED_MATCH',
+  HASHING = 'HASHING_MATCH',
+  SELECTED_INDEX_MATCH = 'SELECTED_INDEX_MATCH',
+  COMPLETE = 'COMPLETE_MATCH',
+  POP = 'POP_FIRST',
 }
 
