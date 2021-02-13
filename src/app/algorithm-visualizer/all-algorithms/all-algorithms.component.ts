@@ -22,12 +22,15 @@ export class AllAlgorithmsComponent implements OnInit {
 
   ngOnInit(): void {
     console.log('in ALL');
+    this.allAnimationsCompleteCount = 0;
   }
   handleIsSorting(event: any) { // event/message from child back to parent
     this.allAnimationsCompleteCount++;
-    
-    if (this.allAnimationsCompleteCount == 3)
+    console.log('anim done!');
+    if (this.allAnimationsCompleteCount == 4) {
       this.allEvent.emit(event);  
+      this.allAnimationsCompleteCount = 0;
+    }
   }
 
 }
