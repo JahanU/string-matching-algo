@@ -1,4 +1,4 @@
-<mat-toolbar class="array-container">
+<mat-toolbar class="container-fluid">
 
   <div class="btn-group" dropdown [insideClick]="true">
 
@@ -48,9 +48,9 @@
 
 <div class="container-fluid">
   <div class="row">
-    <div class="array-container col-12">
-      <form [formGroup]="inputForm" (keyup)="updateStrings()" class="example-form">
+    <div class="col-12">
 
+      <form [formGroup]="inputForm" (keyup)="updateStrings()" class="example-form text-center">
         <mat-form-field class="inputField">
           <input formControlName="needle" matInput placeholder="Needle" value="ABC">
         </mat-form-field>
@@ -58,6 +58,7 @@
         <mat-form-field class="inputField">
           <input formControlName="stack" matInput placeholder="Haystack" value="ABCDE">
         </mat-form-field>
+        <hr>
       </form>
 
       <div *ngIf="selectedAlgorithm == algorithmEnum.NAIVE">

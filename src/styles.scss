@@ -1,4 +1,4 @@
-/* You can add global styles to this file, and also import other style files */
+// /* You can add global styles to this file, and also import other style files */
 
 body {
   font-family: Roboto, Arial, sans-serif;
@@ -9,11 +9,11 @@ body {
   padding: 30px;
 }
 
-.version-info {
-  font-size: 8pt;
-  float: right;
-  margin: 8px;
-}
+// .version-info {
+//   font-size: 8pt;
+//   float: right;
+//   margin: 8px;
+// }
 
 // HTML Elements
 button {
@@ -30,21 +30,12 @@ table {
 }
 
 // HTML Classes
-.array-container {
-  text-align: center;
-}
-
-.array-body {
-  text-align: center;
-}
-
 .array-bar {
   margin: 0px 1px 0px 1px;
   padding: 2px;
   display: inline-block;
   font-size: 18px;
 }
-
 
 // Mat related
 .mat-form-field.mat-select {
@@ -67,6 +58,124 @@ mat-toolbar {
   padding: 18px;
 }
 
-/**  Copyright 2020 Google LLC. All Rights Reserved.
-      Use of this source code is governed by an MIT-style license that
-      can be found in the LICENSE file at http://angular.io/license */
+
+/*
+  Code widgets 
+*/
+
+/** Line numbers styles */
+.hljs {
+  margin: 0 1em;
+  padding: 10px;
+  border: 1px solid gray;
+  border-radius: 4px;
+  transition: border ease 1s;
+}
+
+.hljs-ln {
+  padding: 8px 0;
+  tr {
+    &:first-child td {
+      padding-top: 8px !important;
+    }
+    &:last-child td {
+      padding-bottom: 8px !important;
+    }
+  }
+}
+
+/* for block of numbers */
+td.hljs-ln-numbers {
+  user-select: none;
+  text-align: center;
+  border-right: 1px solid gray;
+  vertical-align: top;
+  padding-right: 8px !important;
+  padding-left: 8px !important;
+}
+
+  /* for block of code */
+td.hljs-ln-code {
+  padding-left: 8px !important;
+}
+
+/* Styling  https://github.com/highlightjs/highlight.js/blob/master/src/styles/atom-one-dark.css */
+/*!
+ * StackOverflow.com light style
+ *
+ * @stackoverflow/stacks v0.56.0
+ * https://github.com/StackExchange/Stacks
+ */
+
+ .hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5em;
+  color: #2f3337;
+  background: #f6f6f6;
+}
+
+.hljs-comment {
+  color: #656e77;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-meta-keyword,
+.hljs-doctag,
+.hljs-section,
+.hljs-selector-class,
+.hljs-meta,
+.hljs-selector-pseudo,
+.hljs-attr {
+  color: #015692;
+}
+
+.hljs-attribute {
+  color: #803378;
+}
+
+.hljs-name,
+.hljs-type,
+.hljs-number,
+.hljs-selector-id,
+.hljs-quote,
+.hljs-template-tag,
+.hljs-built_in,
+.hljs-title,
+.hljs-literal {
+  color: #b75501;
+}
+
+.hljs-string,
+.hljs-regexp,
+.hljs-symbol,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-link,
+.hljs-selector-attr,
+.hljs-meta-string {
+  color: #54790d;
+}
+
+.hljs-bullet,
+.hljs-code {
+  color: #535a60;
+}
+
+.hljs-deletion {
+  color: #c02d2e;
+}
+
+.hljs-addition {
+  color: #2f6f44;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+// Styling End ---------------

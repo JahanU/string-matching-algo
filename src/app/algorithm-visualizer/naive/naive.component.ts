@@ -2,7 +2,7 @@ import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angu
 import { StringService } from 'src/app/shared/string.service';
 import { Letters } from 'src/app/shared/models/Letters';
 import { Colours } from 'src/app/shared/colours.enum';
-import { collapseTextChangeRangesAcrossMultipleVersions } from 'typescript';
+import { AlgorithmEnum } from '../../shared/algorithm.enum';
 
 @Component({
   selector: 'app-naive',
@@ -24,10 +24,11 @@ export class NaiveComponent implements OnInit {
   occurrencesCount: number = 0;
   animationMaxLimit: number = 0;
   timeTaken: string = "00:00:00";
+  codeSnippet: string = AlgorithmEnum.NAIVE_CODE;
 
   constructor(public stringService: StringService) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
   ngOnChanges(changes: OnChanges): void { // whenever parent values change, this updates!
     if (this.isSorting) // Parent triggers to start sorting
