@@ -25,12 +25,14 @@
                 </progressbar>
             </div>
 
-            
-            <div class="array-bar" *ngFor="let letter of stackArr"
+            <div #stack class="array-bar" *ngFor="let letter of stackArr"
                 [ngStyle]="{ 'background-color': letter.colour }">
                 {{letter.character}}
             </div>
             <hr>
+
+            <div class="array-bar" *ngFor="let c of shiftArr"></div> <!-- aux array to shift needle elements to the right-->
+            
             <div class="array-bar" *ngFor="let letter of needleArr"
                 [ngStyle]="{ 'background-color': letter.colour }">
                 {{letter.character}}

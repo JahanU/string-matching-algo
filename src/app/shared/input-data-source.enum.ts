@@ -7,6 +7,9 @@ export enum InputDataSourceEnum {
     GTGGGGAGCTTGCAGGGACTGGCTGTGGACATGGACTCTGTGGTACTAAATGAAGTCCTG
     GGGCTGACTCTCATTGTCTGGATTGACTGA`,
     DNA_NEEDLE = 'ATG',
+
+    // 
+    //
     STORY_NEEDLE = 'Tom',
     STORY = `The Project Gutenberg EBook of The Adventures of Tom Sawyer, Complete
     by Mark Twain (Samuel Clemens) THE ADVENTURES OF TOM SAWYER BY MARK TWAIN (Samuel Langhorne Clemens)
@@ -222,4 +225,7 @@ export enum InputDataSourceEnum {
     only sidewise, in a circle; they kept face to face and eye to eye all
     the time. Finally Tom said:
     `
+    //
+    // 
+    
 }

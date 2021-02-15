@@ -1,5 +1,5 @@
 export enum InputDataEnum {
-    SELECTED_INPUT = 'Input',
+    SELECTED_INPUT = 'User Input',
     DNA = 'DNA',
     STORY = 'Stories'
 }
