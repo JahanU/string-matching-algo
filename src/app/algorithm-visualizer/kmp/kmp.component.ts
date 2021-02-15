@@ -3,6 +3,7 @@ import { StringService } from 'src/app/shared/string.service';
 import { Letters } from 'src/app/shared/models/Letters';
 import { Colours } from '../../shared/colours.enum';
 import { CdkOverlayOrigin } from '@angular/cdk/overlay';
+import { AlgorithmEnum } from 'src/app/shared/algorithm.enum';
 
 @Component({
   selector: 'app-kmp',
@@ -18,14 +19,15 @@ export class KMPComponent implements OnInit {
 
   stackArr: Letters[] = []; // Take value from parent
   needleArr: Letters[] = [];
+  shiftArr: Letters[] = []; // Auxilary array used to shift the needleArr when a match fails
 
   animations: AnimationValues[] = [];
   occurrencesCount: number = 0;
   animationMaxLimit: number = 0;
   timeTaken: string = "00:00:00";
+  codeSnippet: string = AlgorithmEnum.KMP_CODE;
 
   lps: number[] = []; // Longest proper prefix (the DFA (KMP automoton))
-
   displayedColumns: string[] = ['character', 'index', 'failValue'];
   ELEMENT_DATA: failArray[] = [];
 
@@ -39,7 +41,7 @@ export class KMPComponent implements OnInit {
     if (this.isSorting)
       this.startKMPSearch();
     else {
-      this.cloneArraysFromService();
+      this.cloneArrays();
       this.genSuffixArray();
     }
   }
@@ -49,9 +51,10 @@ export class KMPComponent implements OnInit {
     this.KMPSearchAnimation();
   }
 
-  cloneArraysFromService() {
+  cloneArrays() {
     this.stackArr = this.stringService.deepCloneArray(this.parentStack);
     this.needleArr = this.stringService.deepCloneArray(this.parentNeedle);
+    this.shiftArr = [];
   }
 
   genSuffixArray() {
@@ -128,6 +131,7 @@ export class KMPComponent implements OnInit {
         this.occurrencesCount = action.occurrencesCount;
 
         if (resetToWhite) {
+          this.shiftTextRight();
           this.setToWhite();
           resetToWhite = false;
         }
@@ -143,7 +147,7 @@ export class KMPComponent implements OnInit {
             }
           }
 
-          if (action.needleIndex == this.needleArr.length - 1) 
+          if (action.needleIndex == this.needleArr.length - 1)
             this.setToGreen(action.stackIndex);
 
         }
@@ -166,15 +170,21 @@ export class KMPComponent implements OnInit {
     this.stackArr.forEach((chr) => (chr.colour = Colours.WHITE));
     this.needleArr.forEach((chr) => (chr.colour = Colours.WHITE));
   }
-  
+
   setToGreen(stackIndex: number) {
     const needleLen = this.needleArr.length - 1;
     stackIndex -= needleLen; // Go back to the first index, since now we know this is a perf match!
-  
-    for (let i = stackIndex; i <= (stackIndex + needleLen); i++) 
+
+    for (let i = stackIndex; i <= (stackIndex + needleLen); i++)
       this.stackArr[i].colour = Colours.GREEN;
 
     this.needleArr.forEach((chr) => (chr.colour = Colours.GREEN));
+  }
+
+  shiftTextRight() {
+    // > 0 so if match is last, it does uneededly shift chars
+    if (this.animations.length == 0) return;
+    this.shiftArr.push({ character: null, colour: null, index: 0 });
   }
 
   timeTakenInMilli() {

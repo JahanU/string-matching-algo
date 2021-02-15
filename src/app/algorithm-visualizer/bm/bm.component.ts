@@ -1,5 +1,6 @@
 import { OnChanges } from '@angular/core';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AlgorithmEnum } from 'src/app/shared/algorithm.enum';
 import { Colours } from 'src/app/shared/colours.enum';
 import { Letters } from 'src/app/shared/models/Letters';
 import { StringService } from 'src/app/shared/string.service';
@@ -25,16 +26,17 @@ export class BMComponent implements OnInit {
 
   stackArr: Letters[] = [];
   needleArr: Letters[] = [];
+  shiftArr: Letters[] = []; // Auxilary array used to shift the needleArr when a match fails
 
   animations: AnimationValues[] = [];
   occurrencesCount: number = 0;
   animationMaxLimit: number = 0;
   timeTaken: string = "00:00:00";
+  codeSnippet: string = AlgorithmEnum.BM_CODE;
 
   radix: number;
   badChars: number[]; // // the bad-character skip array
   badCharsMap = new Map();
-
   displayedColumns: string[] = ['shift', 'character'];
   ELEMENT_DATA: badCharacter[] = [];
 
@@ -50,14 +52,15 @@ export class BMComponent implements OnInit {
     if (this.isSorting)
       this.startBMSearch();
     else {
-      this.cloneArraysFromService();
+      this.cloneArrays();
       this.genBadCharArray();
     }
   }
 
-  cloneArraysFromService() {
+  cloneArrays() {
     this.stackArr = this.stringService.deepCloneArray(this.parentStack);
     this.needleArr = this.stringService.deepCloneArray(this.parentNeedle);
+    this.shiftArr = [];
   }
 
   startBMSearch() {
@@ -129,6 +132,7 @@ export class BMComponent implements OnInit {
         this.occurrencesCount = action.occurrencesCount;
 
         if (resetToWhite) {
+          this.shiftTextRight();
           this.setToWhite();
           resetToWhite = false;
         }
@@ -162,13 +166,18 @@ export class BMComponent implements OnInit {
   }
   setToGreen(stackIndex: number) {
     const needleLen = this.needleArr.length - 1;
-  
-    for (let i = stackIndex; i <= (stackIndex + needleLen); i++) 
+
+    for (let i = stackIndex; i <= (stackIndex + needleLen); i++)
       this.stackArr[i].colour = Colours.GREEN;
 
     this.needleArr.forEach((chr) => (chr.colour = Colours.GREEN));
   }
 
+  shiftTextRight() {
+    // > 0 so if match is last, it does uneededly shift chars
+    if (this.animations.length == 0) return;
+    this.shiftArr.push({ character: null, colour: null, index: 0 });
+  }
 
   timeTakenInMilli() {
     const startTime = Date.now();

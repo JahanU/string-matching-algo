@@ -3,7 +3,6 @@ import { StringService } from 'src/app/shared/string.service';
 import { Letters } from 'src/app/shared/models/Letters';
 import { Colours } from 'src/app/shared/colours.enum';
 import { AlgorithmEnum } from '../../shared/algorithm.enum';
-import { ElementRef, Renderer2 } from '@angular/core';
 
 @Component({
   selector: 'app-naive',
@@ -19,7 +18,7 @@ export class NaiveComponent implements OnInit {
 
   stackArr: Letters[] = [];
   needleArr: Letters[] = [];
-  shiftArr: Letters[] = [];
+  shiftArr: Letters[] = []; // Auxilary array used to shift the needleArr when a match fails
 
   animations: AnimationValues[] = [];
   matchCount: number = 0;
@@ -29,20 +28,20 @@ export class NaiveComponent implements OnInit {
   codeSnippet: string = AlgorithmEnum.NAIVE_CODE;
 
   constructor(
-    public stringService: StringService, 
-    ) { }
+    public stringService: StringService,
+  ) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   ngOnChanges(changes: OnChanges): void { // whenever parent values change, this updates!
     if (this.isSorting) // Parent triggers to start sorting
       this.startNaiveSearch();
     else {
-      this.cloneArraysFromService();
+      this.cloneArrays();
     }
   }
 
-  cloneArraysFromService() {
+  cloneArrays() {
     this.stackArr = this.stringService.deepCloneArray(this.parentStack);
     this.needleArr = this.stringService.deepCloneArray(this.parentNeedle);
     this.shiftArr = [];
@@ -82,14 +81,14 @@ export class NaiveComponent implements OnInit {
     let resetToWhite = false;
     this.timeTakenInMilli();
     // If match is found at the last animation, we push this so that the occurence var can update
-    this.animations.push({ isMatch: false, occurrencesCount: this.matchCount, stackIndex: null, needleIndex: null}); 
+    this.animations.push({ isMatch: false, occurrencesCount: this.matchCount, stackIndex: null, needleIndex: null });
 
     const timer = setInterval(() => {
       const action: AnimationValues = this.animations.shift();
       if (action) {
         this.occurrencesCount = action.occurrencesCount;
         console.log(this.shiftArr);
-        
+
         if (resetToWhite) {
           this.shiftTextRight();
           this.setToWhite();
@@ -127,17 +126,17 @@ export class NaiveComponent implements OnInit {
   setToGreen(stackIndex: number) {
     const needleLen = this.needleArr.length - 1;
     stackIndex -= needleLen; // Go back to the first index, since now we know this is a perf match!
-  
-    for (let i = stackIndex; i <= (stackIndex + needleLen); i++) 
+
+    for (let i = stackIndex; i <= (stackIndex + needleLen); i++)
       this.stackArr[i].colour = Colours.GREEN;
 
     this.needleArr.forEach((chr) => (chr.colour = Colours.GREEN));
   }
 
-  shiftTextRight() { 
-     // > 0 so if match is last, it does uneededly shift chars
-    if (this.animations.length == 0) return;    
-    this.shiftArr.push({character: null, colour: null, index: 0});
+  shiftTextRight() {
+    // > 0 so if match is last, it does uneededly shift chars
+    if (this.animations.length == 0) return;
+    this.shiftArr.push({ character: null, colour: null, index: 0 });
   }
 
   timeTakenInMilli() {
