@@ -2,8 +2,8 @@ import { Component, OnInit, Output, EventEmitter, Input, OnChanges } from '@angu
 import { StringService } from 'src/app/shared/string.service';
 import { Letters } from 'src/app/shared/models/Letters';
 import { Colours } from '../../shared/colours.enum';
-import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { AlgorithmEnum } from 'src/app/shared/algorithm.enum';
+import { ElementSchemaRegistry } from '@angular/compiler';
 
 @Component({
   selector: 'app-kmp',
@@ -27,7 +27,7 @@ export class KMPComponent implements OnInit {
   timeTaken: string = "00:00:00";
   codeSnippet: string = AlgorithmEnum.KMP_CODE;
 
-  lps: number[] = []; // Longest proper prefix (the DFA (KMP automoton))
+  lps: any[] = []; // Longest proper prefix (the DFA (KMP automoton))
   displayedColumns: string[] = ['character', 'index', 'failValue'];
   ELEMENT_DATA: failArray[] = [];
 
@@ -57,73 +57,158 @@ export class KMPComponent implements OnInit {
     this.shiftArr = [];
   }
 
-  genSuffixArray() {
-    let [left, right] = [0, 1];
-    this.lps = new Array(this.needleArr.length).fill(0);
-
-    while (right < this.lps.length) {
-      // if left and right index match, increment!
-      if (this.needleArr[left].character === this.needleArr[right].character) {
-        this.lps[right] = left + 1;
-        left++;
-        right++;
-      }
-      else {
-        // if they do not match, keep traversing
-        if (left !== 0)
-          left = this.lps[left - 1];
-        else {
-          this.lps[right] = 0;
-          right++;
-        }
-      }
-    }
-    this.createFailureTable();
-  }
 
   createFailureTable(): void {
-    this.ELEMENT_DATA = [];
-    for (let i = 0; i < this.lps.length; i++) {
-      this.ELEMENT_DATA.push({ character: this.needleArr[i].character, index: i, failValue: this.lps[i] });
+    
+    this.ELEMENT_DATA = []; // HTML table
+    let notEmptyArray = []; // Array rows with relevent rows, ignoring those filled with just 0s
+
+    let letterCache = {};
+    let sortedLetters = this.needleArr.reduce((acc, ch) => {
+      if (!letterCache[ch.character]) {
+        letterCache[ch.character] = true;
+        acc.push(ch.character);
+      }
+      return acc;
+    }, []).sort();
+
+    // let sortedLetters = [...new Set(this.needleArr.map((ch) => ch.character).sort())]; 
+    
+    const reducerSum = (accumulator, currentValue) => accumulator + currentValue;
+    for (let row of this.lps) {
+      let sum = row.reduce(reducerSum);
+      if (sum > 0) 
+      notEmptyArray.push(row);
+    }
+    for (let i = 0; i < sortedLetters.length; i++) {
+      this.ELEMENT_DATA.push({ character: sortedLetters[i] , index: i, failValue: notEmptyArray[i] });
     }
   }
 
-  KMPSearch(): number {
+  genSuffixArray() {
     if (this.stackArr.length < this.needleArr.length) return 0;
     if (this.stackArr.length == 0 || this.needleArr.length == 0) return 0;
 
-    let matchCount: number = 0;
-    let [ind, needle] = [0, 0]; // ind traverses whole stack, n checks and traverses through needle
+    const R = 256;
+    const M = this.needleArr.length;
 
-    while (ind < this.stackArr.length) {
-      if (this.stackArr[ind].character == this.needleArr[needle].character) {
-        this.animations.push({ isMatch: true, occurrencesCount: matchCount, stackIndex: ind, needleIndex: needle });
-        ind++;
-        needle++;
+    this.lps = [];
+    for (let r = 0; r < R; r++) {
+      this.lps.push(new Array(M).fill(0));
+    }
+    
+    const hasChar = this.needleArr[0].character != '';
+    if (hasChar)
+      this.lps[this.needleArr[0].character.charCodeAt(0)][0] = 1;
 
-        if (needle == this.needleArr.length) {
-          matchCount++;
-          this.animations.push({ isMatch: true, occurrencesCount: matchCount, stackIndex: ind - 1, needleIndex: needle - 1 });
-          needle = this.lps[needle - 1];
-        }
-      }
-
-      else {
-        if (needle != 0)
-          needle = this.lps[needle - 1];
-        else
-          ind++;
-        this.animations.push({ isMatch: false, occurrencesCount: matchCount, stackIndex: ind, needleIndex: needle });
-      }
+    for (let x = 0, j = 1; j < M; j++) {
+      for (let c = 0; c < R; c++)
+        this.lps[c][j] = this.lps[c][x]; // Copy mismatch cases. 
+      
+      this.lps[this.needleArr[j].character.charCodeAt(0)][j] = j + 1; // Set match case. 
+      x = this.lps[this.needleArr[j].character.charCodeAt(0)][x]; // Update restart state. 
     }
 
-    this.animationMaxLimit = this.animations.length;
+    this.createFailureTable();
+  }
+
+  KMPSearch() {
+    // simulate operation of DFA on text
+    if (this.stackArr.length < this.needleArr.length) return 0;
+    if (this.stackArr.length == 0 || this.needleArr.length == 0) return 0;
+
+    let n = this.stackArr.length;
+    let m = this.needleArr.length;
+    let matchCount = 0;
+    let i, j; // i = stack, j = needle
+
+    for (i = 0, j = 0; i < n && j < m; i++) { // i < stack, j < needle
+
+      if (this.stackArr[i].character == this.needleArr[j].character)
+        this.animations.push({ isMatch: isMatchEnum.CHAR_MATCH, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: -1 });
+      else 
+        this.animations.push({ isMatch: isMatchEnum.FAILED, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: j === 0 ? 1 : j });
+
+      j = this.lps[this.stackArr[i].character.charCodeAt(0)][j];
+      if (j == m) {
+        this.animations.push({ isMatch: isMatchEnum.COMPLETE, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: j });
+        matchCount++;
+        j = 0;
+      }
+  
+    }
+
     return matchCount;
   }
 
+
+  // genSuffixArray() {
+  //   let [left, right] = [0, 1];
+  //   this.lps = new Array(this.needleArr.length).fill(0);
+
+  //   while (right < this.lps.length) {
+  //     // if left and right index match, increment!
+  //     if (this.needleArr[left].character === this.needleArr[right].character) {
+  //       this.lps[right] = left + 1;
+  //       left++;
+  //       right++;
+  //     }
+  //     else {
+  //       // if they do not match, keep traversing
+  //       if (left !== 0)
+  //         left = this.lps[left - 1];
+  //       else {
+  //         this.lps[right] = 0;
+  //         right++;
+  //       }
+  //     }
+  //   }
+  //   this.createFailureTable();
+  // }
+
+  /////// 
+
+  // KMPSearch(): number {
+  //   if (this.stackArr.length < this.needleArr.length) return 0;
+  //   if (this.stackArr.length == 0 || this.needleArr.length == 0) return 0;
+
+  //   let matchCount: number = 0;
+  //   let [ind, needle] = [0, 0]; // ind traverses whole stack, n checks and traverses through needle
+
+  //   while (ind < this.stackArr.length) {
+  //     if (this.stackArr[ind].character == this.needleArr[needle].character) {
+  //       this.animations.push({ isMatch: isMatchEnum.CHAR_MATCH, occurrencesCount: matchCount, stackIndex: ind, needleIndex: needle, skip: -1 });
+  //       ind++;
+  //       needle++;
+
+  //       if (needle == this.needleArr.length) { // complete match
+  //         matchCount++;
+  //         needle = this.lps[needle - 1];
+  //         const skip = needle === 0 ? this.needleArr.length - 1 : needle;
+  //         this.animations.push({ isMatch: isMatchEnum.COMPLETE, occurrencesCount: matchCount, stackIndex: ind - 1, needleIndex: needle - 1, skip: skip });
+  //       }
+  //     }
+
+  //     else {
+  //       if (needle != 0) {
+  //         needle = this.lps[needle - 1];
+  //       }
+  //       else {
+  //         ind++;
+  //       }
+  //       this.animations.push({ isMatch: isMatchEnum.FAILED, occurrencesCount: matchCount, stackIndex: ind, needleIndex: needle, skip: this.lps[needle - 1] });
+  //       // this.animations.push({ isMatch: isMatchEnum.FAILED, occurrencesCount: matchCount, stackIndex: ind, needleIndex: needle, skip: needle === 0 ? 1 : needle });
+  //     }
+  //   }
+
+  //   this.animationMaxLimit = this.animations.length;
+  //   return matchCount;
+  // }
+
   KMPSearchAnimation(): void {
-    let resetToWhite = false;
     this.timeTakenInMilli();
+    let resetToWhite = false;
+    let lastSkipped = 0;
 
     const timer = setInterval(() => {
       const action: AnimationValues = this.animations.shift();
@@ -131,12 +216,13 @@ export class KMPComponent implements OnInit {
         this.occurrencesCount = action.occurrencesCount;
 
         if (resetToWhite) {
-          this.shiftTextRight();
           this.setToWhite();
+          this.shiftTextRight(lastSkipped);
+          lastSkipped = 0;
           resetToWhite = false;
         }
 
-        if (action.isMatch) {
+        if (action.isMatch === isMatchEnum.CHAR_MATCH) {
           this.needleArr[action.needleIndex].colour = Colours.SELECTED;
           this.stackArr[action.stackIndex].colour = Colours.SELECTED;
 
@@ -146,14 +232,18 @@ export class KMPComponent implements OnInit {
               this.stackArr[action.stackIndex - (c + 1)].colour = Colours.SELECTED; // From current stack index, decrement from fail index value
             }
           }
-
-          if (action.needleIndex == this.needleArr.length - 1)
-            this.setToGreen(action.stackIndex);
-
         }
-        else {
+
+        if (action.isMatch === isMatchEnum.COMPLETE) {
+          this.setToGreen(action.stackIndex);
+          lastSkipped = action.skip;
+          resetToWhite = true;
+        }
+
+        if (action.isMatch === isMatchEnum.FAILED) {
           this.needleArr[action.needleIndex].colour = Colours.RED;
           this.stackArr[action.stackIndex].colour = Colours.RED;
+          lastSkipped = action.skip;
           resetToWhite = true;
         }
       }
@@ -181,10 +271,15 @@ export class KMPComponent implements OnInit {
     this.needleArr.forEach((chr) => (chr.colour = Colours.GREEN));
   }
 
-  shiftTextRight() {
+  shiftTextRight(skipNum: number) {
     // > 0 so if match is last, it does uneededly shift chars
     if (this.animations.length == 0) return;
-    this.shiftArr.push({ character: null, colour: null, index: 0 });
+    if (skipNum == -1) return;
+    
+    console.log('skipping: ', skipNum);
+
+    while (skipNum-- > 0)
+      this.shiftArr.push({ character: null, colour: null, index: 0 });
   }
 
   timeTakenInMilli() {
@@ -203,11 +298,19 @@ export class KMPComponent implements OnInit {
 
 
 interface AnimationValues {
-  isMatch: boolean;
+  isMatch: isMatchEnum;
   occurrencesCount: number;
   stackIndex: number;
   needleIndex: number;
+  skip: number;
 }
+
+export enum isMatchEnum {
+  FAILED = 'FAILED_MATCH',
+  CHAR_MATCH = 'CHAR_MATCH',
+  COMPLETE = 'COMPLETE_MATCH',
+}
+
 
 interface failArray {
   character: string;

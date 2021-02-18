@@ -27,7 +27,7 @@ describe('KMPComponent', () => {
 */
 
   it('1 - should return 0, occurrences = 0', () => {
-    component.needleArr = [ {character: 'A', colour: 'white', index: 0}, {character: 'A', colour: 'white', index: 2} ];
+    component.needleArr = [ {character: 'A', colour: 'white', index: 0}, {character: 'A', colour: 'white', index: 1} ];
     component.stackArr = [ {character: '', colour: 'white', index: 0} ];
     component.genSuffixArray();
     const matches = component.KMPSearch();
@@ -36,9 +36,10 @@ describe('KMPComponent', () => {
 
   it('2 - should return 0, occurrences = 0', () => {
     component.needleArr = [ {character: '', colour: 'white', index: 0}  ];
-    component.stackArr = [ {character: 'A', colour: 'white', index: 0}, {character: 'A', colour: 'white', index: 2} ];
+    component.stackArr = [ {character: 'A', colour: 'white', index: 0}, {character: 'A', colour: 'white', index: 1} ];
     component.genSuffixArray();
-    const matches = component.KMPSearch();  expect(matches).toBe(0);
+    const matches = component.KMPSearch();  
+    expect(matches).toBe(0);
   });
 
   it('3 - should return 0, occurrences = 0', () => {

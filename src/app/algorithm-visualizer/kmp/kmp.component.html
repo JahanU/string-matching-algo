@@ -1,7 +1,7 @@
 <div class="container-fluid col-12">
 
   <div class="row">
-    <div class="col-6">
+    <div class="col-3">
       <pre><code [highlight]="codeSnippet" [lineNumbers]="true"></code></pre>
     </div>
 
@@ -33,6 +33,7 @@
         {{letter.character}}
       </div>
       <hr>
+
       <!-- aux array to shift needle elements to the right-->
       <div class="array-bar" *ngFor="let c of shiftArr"></div>
       <div class="array-body array-bar" *ngFor="let letter of needleArr"

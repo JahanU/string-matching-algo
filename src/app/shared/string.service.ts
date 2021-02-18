@@ -12,10 +12,10 @@ export class StringService {
   needleArr: Letters[];
   occurrencesCount: number = 0;
 
-  animationSpeed: number = 400;
+  animationSpeed: number = 200;
 
   constructor() {
-    [this.stack, this.needle, this.stackArr, this.needleArr] = ['ABCDABD ABCDAB ABCDABCDABDE','ABCDABD',[],[]];
+    [this.stack, this.needle, this.stackArr, this.needleArr] = ['ABC ABCDAB ABCDABCDABDE','ABCDABD',[],[]];
     this.updateStringsArray();
   }
 
