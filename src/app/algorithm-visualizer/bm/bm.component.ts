@@ -61,9 +61,11 @@ export class BMComponent implements OnInit {
     this.stackArr = this.stringService.deepCloneArray(this.parentStack);
     this.needleArr = this.stringService.deepCloneArray(this.parentNeedle);
     this.shiftArr = [];
+    this.animations = [];
   }
 
   startBMSearch() {
+    // this.BMSearch();
     this.BMSearch();
     this.bmSearchAnimation();
   }
@@ -90,41 +92,45 @@ export class BMComponent implements OnInit {
   }
 
   BMSearch() {
-    const m = this.needleArr.length;
-    const n = this.stackArr.length;
-    let s = 0;
+    let m = this.needleArr.length;
+    let n = this.stackArr.length;
+    if (n < m) return 0;
+    if (n == 0 || m == 0) return 0;
+
+    let skip = 0;
     let matchCount = 0;
+    this.animations.push({ isMatch: this.stackArr[m-1].character === this.needleArr[m-1].character, occurrencesCount: matchCount, stackIndex: m-1, needleIndex: m-1, skipped: -1 });
 
-    if (this.stackArr.length < this.needleArr.length) return 0;
-    if (this.stackArr.length == 0 || this.needleArr.length == 0) return 0;
+    for (let i = 0; i <= n - m; i += skip) {
+        skip = 0;
 
-    while (s <= (n - m)) {
-      let j = (m - 1);
+        for (let j = m-1; j >= 0; j--) {
+            if (this.needleArr[j].character !== this.stackArr[i+j].character) {
+                skip = Math.max(1, j - this.badChars[this.stackArr[i+j].character.charCodeAt(0)]);
+                this.animations.push({ isMatch: false, occurrencesCount: matchCount, stackIndex: i+j, needleIndex: j, skipped: -1 });
+                this.animations.push({ isMatch: false, occurrencesCount: matchCount, stackIndex: i+j, needleIndex: j, skipped: skip });
+                break;
+            }
+            else {
+              this.animations.push({ isMatch: true, occurrencesCount: matchCount, stackIndex: i+j, needleIndex: j, skipped: skip });
+            }
+        }
 
-      while (j >= 0 && this.needleArr[j].character == this.stackArr[s + j].character) {
-        this.animations.push({ isMatch: true, occurrencesCount: matchCount, stackIndex: (s + j), needleIndex: j });
-        j--;
-      }
-
-      if (j < 0) {
-        // console.log('match found! at index: ' + s);
-        matchCount++;
-        this.animations.push({ isMatch: true, occurrencesCount: matchCount, stackIndex: (s + j), needleIndex: j });
-        s += (s + m < n) ? m - this.badChars[this.stackArr[s + m].character.charCodeAt(0)] : 1;
-      }
-      else {
-        this.animations.push({ isMatch: false, occurrencesCount: matchCount, stackIndex: (s + j), needleIndex: j });
-        s += Math.max(1, j - this.badChars[this.stackArr[s + j].character.charCodeAt(0)]);
-      }
+        if (skip == 0) { // found
+          matchCount++;
+          skip++;
+          this.animations.push({ isMatch: true, occurrencesCount: matchCount, stackIndex: null, needleIndex: null, skipped: skip });
+        }
     }
+    
     this.animationMaxLimit = this.animations.length;
-    return matchCount;
+    return matchCount; // not found
   }
-
 
   bmSearchAnimation(): void {
     let resetToWhite = false;
     this.timeTakenInMilli();
+    this.animations.shift();
 
     const timerBM = setInterval(() => {
       const action: AnimationValues = this.animations.shift();
@@ -132,22 +138,24 @@ export class BMComponent implements OnInit {
         this.occurrencesCount = action.occurrencesCount;
 
         if (resetToWhite) {
-          this.shiftTextRight();
           this.setToWhite();
+          this.shiftTextRight(action.skipped);
           resetToWhite = false;
         }
 
         if (action.isMatch) {
-          this.needleArr[action.needleIndex].colour = Colours.SELECTED;
-          this.stackArr[action.stackIndex].colour = Colours.SELECTED;
+          if (action.needleIndex) this.needleArr[action.needleIndex].colour = Colours.SELECTED;
+          if (action.stackIndex) this.stackArr[action.stackIndex].colour = Colours.SELECTED;
+          
           if (action.needleIndex == 0) {
             resetToWhite = true;
             this.setToGreen(action.stackIndex);
           }
         }
-        else {
-          this.needleArr[action.needleIndex].colour = Colours.RED;
-          this.stackArr[action.stackIndex].colour = Colours.RED;
+
+        if (action.isMatch === false) {
+          if (action.needleIndex) this.needleArr[action.needleIndex].colour = Colours.RED;
+          if (action.stackIndex) this.stackArr[action.stackIndex].colour = Colours.RED;
           resetToWhite = true;
         }
       }
@@ -164,19 +172,25 @@ export class BMComponent implements OnInit {
     this.stackArr.forEach((chr) => (chr.colour = Colours.WHITE));
     this.needleArr.forEach((chr) => (chr.colour = Colours.WHITE));
   }
+
   setToGreen(stackIndex: number) {
     const needleLen = this.needleArr.length - 1;
-
     for (let i = stackIndex; i <= (stackIndex + needleLen); i++)
       this.stackArr[i].colour = Colours.GREEN;
 
     this.needleArr.forEach((chr) => (chr.colour = Colours.GREEN));
   }
 
-  shiftTextRight() {
+  shiftTextRight(skipNum: number) {
     // > 0 so if match is last, it does uneededly shift chars
     if (this.animations.length == 0) return;
-    this.shiftArr.push({ character: null, colour: null, index: 0 });
+    if (skipNum == -1) return;
+    console.log('skipped: ', skipNum);
+
+    for (let i = 0; i < skipNum; i++) {
+      this.shiftArr.push({ character: null, colour: null, index: null });
+    }
+
   }
 
   timeTakenInMilli() {
@@ -199,6 +213,7 @@ interface AnimationValues {
   occurrencesCount: number;
   stackIndex: number;
   needleIndex: number;
+  skipped: number;
 }
 
 interface badCharacter {

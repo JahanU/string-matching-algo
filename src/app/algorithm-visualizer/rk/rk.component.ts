@@ -48,7 +48,7 @@ export class RkComponent implements OnInit {
       this.startRKSearch();
     else {
       this.cloneArrays();
-      this.setPreNeedleHash();
+      this.setNeedleHash();
     }
   }
 
@@ -69,7 +69,7 @@ export class RkComponent implements OnInit {
    * Preprocesses the pattern string.
    *
    */
-  setPreNeedleHash() {
+  setNeedleHash() {
     this.RM = 1;
     for (let i = 1; i <= this.needleArr.length - 1; i++) {
       this.RM = (this.R * this.RM) % this.prime;

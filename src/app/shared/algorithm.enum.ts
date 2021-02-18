@@ -23,7 +23,6 @@ export enum AlgorithmEnum {
       if (j == needleArr.length)
         matchCount++;
     }
-    animationMaxLimit = animations.length;
     return matchCount;
     `,
     // 
@@ -77,13 +76,13 @@ export enum AlgorithmEnum {
             ind++;
         }
       }
-      animationMaxLimit = animations.length;
       return matchCount;
     }
     `,
     // 
   BM_CODE = 
   `
+  
   genBadCharArray() {
     badChars.fill(-1, 0, radix);
     badCharsMap = new Map<string, number>();
@@ -95,32 +94,30 @@ export enum AlgorithmEnum {
   }
 
   BMSearch() {
-    const m = needleArr.length;
-    const n = stackArr.length;
-    let s = 0;
+    let m = needleArr.length;
+    let n = stackArr.length;
+    if (n < m) return 0;
+    if (n == 0 || m == 0) return 0;
+
+    let skip = 0;
     let matchCount = 0;
 
-    if (stackArr.length < needleArr.length) return 0;
-    if (stackArr.length == 0 || needleArr.length == 0) return 0;
+    for (let i = 0; i <= n - m; i += skip) {
+        skip = 0;
 
-    while (s <= (n - m)) {
-      let j = (m - 1);
+        for (let j = m-1; j >= 0; j--) {
+            if (needleArr[j].character !== stackArr[i+j].character) {
+                skip = Math.max(1, j - badChars[stackArr[i+j].character.charCodeAt(0)]);
+                break;
+            }
+        }
 
-      while (j >= 0 && needleArr[j].character == stackArr[s + j].character) {
-        j--;
-      }
-
-      if (j < 0) {
-        // console.log('match found! at index: ' + s);
-        matchCount++;
-        s += (s + m < n) ? m - badChars[stackArr[s + m].character.charCodeAt(0)] : 1;
-      }
-      else {
-        s += Math.max(1, j - badChars[stackArr[s + j].character.charCodeAt(0)]);
-      }
+        if (skip == 0) { // found
+          matchCount++;
+          skip++;
+        }
     }
-    animationMaxLimit = animations.length;
-    return matchCount;
+    return matchCount; // not found
   }
   `,
   // 
@@ -140,7 +137,6 @@ export enum AlgorithmEnum {
 
     for (let i = 0; i < wordLength; i++) {
       h = (R * h + text[i].character.charCodeAt(0)) % prime;
-      animations.push({ isMatch: isMatchEnum.HASHING, occurrencesCount: matchCount, currentString: currentHashedSubstring, stackIndex: i, needleIndex: i });
     }
     return h;
   }
@@ -170,7 +166,6 @@ export enum AlgorithmEnum {
           if ((patHash == txtHash) && check(offset)) 
             matchCount++;
         }
-    animationMaxLimit = animations.length;
     return matchCount;
   }
   `,

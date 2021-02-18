@@ -1,7 +1,5 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Letters } from './models/Letters';
-import { map, delay } from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'
@@ -14,10 +12,10 @@ export class StringService {
   needleArr: Letters[];
   occurrencesCount: number = 0;
 
-  animationSpeed: number = 100;
+  animationSpeed: number = 400;
 
   constructor() {
-    [this.stack, this.needle, this.stackArr, this.needleArr] = ['ABC ABCDABD','ABCDABD',[],[]];
+    [this.stack, this.needle, this.stackArr, this.needleArr] = ['ABCDABD ABCDAB ABCDABCDABDE','ABCDABD',[],[]];
     this.updateStringsArray();
   }
 
