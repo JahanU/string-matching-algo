@@ -35,7 +35,11 @@
       <hr>
 
       <!-- aux array to shift needle elements to the right-->
-      <div class="array-bar" *ngFor="let c of shiftArr"></div>
+      <div class="array-bar" *ngFor="let c of shiftArr"
+        [ngStyle]="{ 'background-color': c.colour }">
+        {{c.character}}
+      </div>
+
       <div class="array-body array-bar" *ngFor="let letter of needleArr"
         [ngStyle]="{ 'background-color': letter.colour }">
         {{letter.character}}

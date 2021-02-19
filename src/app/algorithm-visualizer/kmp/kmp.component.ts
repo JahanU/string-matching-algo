@@ -126,18 +126,20 @@ export class KMPComponent implements OnInit {
 
       if (this.stackArr[i].character == this.needleArr[j].character)
         this.animations.push({ isMatch: isMatchEnum.CHAR_MATCH, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: -1 });
-      else 
-        this.animations.push({ isMatch: isMatchEnum.FAILED, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: j === 0 ? 1 : j });
+      else {
+        this.animations.push({ isMatch: isMatchEnum.FAILED, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: j });
+      }
 
       j = this.lps[this.stackArr[i].character.charCodeAt(0)][j];
-      if (j == m) {
-        this.animations.push({ isMatch: isMatchEnum.COMPLETE, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: j });
+      if (j == m) { // perfect match!
+        this.animations.push({ isMatch: isMatchEnum.COMPLETE, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: j-1 });
         matchCount++;
         j = 0;
       }
   
     }
 
+    this.animationMaxLimit = this.animations.length;
     return matchCount;
   }
 
@@ -208,7 +210,7 @@ export class KMPComponent implements OnInit {
   KMPSearchAnimation(): void {
     this.timeTakenInMilli();
     let resetToWhite = false;
-    let lastSkipped = 0;
+    let lastSkipped = -1;
 
     const timer = setInterval(() => {
       const action: AnimationValues = this.animations.shift();
@@ -218,7 +220,7 @@ export class KMPComponent implements OnInit {
         if (resetToWhite) {
           this.setToWhite();
           this.shiftTextRight(lastSkipped);
-          lastSkipped = 0;
+          lastSkipped = -1;
           resetToWhite = false;
         }
 
@@ -275,11 +277,14 @@ export class KMPComponent implements OnInit {
     // > 0 so if match is last, it does uneededly shift chars
     if (this.animations.length == 0) return;
     if (skipNum == -1) return;
-    
-    console.log('skipping: ', skipNum);
 
-    while (skipNum-- > 0)
-      this.shiftArr.push({ character: null, colour: null, index: 0 });
+    while (skipNum-- >= 0)
+      this.shiftArr.push({ character: this.shiftArr.length.toString(), colour: 'pink', index: this.shiftArr.length });
+
+
+    while ((this.shiftArr.length + this.needleArr.length) > this.stackArr.length) 
+      this.shiftArr.pop();
+
   }
 
   timeTakenInMilli() {
