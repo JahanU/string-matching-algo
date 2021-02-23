@@ -15,7 +15,7 @@
 
         <progressbar type="primary" [striped]="true" [animate]="true" *ngIf="isSorting == false" max={{1}}
           [value]="parentStack.length">
-          <i>{{parentStack.length}} / {{parentNeedle.length}} </i>
+          <i>{{parentNeedle.length}} / {{parentStack.length}} </i>
         </progressbar>
 
         <progressbar type="danger" [striped]="true" [animate]="true" *ngIf="isSorting" max={{animationMaxLimit}}
