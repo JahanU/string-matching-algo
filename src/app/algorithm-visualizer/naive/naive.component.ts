@@ -32,7 +32,7 @@ export class NaiveComponent implements OnInit {
     public stringService: StringService,
   ) { }
 
-  ngOnInit(): void { 
+  ngOnInit(): void {
     console.log('In Naive');
   }
 

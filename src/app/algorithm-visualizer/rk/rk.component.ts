@@ -9,6 +9,7 @@ import { StringService } from 'src/app/shared/string.service';
   templateUrl: './rk.component.html',
   styleUrls: ['./rk.component.scss']
 })
+// https://algs4.cs.princeton.edu/53substring/RabinKarp.java.html
 export class RkComponent implements OnInit {
 
   @Input() isSorting: boolean;
@@ -28,13 +29,13 @@ export class RkComponent implements OnInit {
   animationMaxLimit: number = 0;
   timeTaken: string = "00:00:00";
   codeSnippet: string = AlgorithmEnum.RK_CODE;
+  currentHashedSubstring: string = '';
 
   patHash: number;    // pattern hash value
   prime: number;      // a large prime, small enough to avoid long overflow
   R: number;          // radix
   RM: number;         // R^(M-1) % Q
 
-  currentHashedSubstring: string = '';
 
   constructor(public stringService: StringService) {
     this.R = 256;
@@ -74,6 +75,7 @@ export class RkComponent implements OnInit {
    */
   setNeedleHash() {
     this.RM = 1;
+    // precompute R^(m-1) % q for use in removing leading digit
     for (let i = 1; i <= this.needleArr.length - 1; i++) {
       this.RM = (this.R * this.RM) % this.prime;
     }
@@ -125,9 +127,9 @@ export class RkComponent implements OnInit {
     // check for match at offset 0
     if ((this.patHash == txtHash) && this.check(0)) 
       this.matchCount++;
-    else { // If no match, then we pop the first element, otherwise we keep the first element as this is a perf match!
+    else // If no match, then we pop the first element, otherwise we keep the first element as this is a perf match!
       this.animations.push({ isMatch: isMatchEnum.POP, occurrencesCount: this.matchCount, currentString: this.currentHashedSubstring, stackIndex: 0, needleIndex: 0, shiftRight: true });
-    }
+
     // check for hash match; if hash match, check for exact match
     for (let i = this.needleArr.length; i < this.stackArr.length; i++) {
 
@@ -140,6 +142,7 @@ export class RkComponent implements OnInit {
       // match
       const offset = i - this.needleArr.length + 1;
       this.currentHashedSubstring = this.currentHashedSubstring.substring(1);
+      this.animations[this.animations.length - 1].currentString = this.currentHashedSubstring;
       this.animations.push({ isMatch: isMatchEnum.POP, occurrencesCount: this.matchCount, currentString: this.currentHashedSubstring, stackIndex: offset, needleIndex: 0, shiftRight: true });
       if ((this.patHash == txtHash) && this.check(offset))
         this.matchCount++;
@@ -153,7 +156,6 @@ export class RkComponent implements OnInit {
   rkAnimation(): void {
     this.timeTakenInMilli();
     this.currentHashedSubstring = this.animations[0].currentString;
-    let shiftRight = false;
 
     const timer = setInterval(() => {
       const action: AnimationValues = this.animations.shift();
@@ -162,16 +164,6 @@ export class RkComponent implements OnInit {
         this.occurrencesCount = action.occurrencesCount;
         this.currentHashedSubstring = action.currentString;
         
-        if (shiftRight) {
-          this.shiftTextRight();
-          shiftRight = false;
-        }
-
-        // if (action.shiftRight) {
-        //   this.shiftTextRight();
-        //   shiftRight = false;
-        // }
-
         if (isMatchEnum.FAILED === action.isMatch) {
           console.log('failed');
           this.stackArr[action.stackIndex].colour = Colours.RED;
@@ -187,7 +179,8 @@ export class RkComponent implements OnInit {
         if (isMatchEnum.POP == action.isMatch) {
           console.log('pop');
           this.stackArr[action.stackIndex].colour = Colours.WHITE;
-          shiftRight = true;
+          this.shiftTextRight();
+
         }
 
         if (isMatchEnum.SELECTED_INDEX_MATCH == action.isMatch) {
@@ -204,7 +197,8 @@ export class RkComponent implements OnInit {
           this.setColourFromIndex(action.stackIndex, Colours.GREEN);
           this.setColourFromIndex(action.stackIndex, Colours.SELECTED);
           this.setToWhiteToIndex(this.stackArr, action.stackIndex)
-          shiftRight = true;
+          this.shiftTextRight();
+
         }
 
       }
