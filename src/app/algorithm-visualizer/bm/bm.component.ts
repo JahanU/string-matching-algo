@@ -23,6 +23,7 @@ export class BMComponent implements OnInit {
   @Output() public bmEvent = new EventEmitter();
   @Input() parentStack: Letters[] = []; // Take value from parent
   @Input() parentNeedle: Letters[] = [];
+  @Input() hideCodeSnippet: boolean = false;
 
   stackArr: Letters[] = [];
   needleArr: Letters[] = [];

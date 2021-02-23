@@ -15,6 +15,7 @@ export class RkComponent implements OnInit {
   @Output() public rkEvent = new EventEmitter(); // Emit when animation is done
   @Input() parentStack: Letters[] = []; // Take value from parent
   @Input() parentNeedle: Letters[] = [];
+  @Input() hideCodeSnippet: boolean = false;
 
   stackArr: Letters[] = [];
   needleArr: Letters[] = []; // Needed only for Las Vegas

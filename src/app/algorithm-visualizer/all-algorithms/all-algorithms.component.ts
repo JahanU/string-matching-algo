@@ -15,7 +15,8 @@ export class AllAlgorithmsComponent implements OnInit {
   @Input() isSorting: boolean = false;
   @Input() parentStack: Letters[] = [];
   @Input() parentNeedle: Letters[] = []; // Take value from parent
-  
+  @Input() hideCodeSnippet: boolean;
+
   allAnimationsCompleteCount: number = 0;
 
   constructor(public stringService: StringService) { }

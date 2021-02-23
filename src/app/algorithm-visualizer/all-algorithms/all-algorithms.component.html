@@ -1,18 +1,20 @@
 <div class="row col-12">
 
+    <!-- {{hideCodeSnippet}} -->
+    
     <div class="col-3">
-        <app-naive [parentNeedle]="parentNeedle" [parentStack]="parentStack" [isSorting]="isSorting" (naiveEvent)="handleIsSorting($event)"> </app-naive> 
+        <app-naive [parentNeedle]="parentNeedle" [parentStack]="parentStack" [isSorting]="isSorting" hideCodeSnippet=true (naiveEvent)="handleIsSorting($event)"> </app-naive> 
     </div>
 
     <div class="col-3">
-        <app-bm [parentNeedle]="parentNeedle" [parentStack]="parentStack" [isSorting]="isSorting" (bmEvent)="handleIsSorting($event)"> </app-bm> 
+        <app-bm [parentNeedle]="parentNeedle" [parentStack]="parentStack" [isSorting]="isSorting" hideCodeSnippet=true (bmEvent)="handleIsSorting($event)"> </app-bm> 
     </div>
 
     <div class="col-3">
-        <app-kmp [parentNeedle]="parentNeedle" [parentStack]="parentStack" [isSorting]="isSorting" (kmpEvent)="handleIsSorting($event)"> </app-kmp> 
+        <app-kmp [parentNeedle]="parentNeedle" [parentStack]="parentStack" [isSorting]="isSorting" hideCodeSnippet=true (kmpEvent)="handleIsSorting($event)"> </app-kmp> 
     </div>
 
     <div class="col-3">
-        <app-rk [parentNeedle]="parentNeedle" [parentStack]="parentStack" [isSorting]="isSorting" (rkEvent)="handleIsSorting($event)"> </app-rk> 
+        <app-rk [parentNeedle]="parentNeedle" [parentStack]="parentStack" [isSorting]="isSorting" hideCodeSnippet=true (rkEvent)="handleIsSorting($event)"> </app-rk> 
     </div>
 </div>

@@ -62,7 +62,7 @@
       </form>
 
       <div *ngIf="selectedAlgorithm == algorithmEnum.NAIVE">
-        <app-naive [parentNeedle]="needleArr" [parentStack]="stackArr" [isSorting]="isSorting" (naiveEvent)="handleIsSorting($event)"> </app-naive> 
+        <app-naive [parentNeedle]="needleArr" [parentStack]="stackArr" [isSorting]="isSorting" [hideCodeSnippet]=false (naiveEvent)="handleIsSorting($event)"> </app-naive> 
       </div>
 
       <div *ngIf="selectedAlgorithm == algorithmEnum.KMP">
@@ -78,7 +78,7 @@
       </div>
 
       <div *ngIf="selectedAlgorithm == algorithmEnum.ALL">
-        <app-all-algorithms [parentNeedle]="needleArr" [parentStack]="stackArr" [isSorting]="isSorting" (allEvent)="handleIsSorting($event)"> </app-all-algorithms> 
+        <app-all-algorithms [parentNeedle]="needleArr" [parentStack]="stackArr" [isSorting]="isSorting" hideCodeSnippet=true (allEvent)="handleIsSorting($event)"> </app-all-algorithms> 
       </div>
 
 

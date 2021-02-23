@@ -1,11 +1,11 @@
 <div class="container-fluid col-12">
 
     <div class="row">
-        <div class="col-6">
+        <div *ngIf="hideCodeSnippet === false" class="col-6">
             <pre><code [highlight]="codeSnippet" [lineNumbers]="true"></code></pre>
         </div>
 
-        <div class="col-6">
+        <div [ngClass]="hideCodeSnippet === false ? 'col-6' : 'col-12' ">
             <mat-card class="col-12 text-center">
                 Naive
                 <mat-card-subtitle>

@@ -15,6 +15,7 @@ export class NaiveComponent implements OnInit {
   @Output() public naiveEvent = new EventEmitter(); // Emit when animation is done
   @Input() parentStack: Letters[] = []; // Take value from parent
   @Input() parentNeedle: Letters[] = [];
+  @Input() hideCodeSnippet: boolean = false;
 
   stackArr: Letters[] = [];
   needleArr: Letters[] = [];
@@ -31,7 +32,9 @@ export class NaiveComponent implements OnInit {
     public stringService: StringService,
   ) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void { 
+    console.log('In Naive');
+  }
 
   ngOnChanges(changes: OnChanges): void { // whenever parent values change, this updates!
     if (this.isSorting) // Parent triggers to start sorting

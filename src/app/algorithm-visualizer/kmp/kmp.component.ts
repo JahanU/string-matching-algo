@@ -16,6 +16,7 @@ export class KMPComponent implements OnInit {
   @Output() public kmpEvent = new EventEmitter();
   @Input() parentStack: Letters[] = []; // Take value from parent
   @Input() parentNeedle: Letters[] = [];
+  @Input() hideCodeSnippet: boolean = false;
 
   stackArr: Letters[] = []; // Take value from parent
   needleArr: Letters[] = [];
