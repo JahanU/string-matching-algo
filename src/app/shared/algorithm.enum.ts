@@ -29,19 +29,19 @@ export enum AlgorithmEnum {
     `,
   // 
   KMP_CODE =
-  `genSuffixArray() {
+  `setDFA() {
   const R = 256;
   const M = needleArr.length;
-  lps = [];
+  dfa = [];
   for (let r = 0; r < R; r++)
-    lps.push(new Array(M).fill(0));
+    dfa.push(new Array(M).fill(0));
 
   for (let i = 0, j = 1; j < M; j++) {
     for (let c = 0; c < R; c++) {
-      lps[c][j] = lps[c][i]; // Copy mismatch cases. 
+      dfa[c][j] = dfa[c][i]; // Copy mismatch cases. 
     }
-    lps[needleArr[j].character.charCodeAt(0)][j] = j + 1; // Set match case. 
-    i = lps[needleArr[j].character.charCodeAt(0)][i]; // Update restart state. 
+    dfa[needleArr[j].character.charCodeAt(0)][j] = j + 1; // Set match case. 
+    i = dfa[needleArr[j].character.charCodeAt(0)][i]; // Update restart state. 
   }
 }
 
@@ -53,7 +53,7 @@ KMPSearch(): number {
 
   // simulate operation of DFA on text
   for (i = 0, j = 0; i < stackArr.length && j < needleArr.length; i++) { 
-    j = lps[stackArr[i].character.charCodeAt(0)][j];
+    j = dfa[stackArr[i].character.charCodeAt(0)][j];
     if (j == needleArr.length) { // perfect match!
       matchCount++;
       j = 0;

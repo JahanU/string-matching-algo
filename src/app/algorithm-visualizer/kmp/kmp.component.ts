@@ -28,7 +28,7 @@ export class KMPComponent implements OnInit {
   timeTaken: string = "00:00:00";
   codeSnippet: string = AlgorithmEnum.KMP_CODE;
 
-  lps: any[] = []; // Longest proper prefix (the DFA (KMP automoton))
+  dfa: any[] = []; // // the KMP automoton
   displayedColumns: string[] = ['character', 'index', 'failValue'];
   ELEMENT_DATA: failArray[] = [];
 
@@ -43,7 +43,7 @@ export class KMPComponent implements OnInit {
       this.startKMPSearch();
     else {
       this.cloneArrays();
-      this.genSuffixArray();
+      this.setDFA();
     }
   }
 
@@ -60,23 +60,12 @@ export class KMPComponent implements OnInit {
 
 
   createFailureTable(): void {
-
     this.ELEMENT_DATA = []; // HTML table
     let notEmptyArray = []; // Array rows with relevent rows, ignoring those filled with just 0s
-
-    // let letterCache = {};
-    // let sortedLetters = this.needleArr.reduce((acc, ch) => {
-    //   if (!letterCache[ch.character]) {
-    //     letterCache[ch.character] = true;
-    //     acc.push(ch.character);
-    //   }
-    //   return acc;
-    // }, []).sort();
-
     let sortedLetters = [...new Set(this.needleArr.map((ch) => ch.character).sort())]; 
     const reducerSum = (accumulator, currentValue) => accumulator + currentValue;
     
-    for (let row of this.lps) {
+    for (let row of this.dfa) {
       let sum = row.reduce(reducerSum);
       if (sum > 0)
         notEmptyArray.push(row);
@@ -86,28 +75,28 @@ export class KMPComponent implements OnInit {
     }
   }
 
-  genSuffixArray() {
+  setDFA() {
     if (this.stackArr.length < this.needleArr.length) return 0;
     if (this.stackArr.length == 0 || this.needleArr.length == 0) return 0;
 
-    const R = 256;
+    const R = 256; // the radix
     const M = this.needleArr.length;
 
-    this.lps = [];
+    this.dfa = [];
     for (let r = 0; r < R; r++) {
-      this.lps.push(new Array(M).fill(0));
+      this.dfa.push(new Array(M).fill(0));
     }
 
     const hasChar = this.needleArr[0].character != '';
     if (hasChar)
-      this.lps[this.needleArr[0].character.charCodeAt(0)][0] = 1;
+      this.dfa[this.needleArr[0].character.charCodeAt(0)][0] = 1;
 
     for (let i = 0, j = 1; j < M; j++) {
       for (let c = 0; c < R; c++)
-        this.lps[c][j] = this.lps[c][i]; // Copy mismatch cases. 
+        this.dfa[c][j] = this.dfa[c][i]; // Copy mismatch cases. 
 
-      this.lps[this.needleArr[j].character.charCodeAt(0)][j] = j + 1; // Set match case. 
-      i = this.lps[this.needleArr[j].character.charCodeAt(0)][i]; // Update restart state. 
+      this.dfa[this.needleArr[j].character.charCodeAt(0)][j] = j + 1; // Set match case. 
+      i = this.dfa[this.needleArr[j].character.charCodeAt(0)][i]; // Update restart state. 
     }
 
     this.createFailureTable();
@@ -127,16 +116,17 @@ export class KMPComponent implements OnInit {
       if (this.stackArr[i].character == this.needleArr[j].character)
         this.animations.push({ isMatch: isMatchEnum.CHAR_MATCH, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: -1 });
       else {
-        this.animations.push({ isMatch: isMatchEnum.FAILED, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: j });
+        console.log(this.dfa[this.stackArr[i].character.charCodeAt(0)][j]);
+        console.log(j);
+        this.animations.push({ isMatch: isMatchEnum.FAILED, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: j - this.dfa[this.stackArr[i].character.charCodeAt(0)][j] });
       }
 
-      j = this.lps[this.stackArr[i].character.charCodeAt(0)][j];
+      j = this.dfa[this.stackArr[i].character.charCodeAt(0)][j];
       if (j == m) { // perfect match!
-        this.animations.push({ isMatch: isMatchEnum.COMPLETE, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: j - 1 });
+        this.animations.push({ isMatch: isMatchEnum.COMPLETE, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: j });
         matchCount++;
         j = 0;
       }
-
     }
 
     this.animationMaxLimit = this.animations.length;
@@ -215,8 +205,10 @@ export class KMPComponent implements OnInit {
     if (this.animations.length == 0) return;
     if (skipNum == -1) return;
 
+    console.log(`Skipping: ${skipNum}`);
+
     while (skipNum-- >= 0)
-      this.shiftArr.push({ character: this.shiftArr.length.toString(), colour: 'pink', index: this.shiftArr.length });
+      this.shiftArr.push({ character: " ", colour: null, index: null });
 
 
     while ((this.shiftArr.length + this.needleArr.length) > this.stackArr.length)
