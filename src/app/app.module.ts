@@ -23,8 +23,8 @@ import { RkComponent } from './algorithm-visualizer/rk/rk.component';
 import { HighlightModule, HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
 
 const routes: Routes = [
-  { path: 'algorithm', component: AlgorithmVisualizerComponent },
-  { path: '', redirectTo: '/algorithm', pathMatch: 'full' },
+  { path: '', component: AlgorithmVisualizerComponent },
+  // { path: '', redirectTo: '/algorithm', pathMatch: 'full' },
 ]
 
 @NgModule({
