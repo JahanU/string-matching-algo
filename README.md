@@ -1,4 +1,4 @@
-https://jahanu.github.io/string-matching-algo/algorithm
+https://jahanu.github.io/string-matching-algo/
 
 ![multiple string matching algorithms comparison](https://github.com/JahanU/string-matching-algo/blob/master/images/String-algo.png)
 
