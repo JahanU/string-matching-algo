@@ -22,20 +22,21 @@ that Antichrist- I really believe he is Antichrist- I will have
 nothing more to do with you and you are no longer my friend, no longer
 my 'faithful slave,' as you call yourself! But how do you do? I see
 I have frightened you- sit down and tell me all the news."
-
     `,
-    STORY_NEEDLE = 'Anna',
+    STORY_NEEDLE = 'Antichrist',
 
     // 3
     BIBLE_STACK = `
-In the beginning God created the heaven and the earth. And the earth was without form, and void; and darkness was upon the face of the deep. And the Spirit of God moved upon the face of the waters. 
+In the beginning God created the heaven and the earth. 
+And the earth was without form, and void; 
+and darkness was upon the face of the deep. And the Spirit of God moved upon the face of the waters. 
 And God said, Let there be light: and there was light. 
 And God saw the light, that it was good: and God divided the light from the darkness. 
 And God called the light Day, and the darkness he called Night. And the evening and the morning were the first day. 
 And God said, Let there be a firmament in the midst of the waters, and let it divide the waters from the waters. 
 And God made the firmament, and divided the waters which were under the firmament from the waters which were above the firmament: and it was so. 
 And God called the firmament Heaven. And the evening and the morning were the second day.`,
-   BIBLE_NEEDLE = 'God',
+    BIBLE_NEEDLE = 'God',
 
     // 4
     STOCKS_STACK = `
