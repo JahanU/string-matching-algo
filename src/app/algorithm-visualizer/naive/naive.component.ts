@@ -90,7 +90,6 @@ export class NaiveComponent implements OnInit {
       const action: AnimationValues = this.animations.shift();
       if (action) {
         this.occurrencesCount = action.occurrencesCount;
-        console.log(this.shiftArr);
 
         if (resetToWhite) {
           this.shiftTextRight();

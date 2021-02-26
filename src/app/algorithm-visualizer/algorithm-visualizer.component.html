@@ -27,12 +27,19 @@
     </button>
     <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-animated">
 
-    <li role="menuitem" (click)="updateInputData($event)" >
+      <!-- <li role="menuitem" (click)="updateInputData()" >
         <a class="dropdown-item" (click)="displayInput(inputDataEnum.DNA)">{{inputDataEnum.DNA}}</a>
         <a class="dropdown-item" (click)="displayInput(inputDataEnum.STORY)">{{inputDataEnum.STORY}}</a>
+      </li> -->
+
+
+      <li role="menuitem" (click)="updateInputData()" *ngFor="let item of inputDataEnum | keyvalue">
+        <a class="dropdown-item" (click)="displayInput(item.value)">{{item.value}}</a>
       </li>
+
     </ul>
   </div>
+
 
 
   <button type="button" class="btn btn-danger" (click)="startSearching()"
@@ -62,28 +69,31 @@
       </form>
 
       <div *ngIf="selectedAlgorithm == algorithmEnum.NAIVE">
-        <app-naive [parentNeedle]="needleArr" [parentStack]="stackArr" [isSorting]="isSorting" [hideCodeSnippet]=false (naiveEvent)="handleIsSorting($event)"> </app-naive> 
+        <app-naive [parentNeedle]="needleArr" [parentStack]="stackArr" [isSorting]="isSorting" [hideCodeSnippet]=false
+          (naiveEvent)="handleIsSorting($event)"> </app-naive>
       </div>
 
       <div *ngIf="selectedAlgorithm == algorithmEnum.KMP">
-        <app-kmp [parentNeedle]="needleArr" [parentStack]="stackArr" [isSorting]="isSorting" (kmpEvent)="handleIsSorting($event)"> </app-kmp> 
+        <app-kmp [parentNeedle]="needleArr" [parentStack]="stackArr" [isSorting]="isSorting"
+          (kmpEvent)="handleIsSorting($event)"> </app-kmp>
       </div>
 
       <div *ngIf="selectedAlgorithm == algorithmEnum.BM">
-        <app-bm [parentNeedle]="needleArr" [parentStack]="stackArr" [isSorting]="isSorting" (bmEvent)="handleIsSorting($event)"> </app-bm> 
+        <app-bm [parentNeedle]="needleArr" [parentStack]="stackArr" [isSorting]="isSorting"
+          (bmEvent)="handleIsSorting($event)"> </app-bm>
       </div>
 
       <div *ngIf="selectedAlgorithm == algorithmEnum.RK">
-        <app-rk [parentNeedle]="needleArr" [parentStack]="stackArr" [isSorting]="isSorting" (rkEvent)="handleIsSorting($event)"> </app-rk> 
+        <app-rk [parentNeedle]="needleArr" [parentStack]="stackArr" [isSorting]="isSorting"
+          (rkEvent)="handleIsSorting($event)"> </app-rk>
       </div>
 
       <div *ngIf="selectedAlgorithm == algorithmEnum.ALL">
-        <app-all-algorithms [parentNeedle]="needleArr" [parentStack]="stackArr" [isSorting]="isSorting" hideCodeSnippet=true (allEvent)="handleIsSorting($event)"> </app-all-algorithms> 
+        <app-all-algorithms [parentNeedle]="needleArr" [parentStack]="stackArr" [isSorting]="isSorting"
+          hideCodeSnippet=true (allEvent)="handleIsSorting($event)"> </app-all-algorithms>
       </div>
 
 
     </div>
   </div>
 </div>
-
-

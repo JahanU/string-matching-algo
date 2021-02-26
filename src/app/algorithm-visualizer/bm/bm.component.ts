@@ -154,9 +154,9 @@ export class BMComponent implements OnInit {
           }
         }
 
-        if (action.isMatch === false) {
-          if (action.needleIndex) this.needleArr[action.needleIndex].colour = Colours.RED;
-          if (action.stackIndex) this.stackArr[action.stackIndex].colour = Colours.RED;
+        if (!action.isMatch) {
+          this.needleArr[action.needleIndex].colour = Colours.RED;
+          this.stackArr[action.stackIndex].colour = Colours.RED;
           resetToWhite = true;
         }
       }

@@ -7,8 +7,7 @@ export enum AlgorithmEnum {
   ALL = 'All',
   // TWSM = 'Two-way String Matching',
   // 
-  NAIVE_CODE =
-  `naiveSearch(): number {
+  NAIVE_CODE = `naiveSearch(): number {
   if (stackArr.length < needleArr.length) return 0;
   if (stackArr.length == 0 || needleArr.length == 0) return 0;
   matchCount = 0;
@@ -28,8 +27,7 @@ export enum AlgorithmEnum {
 }
     `,
   // 
-  KMP_CODE =
-  `setDFA() {
+  KMP_CODE = `setDFA() {
   const R = 256;
   const M = needleArr.length;
   dfa = [];
@@ -63,8 +61,7 @@ KMPSearch(): number {
 }
     `,
   // 
-  BM_CODE =
-  `radix = 256;
+  BM_CODE = `radix = 256;
 
 genBadCharArray() {
   badChars.fill(-1, 0, radix);
@@ -101,8 +98,7 @@ BMSearch() {
 }
   `,
   // 
-  RK_CODE =
-  `R = 256;
+  RK_CODE = `R = 256;
 prime = 199;
 RM = 1; // precompute R^(m-1) % q for use in removing leading digit
 
@@ -152,6 +148,4 @@ rkSearch(): number {
   return matchCount;
 }
   `,
-
-
 }
