@@ -11,6 +11,7 @@
       <li role="menuitem">
         <a class="dropdown-item" (click)=selectAlgo(algorithmEnum.NAIVE)>{{algorithmEnum.NAIVE}}</a>
         <a class="dropdown-item" (click)=selectAlgo(algorithmEnum.DFA)>{{algorithmEnum.DFA}}</a>
+        <a class="dropdown-item" (click)=selectAlgo(algorithmEnum.KMP)>{{algorithmEnum.KMP}}</a>
         <a class="dropdown-item" (click)=selectAlgo(algorithmEnum.BM)>{{algorithmEnum.BM}}</a>
         <a class="dropdown-item" (click)=selectAlgo(algorithmEnum.RK)>{{algorithmEnum.RK}}</a>
         <!-- <a class="dropdown-item" (click)=selectAlgo(algorithmEnum.TWSM)>{{algorithmEnum.TWSM}}</a> -->
@@ -71,6 +72,11 @@
       <div *ngIf="selectedAlgorithm == algorithmEnum.DFA">
         <app-dfa [parentNeedle]="needleArr" [parentStack]="stackArr" [isSorting]="isSorting"
           (dfaEvent)="handleIsSorting($event)"> </app-dfa>
+      </div>
+
+      <div *ngIf="selectedAlgorithm == algorithmEnum.KMP">
+        <app-kmp [parentNeedle]="needleArr" [parentStack]="stackArr" [isSorting]="isSorting"
+          (kmpEvent)="handleIsSorting($event)"> </app-kmp>
       </div>
 
       <div *ngIf="selectedAlgorithm == algorithmEnum.BM">

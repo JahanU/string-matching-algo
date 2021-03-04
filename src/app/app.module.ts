@@ -21,6 +21,7 @@ import { BMComponent } from './algorithm-visualizer/bm/bm.component';
 import { AllAlgorithmsComponent } from './algorithm-visualizer/all-algorithms/all-algorithms.component';
 import { RkComponent } from './algorithm-visualizer/rk/rk.component';
 import { HighlightModule, HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
+import { KmpComponent } from './algorithm-visualizer/kmp/kmp.component';
 
 const routes: Routes = [
   { path: '', component: AlgorithmVisualizerComponent },
@@ -28,7 +29,7 @@ const routes: Routes = [
 ]
 
 @NgModule({
-  declarations: [AppComponent, AlgorithmVisualizerComponent, NaiveComponent, DFAComponent, BMComponent, AllAlgorithmsComponent, RkComponent],
+  declarations: [AppComponent, AlgorithmVisualizerComponent, NaiveComponent, DFAComponent, BMComponent, AllAlgorithmsComponent, RkComponent, KmpComponent],
   imports: [
     BrowserModule,
     MatToolbarModule,

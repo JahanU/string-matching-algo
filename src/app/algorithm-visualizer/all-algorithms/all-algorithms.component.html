@@ -1,20 +1,24 @@
-<div class="row col-12">
-
-    <!-- {{hideCodeSnippet}} -->
-    
-    <div class="col-3">
-        <app-naive [parentNeedle]="parentNeedle" [parentStack]="parentStack" [isSorting]="isSorting" hideCodeSnippet=true (naiveEvent)="handleIsSorting($event)"> </app-naive> 
-    </div>
-
-    <div class="col-3">
-        <app-bm [parentNeedle]="parentNeedle" [parentStack]="parentStack" [isSorting]="isSorting" hideCodeSnippet=true (bmEvent)="handleIsSorting($event)"> </app-bm> 
-    </div>
-
-    <div class="col-3">
-        <app-dfa [parentNeedle]="parentNeedle" [parentStack]="parentStack" [isSorting]="isSorting" hideCodeSnippet=true (dfaEvent)="handleIsSorting($event)"> </app-dfa> 
-    </div>
-
-    <div class="col-3">
-        <app-rk [parentNeedle]="parentNeedle" [parentStack]="parentStack" [isSorting]="isSorting" hideCodeSnippet=true (rkEvent)="handleIsSorting($event)"> </app-rk> 
+<div class="container">
+    <div class="row">
+        <div class="col-sm">
+            <app-naive [parentNeedle]="parentNeedle" [parentStack]="parentStack" [isSorting]="isSorting"
+                hideCodeSnippet=true (naiveEvent)="handleIsSorting($event)"> </app-naive>
+        </div>
+        <div class="col-sm">
+            <app-dfa [parentNeedle]="parentNeedle" [parentStack]="parentStack" [isSorting]="isSorting"
+                hideCodeSnippet=true (naiveEvent)="handleIsSorting($event)"> </app-dfa>
+        </div>
+        <div class="col-sm">
+            <app-kmp [parentNeedle]="parentNeedle" [parentStack]="parentStack" [isSorting]="isSorting"
+                hideCodeSnippet=true (naiveEvent)="handleIsSorting($event)"> </app-kmp>
+        </div>
+        <div class="col-sm">
+            <app-bm [parentNeedle]="parentNeedle" [parentStack]="parentStack" [isSorting]="isSorting"
+                hideCodeSnippet=true (naiveEvent)="handleIsSorting($event)"> </app-bm>
+        </div>
+            <div class="col-sm">
+            <app-rk [parentNeedle]="parentNeedle" [parentStack]="parentStack" [isSorting]="isSorting"
+                hideCodeSnippet=true (naiveEvent)="handleIsSorting($event)"> </app-rk>
+        </div>
     </div>
 </div>

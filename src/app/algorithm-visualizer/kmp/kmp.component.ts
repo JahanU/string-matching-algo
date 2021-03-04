@@ -5,14 +5,14 @@ import { Colours } from '../../shared/colours.enum';
 import { AlgorithmEnum } from 'src/app/shared/algorithm.enum';
 
 @Component({
-  selector: 'app-dfa',
-  templateUrl: './dfa.component.html',
-  styleUrls: ['./dfa.component.scss']
+  selector: 'app-kmp',
+  templateUrl: './kmp.component.html',
+  styleUrls: ['./kmp.component.scss']
 })
-export class DFAComponent implements OnInit {
-
+export class KmpComponent implements OnInit {
+  
   @Input() isSorting: boolean;
-  @Output() public dfaEvent = new EventEmitter();
+  @Output() public kmpEvent = new EventEmitter();
   @Input() parentStack: Letters[] = []; // Take value from parent
   @Input() parentNeedle: Letters[] = [];
   @Input() hideCodeSnippet: boolean = false;
@@ -25,11 +25,11 @@ export class DFAComponent implements OnInit {
   occurrencesCount: number = 0;
   animationMaxLimit: number = 0;
   timeTaken: string = "00:00:00";
-  codeSnippet: string = AlgorithmEnum.DFA_CODE;
+  codeSnippet: string = AlgorithmEnum.KMP_CODE;
 
-  dfa: any[] = []; // // the DFA automoton
-  displayedColumns: string[] = ['character', 'index', 'failValue'];
-  ELEMENT_DATA: failArray[] = [];
+  next: number[] = []; // // the kmp automoton
+  // displayedColumns: string[] = ['character', 'index', 'failValue'];
+  // ELEMENT_DATA: failArray[] = [];
 
   constructor(
     private readonly stringService: StringService,
@@ -39,16 +39,16 @@ export class DFAComponent implements OnInit {
 
   ngOnChanges(changes: OnChanges): void { // whenever parent values change, this updates!
     if (this.isSorting)
-      this.startDFASearch();
+      this.startkmpSearch();
     else {
       this.cloneArrays();
-      this.setDFA();
+      this.setNFA();
     }
   }
 
-  startDFASearch() {
-    this.DFASearch();
-    this.DFASearchAnimation();
+  startkmpSearch() {
+    this.kmpSearch();
+    this.kmpSearchAnimation();
   }
 
   cloneArrays() {
@@ -58,50 +58,54 @@ export class DFAComponent implements OnInit {
   }
 
 
-  createFailureTable(): void {
-    this.ELEMENT_DATA = []; // HTML table
-    let notEmptyArray = []; // Array rows with relevent rows, ignoring those filled with just 0s
-    let sortedLetters = [...new Set(this.needleArr.map((ch) => ch.character).sort())]; 
-    const reducerSum = (accumulator, currentValue) => accumulator + currentValue;
+  // createFailureTable(): void {
+  //   this.ELEMENT_DATA = []; // HTML table
+  //   let notEmptyArray = []; // Array rows with relevent rows, ignoring those filled with just 0s
+  //   let sortedLetters = [...new Set(this.needleArr.map((ch) => ch.character).sort())]; 
+  //   const reducerSum = (accumulator, currentValue) => accumulator + currentValue;
     
-    for (let row of this.dfa) {
-      let sum = row.reduce(reducerSum);
-      if (sum > 0)
-        notEmptyArray.push(row);
-    }
-    for (let i = 0; i < sortedLetters.length; i++) {
-      this.ELEMENT_DATA.push({ character: sortedLetters[i], index: i, failValue: notEmptyArray[i] });
-    }
-  }
+  //   for (let row of this.kmp) {
+  //     let sum = row.reduce(reducerSum);
+  //     if (sum > 0)
+  //       notEmptyArray.push(row);
+  //   }
+  //   for (let i = 0; i < sortedLetters.length; i++) {
+  //     this.ELEMENT_DATA.push({ character: sortedLetters[i], index: i, failValue: notEmptyArray[i] });
+  //   }
+  // }
 
-  setDFA() {
+  // create Knuth-Morris-Pratt NFA from pattern
+  setNFA() {
     if (this.stackArr.length < this.needleArr.length) return 0;
     if (this.stackArr.length == 0 || this.needleArr.length == 0) return 0;
 
-    const R = 256; // the radix
-    const M = this.needleArr.length;
+    let m = this.needleArr.length;
+    this.next = [].fill(0, m);
+    let j = -1;
 
-    this.dfa = [];
-    for (let r = 0; r < R; r++) {
-      this.dfa.push(new Array(M).fill(0));
-    }
+    for (let i = 0; i < m; i++) {
+      if (i == 0) {
+        this.next[i] = -1;
+      }
+      else if (this.needleArr[i].character != this.needleArr[j].character) {
+        this.next[i] = j;
+      }
+      else {
+        this.next[i] = this.next[j];
+      }
 
-    const hasChar = this.needleArr[0].character != '';
-    if (hasChar)
-      this.dfa[this.needleArr[0].character.charCodeAt(0)][0] = 1;
+      while (j >= 0 && this.needleArr[i].character != this.needleArr[j].character) {
+        j = this.next[j];
+      }
+      j++;
+    }    
 
-    for (let i = 0, j = 1; j < M; j++) {
-      for (let c = 0; c < R; c++)
-        this.dfa[c][j] = this.dfa[c][i]; // Copy mismatch cases. 
-
-      this.dfa[this.needleArr[j].character.charCodeAt(0)][j] = j + 1; // Set match case. 
-      i = this.dfa[this.needleArr[j].character.charCodeAt(0)][i]; // Update restart state. 
-    }
-
-    this.createFailureTable();
+    // this.createFailureTable();
   }
 
-  DFASearch() {// simulate operation of DFA on text
+  // return offset of first occurrence of text in pattern (or n if no match)
+  // simulate the NFA to find match 
+  kmpSearch() {
     if (this.stackArr.length < this.needleArr.length) return 0;
     if (this.stackArr.length == 0 || this.needleArr.length == 0) return 0;
 
@@ -110,35 +114,34 @@ export class DFAComponent implements OnInit {
     let matchCount = 0;
     let i, j; // i = stack, j = needle
 
-    for (i = 0, j = 0; i < n && j < m; i++) { // i < stack, j < needle
+    console.log(this.next);
 
-      if (this.stackArr[i].character == this.needleArr[j].character)
-        this.animations.push({ isMatch: isMatchEnum.CHAR_MATCH, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: -1 });
-      else {
-        this.animations.push({ isMatch: isMatchEnum.FAILED, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: j - this.dfa[this.stackArr[i].character.charCodeAt(0)][j] });
+    for (i = 0, j = 0; i < n && j < m; i++) {
+      while (j >= 0 && this.stackArr[i].character != this.needleArr[j].character) {
+        this.animations.push({ isMatch: isMatchEnum.FAILED, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: Math.max(0, this.next[j]) });
+        j = this.next[j];
       }
-
-      j = this.dfa[this.stackArr[i].character.charCodeAt(0)][j];
-      if (j == m) { // perfect match!
-        this.animations.push({ isMatch: isMatchEnum.COMPLETE, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: j });
+      this.animations.push({ isMatch: isMatchEnum.CHAR_MATCH, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: -1 });
+      j++;
+      if (j == m) {
+        this.animations.push({ isMatch: isMatchEnum.COMPLETE, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: j-1 });
         matchCount++;
         j = 0;
       }
     }
-
     this.animationMaxLimit = this.animations.length;
     return matchCount;
   }
 
 
-  DFASearchAnimation(): void {
+  kmpSearchAnimation(): void {
     this.timeTakenInMilli();
     let resetToWhite = false;
     let lastSkipped = -1;
 
     const timer = setInterval(() => {
       const action: AnimationValues = this.animations.shift();
-      if (action) {
+      if (action) {        
         this.occurrencesCount = action.occurrencesCount;
 
         if (resetToWhite) {
@@ -149,7 +152,7 @@ export class DFAComponent implements OnInit {
         }
 
         if (action.isMatch === isMatchEnum.CHAR_MATCH) {
-          this.needleArr[action.needleIndex].colour = Colours.SELECTED;
+          if (action.needleIndex >= 0) this.needleArr[action.needleIndex].colour = Colours.SELECTED;
           this.stackArr[action.stackIndex].colour = Colours.SELECTED;
 
           if (action.needleIndex > 0) { // Traverse back from the prefix~
@@ -176,7 +179,7 @@ export class DFAComponent implements OnInit {
       else {
         clearInterval(timer);
         this.isSorting = false;
-        this.dfaEvent.emit(this.isSorting);
+        this.kmpEvent.emit(this.isSorting);
         this.setToWhite();
       }
     }, this.stringService.animationSpeed);
@@ -200,9 +203,10 @@ export class DFAComponent implements OnInit {
   shiftTextRight(skipNum: number) {
     // > 0 so if match is last, it does uneededly shift chars
     if (this.animations.length == 0) return;
-    if (skipNum == -1) return;
+    if (skipNum <= -1) return;
+
     while (skipNum-- >= 0)
-      this.shiftArr.push({ character: " ", colour: null, index: null });
+      this.shiftArr.push({ character: " ", colour: null, index: null });    
   }
 
   timeTakenInMilli() {

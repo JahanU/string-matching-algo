@@ -16,6 +16,7 @@ export class StringService {
 
   constructor() {
     [this.stack, this.needle, this.stackArr, this.needleArr] = ['ABC ABCDAB ABCDABCDABDE','ABCDABD',[],[]];
+    // [this.stack, this.needle, this.stackArr, this.needleArr] = ['ZZZABCABCABC','ABC',[],[]];
     // [this.stack, this.needle, this.stackArr, this.needleArr] = ['ABCDABCDABDE','ABCDABD',[],[]];
     this.updateStringsArray();
   }

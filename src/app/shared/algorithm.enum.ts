@@ -2,6 +2,7 @@ export enum AlgorithmEnum {
   SELECTED_ALGORITHM = 'Algorithms',
   NAIVE = 'Naive',
   DFA = 'Deterministic Finite Automation',
+  KMP = 'Knuth-Morris-Pratt',
   BM = 'Boyer-Moore',
   RK = 'Rabin-Karp',
   ALL = 'All',
@@ -60,6 +61,8 @@ DFASearch(): number {
   return matchCount;
 }
     `,
+  //
+  KMP_CODE = ``,
   // 
   BM_CODE = `radix = 256;
 
