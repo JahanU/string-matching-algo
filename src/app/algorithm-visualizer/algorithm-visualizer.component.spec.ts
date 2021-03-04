@@ -41,8 +41,8 @@
 //     stringService.createStringsArrays();
 //     let occurrencesNaive = component.naiveSearch();
 //     expect(occurrencesNaive).toBe(0);
-//     let occurrencesKMP = component.KMPSearch();
-//     expect(occurrencesKMP).toBe(0);
+//     let occurrencesDFA = component.DFASearch();
+//     expect(occurrencesDFA).toBe(0);
 //   });
 
 //   it('2) should return 0, occurrences = 0', () => {
@@ -51,8 +51,8 @@
 //     stringService.createStringsArrays();
 //     let occurrencesNaive = component.naiveSearch();
 //     expect(occurrencesNaive).toBe(0);
-//     let occurrencesKMP = component.KMPSearch();
-//     expect(occurrencesKMP).toBe(0);
+//     let occurrencesDFA = component.DFASearch();
+//     expect(occurrencesDFA).toBe(0);
 //   });
 
 //   it('3) should return 0, occurrences = 0', () => {
@@ -61,8 +61,8 @@
 //     stringService.createStringsArrays();
 //     let occurrencesNaive = component.naiveSearch();
 //     expect(occurrencesNaive).toBe(0);
-//     let occurrencesKMP = component.KMPSearch();
-//     expect(occurrencesKMP).toBe(0);
+//     let occurrencesDFA = component.DFASearch();
+//     expect(occurrencesDFA).toBe(0);
 //   });
 
 
@@ -72,8 +72,8 @@
 //     stringService.createStringsArrays();
 //     let occurrencesNaive = component.naiveSearch();
 //     expect(occurrencesNaive).toBe(0);
-//     let occurrencesKMP = component.KMPSearch();
-//     expect(occurrencesKMP).toBe(0);
+//     let occurrencesDFA = component.DFASearch();
+//     expect(occurrencesDFA).toBe(0);
 //   });
 
 //   it('should return correct occurrences = 1', () => {
@@ -82,8 +82,8 @@
 //     stringService.createStringsArrays();
 //     let occurrencesNaive = component.naiveSearch();
 //     expect(occurrencesNaive).toBe(1);
-//     let occurrencesKMP = component.KMPSearch();
-//     expect(occurrencesKMP).toBe(1);
+//     let occurrencesDFA = component.DFASearch();
+//     expect(occurrencesDFA).toBe(1);
 //   });
 
 //   it('should return correct occurrences = 2', () => {
@@ -92,8 +92,8 @@
 //     stringService.createStringsArrays();
 //     let occurrencesNaive = component.naiveSearch();
 //     expect(occurrencesNaive).toBe(2);
-//     let occurrencesKMP = component.KMPSearch();
-//     expect(occurrencesKMP).toBe(2);
+//     let occurrencesDFA = component.DFASearch();
+//     expect(occurrencesDFA).toBe(2);
 //   });
 
 //   it('should return correct occurrences = 6', () => {
@@ -102,7 +102,7 @@
 //     stringService.createStringsArrays();
 //     let occurrencesNaive = component.naiveSearch();
 //     expect(occurrencesNaive).toBe(6);
-//     let occurrencesKMP = component.KMPSearch();
-//     expect(occurrencesKMP).toBe(6);
+//     let occurrencesDFA = component.DFASearch();
+//     expect(occurrencesDFA).toBe(6);
 //   });
 // });

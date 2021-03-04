@@ -2,10 +2,10 @@
 // import { StringService } from 'src/app/shared/string.service';
 // import { Letters } from 'src/app/shared/models/Letters';
 
-// export class KMPSearch {
+// export class DFASearch {
 
 //     animations: AnimationValues[] = [];
-//     lps: number[] = []; // Longest proper prefix (the DFA (KMP automoton))
+//     lps: number[] = []; // Longest proper prefix (the DFA (DFA automoton))
 
 //     constructor(
 //         private readonly stringService: StringService,
@@ -35,7 +35,7 @@
 //       }      
 //     }
 
-//     KMPSearch(stack: Letters[], needle: Letters[]): number {
+//     DFASearch(stack: Letters[], needle: Letters[]): number {
       
 //       if (stack.length < needle.length)
 //         return 0;
@@ -70,7 +70,7 @@
 //       return matchCount;
 //     }
 
-//     KMPSearchAnimation(): void {
+//     DFASearchAnimation(): void {
 //       let resetToWhite = false; 
 //       // this.animations.pop();
 

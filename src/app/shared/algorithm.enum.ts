@@ -1,7 +1,7 @@
 export enum AlgorithmEnum {
   SELECTED_ALGORITHM = 'Algorithms',
   NAIVE = 'Naive',
-  KMP = 'Knuth-Morris-Pratt',
+  DFA = 'Deterministic Finite Automation',
   BM = 'Boyer-Moore',
   RK = 'Rabin-Karp',
   ALL = 'All',
@@ -27,7 +27,7 @@ export enum AlgorithmEnum {
 }
     `,
   // 
-  KMP_CODE = `setDFA() {
+  DFA_CODE = `setDFA() {
   const R = 256;
   const M = needleArr.length;
   dfa = [];
@@ -43,7 +43,7 @@ export enum AlgorithmEnum {
   }
 }
 
-KMPSearch(): number {
+DFASearch(): number {
   if (stackArr.length < needleArr.length) return 0;
   if (stackArr.length == 0 || needleArr.length == 0) return 0;
   matchCount = 0;

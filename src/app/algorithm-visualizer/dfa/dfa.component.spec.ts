@@ -1,21 +1,21 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { InputDataSourceEnum } from '../../shared/input-data-source.enum';
 import { StringService } from 'src/app/shared/string.service';
-import { KMPComponent } from './kmp.component';
+import { DFAComponent } from './dfa.component';
 
-describe('KMPComponent', () => {
-    let component: KMPComponent;
-    let fixture: ComponentFixture<KMPComponent>;
+describe('DFAComponent', () => {
+    let component: DFAComponent;
+    let fixture: ComponentFixture<DFAComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [KMPComponent]
+            declarations: [DFAComponent]
         })
             .compileComponents();
     });
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(KMPComponent);
+        fixture = TestBed.createComponent(DFAComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
@@ -30,7 +30,7 @@ describe('KMPComponent', () => {
         component.needleArr = [{ character: 'A', colour: 'white', index: 0 }, { character: 'A', colour: 'white', index: 1 }];
         component.stackArr = [{ character: '', colour: 'white', index: 0 }];
         component.setDFA();
-        const matches = component.KMPSearch();
+        const matches = component.DFASearch();
         expect(matches).toBe(0);
     });
 
@@ -38,7 +38,7 @@ describe('KMPComponent', () => {
         component.needleArr = [{ character: '', colour: 'white', index: 0 }];
         component.stackArr = [{ character: 'A', colour: 'white', index: 0 }, { character: 'A', colour: 'white', index: 1 }];
         component.setDFA();
-        const matches = component.KMPSearch();
+        const matches = component.DFASearch();
         expect(matches).toBe(0);
     });
 
@@ -46,14 +46,14 @@ describe('KMPComponent', () => {
         component.needleArr = [];
         component.stackArr = [];
         component.setDFA();
-        const matches = component.KMPSearch(); expect(matches).toBe(0);
+        const matches = component.DFASearch(); expect(matches).toBe(0);
     });
 
     it('4 - should return 0, occurrences = 0', () => {
         component.needleArr = [{ character: '', colour: 'white', index: 0 }];
         component.stackArr = [{ character: 'A', colour: 'white', index: 0 }, { character: 'A', colour: 'white', index: 2 }];
         component.setDFA();
-        const matches = component.KMPSearch(); expect(matches).toBe(0);
+        const matches = component.DFASearch(); expect(matches).toBe(0);
     });
 
     it('5 - should return 0, occurrences = 0', () => {
@@ -67,7 +67,7 @@ describe('KMPComponent', () => {
             { character: 'B', colour: 'white', index: 2 },
         ];
         component.setDFA();
-        const matches = component.KMPSearch(); expect(matches).toBe(0);
+        const matches = component.DFASearch(); expect(matches).toBe(0);
     });
 
 
@@ -82,7 +82,7 @@ describe('KMPComponent', () => {
             { character: 'C', colour: 'white', index: 3 }
         ];
         component.setDFA();
-        const matches = component.KMPSearch(); expect(matches).toBe(1);
+        const matches = component.DFASearch(); expect(matches).toBe(1);
     });
 
     it('7 - should return 2, occurrences = 2', () => {
@@ -97,7 +97,7 @@ describe('KMPComponent', () => {
             { character: 'B', colour: 'white', index: 4 },
         ];
         component.setDFA();
-        const matches = component.KMPSearch();
+        const matches = component.DFASearch();
         expect(matches).toBe(2);
     });
 
@@ -130,7 +130,7 @@ describe('KMPComponent', () => {
             { character: 'D', colour: 'white', index: 15 },
         ];
         component.setDFA();
-        const matches = component.KMPSearch();
+        const matches = component.DFASearch();
         expect(matches).toBe(1);
     });
 
@@ -146,7 +146,7 @@ describe('KMPComponent', () => {
         }
 
         component.setDFA();
-        const matches = component.KMPSearch();
+        const matches = component.DFASearch();
         expect(matches).toBe(6);
     });
 
@@ -160,7 +160,7 @@ describe('KMPComponent', () => {
             component.needleArr.push({ character: char, colour: null, index: i });
         }
         component.setDFA();
-        const matches = component.KMPSearch(); 
+        const matches = component.DFASearch(); 
         expect(matches).toBe(2);
     });
 
@@ -171,7 +171,7 @@ describe('KMPComponent', () => {
             component.needleArr.push({ character: InputDataSourceEnum.BIBLE_NEEDLE.charAt(i), colour: null, index: i });
 
         component.setDFA();
-        const matches = component.KMPSearch(); 
+        const matches = component.DFASearch(); 
         expect(matches).toBe(9);
     });
 
@@ -182,7 +182,7 @@ describe('KMPComponent', () => {
             component.needleArr.push({ character: InputDataSourceEnum.STOCKS_NEEDLE.charAt(i), colour: null, index: i });
 
         component.setDFA();
-        const matches = component.KMPSearch(); 
+        const matches = component.DFASearch(); 
         expect(matches).toBe(5);
     });
 
@@ -193,7 +193,7 @@ describe('KMPComponent', () => {
             component.needleArr.push({ character: InputDataSourceEnum.MOVIES_NEEDLE.charAt(i), colour: null, index: i });
 
         component.setDFA();
-        const matches = component.KMPSearch(); 
+        const matches = component.DFASearch(); 
         expect(matches).toBe(3);
     });
 

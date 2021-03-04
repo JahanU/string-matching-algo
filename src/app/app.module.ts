@@ -16,7 +16,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { MatTableModule } from '@angular/material/table';
 import { NaiveComponent } from './algorithm-visualizer/naive/naive.component';
-import { KMPComponent } from './algorithm-visualizer/kmp/kmp.component';
+import { DFAComponent } from './algorithm-visualizer/dfa/dfa.component';
 import { BMComponent } from './algorithm-visualizer/bm/bm.component';
 import { AllAlgorithmsComponent } from './algorithm-visualizer/all-algorithms/all-algorithms.component';
 import { RkComponent } from './algorithm-visualizer/rk/rk.component';
@@ -28,7 +28,7 @@ const routes: Routes = [
 ]
 
 @NgModule({
-  declarations: [AppComponent, AlgorithmVisualizerComponent, NaiveComponent, KMPComponent, BMComponent, AllAlgorithmsComponent, RkComponent],
+  declarations: [AppComponent, AlgorithmVisualizerComponent, NaiveComponent, DFAComponent, BMComponent, AllAlgorithmsComponent, RkComponent],
   imports: [
     BrowserModule,
     MatToolbarModule,

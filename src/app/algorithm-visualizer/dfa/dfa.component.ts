@@ -6,14 +6,14 @@ import { AlgorithmEnum } from 'src/app/shared/algorithm.enum';
 import { ElementSchemaRegistry } from '@angular/compiler';
 
 @Component({
-  selector: 'app-kmp',
-  templateUrl: './kmp.component.html',
-  styleUrls: ['./kmp.component.scss']
+  selector: 'app-dfa',
+  templateUrl: './dfa.component.html',
+  styleUrls: ['./dfa.component.scss']
 })
-export class KMPComponent implements OnInit {
+export class DFAComponent implements OnInit {
 
   @Input() isSorting: boolean;
-  @Output() public kmpEvent = new EventEmitter();
+  @Output() public dfaEvent = new EventEmitter();
   @Input() parentStack: Letters[] = []; // Take value from parent
   @Input() parentNeedle: Letters[] = [];
   @Input() hideCodeSnippet: boolean = false;
@@ -26,9 +26,9 @@ export class KMPComponent implements OnInit {
   occurrencesCount: number = 0;
   animationMaxLimit: number = 0;
   timeTaken: string = "00:00:00";
-  codeSnippet: string = AlgorithmEnum.KMP_CODE;
+  codeSnippet: string = AlgorithmEnum.DFA_CODE;
 
-  dfa: any[] = []; // // the KMP automoton
+  dfa: any[] = []; // // the DFA automoton
   displayedColumns: string[] = ['character', 'index', 'failValue'];
   ELEMENT_DATA: failArray[] = [];
 
@@ -40,16 +40,16 @@ export class KMPComponent implements OnInit {
 
   ngOnChanges(changes: OnChanges): void { // whenever parent values change, this updates!
     if (this.isSorting)
-      this.startKMPSearch();
+      this.startDFASearch();
     else {
       this.cloneArrays();
       this.setDFA();
     }
   }
 
-  startKMPSearch() {
-    this.KMPSearch();
-    this.KMPSearchAnimation();
+  startDFASearch() {
+    this.DFASearch();
+    this.DFASearchAnimation();
   }
 
   cloneArrays() {
@@ -102,7 +102,7 @@ export class KMPComponent implements OnInit {
     this.createFailureTable();
   }
 
-  KMPSearch() {// simulate operation of DFA on text
+  DFASearch() {// simulate operation of DFA on text
     if (this.stackArr.length < this.needleArr.length) return 0;
     if (this.stackArr.length == 0 || this.needleArr.length == 0) return 0;
 
@@ -134,7 +134,7 @@ export class KMPComponent implements OnInit {
   }
 
 
-  KMPSearchAnimation(): void {
+  DFASearchAnimation(): void {
     this.timeTakenInMilli();
     let resetToWhite = false;
     let lastSkipped = -1;
@@ -179,7 +179,7 @@ export class KMPComponent implements OnInit {
       else {
         clearInterval(timer);
         this.isSorting = false;
-        this.kmpEvent.emit(this.isSorting);
+        this.dfaEvent.emit(this.isSorting);
         this.setToWhite();
       }
     }, this.stringService.animationSpeed);
