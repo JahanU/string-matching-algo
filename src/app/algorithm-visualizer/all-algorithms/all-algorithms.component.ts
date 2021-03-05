@@ -28,7 +28,7 @@ export class AllAlgorithmsComponent implements OnInit {
   handleIsSorting(event: any) { // event/message from child back to parent
     this.allAnimationsCompleteCount++;
     console.log('anim done!');
-    if (this.allAnimationsCompleteCount == 4) {
+    if (this.allAnimationsCompleteCount == 5) {
       this.allEvent.emit(event);  
       this.allAnimationsCompleteCount = 0;
     }

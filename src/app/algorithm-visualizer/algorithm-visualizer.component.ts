@@ -24,7 +24,7 @@ export class AlgorithmVisualizerComponent implements OnInit {
   algorithmEnum = AlgorithmEnum; // init, to use in HTML
   inputDataEnum = InputDataEnum; // init
 
-  selectedAlgorithm: AlgorithmEnum = AlgorithmEnum.KMP; // default
+  selectedAlgorithm: AlgorithmEnum = AlgorithmEnum.ALL; // default
   selectedInput: InputDataEnum = InputDataEnum.USER_INPUT; // default
   allStories = new Map<InputDataEnum, [InputDataSourceEnum, InputDataSourceEnum]>();
 
