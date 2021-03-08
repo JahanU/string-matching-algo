@@ -15,8 +15,10 @@ export class StringService {
   animationSpeed: number = 400;
 
   constructor() {
+        [this.stack, this.needle, this.stackArr, this.needleArr] = ['AZBZCAZBCZABC','ABC',[],[]];
+
     // [this.stack, this.needle, this.stackArr, this.needleArr] = ['ABBABBA','ABBA',[],[]];
-    [this.stack, this.needle, this.stackArr, this.needleArr] = ['ABCABCABC','ABC',[],[]];
+    // [this.stack, this.needle, this.stackArr, this.needleArr] = ['ABCABCABC','ABC',[],[]];
     // [this.stack, this.needle, this.stackArr, this.needleArr] = ['ZZABCABCABC','ABC',[],[]];
     // [this.stack, this.needle, this.stackArr, this.needleArr] = ['ABCDABCDABDE','ABCDABD',[],[]];
 

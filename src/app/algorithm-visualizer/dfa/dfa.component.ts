@@ -57,6 +57,8 @@ export class DFAComponent implements OnInit {
     this.shiftArr = [];
   }
 
+
+  // DFA 
   createFailureTable(): void {
     this.ELEMENT_DATA = []; // HTML table
     let notEmptyArray = []; // Array rows with relevent rows, ignoring those filled with just 0s
@@ -107,11 +109,9 @@ export class DFAComponent implements OnInit {
     let n = this.stackArr.length;
     let m = this.needleArr.length;
     let matchCount = 0;
-    let i, j; // i = stack, j = needle
-    let match = false;
+    let i = 0, j = 0; // i = stack, j = needle
 
-    for (i = 0, j = 0; i < n && j < m; i++) { // i < stack, j < needle
-
+    for (i = 0; i < n; i++) { // i < stack, j < needle
       if (this.stackArr[i].character == this.needleArr[j].character) {
         this.animations.push({ isMatch: isMatchEnum.CHAR_MATCH, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: -1 });
       }
@@ -121,10 +121,9 @@ export class DFAComponent implements OnInit {
       j = this.dfa[this.stackArr[i].character.charCodeAt(0)][j];
 
       if (j == m) { // perfect match!
-        this.animations.push({ isMatch: isMatchEnum.COMPLETE, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: j - 2 });
+        this.animations.push({ isMatch: isMatchEnum.COMPLETE, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: this.dfa[this.stackArr[i].character.charCodeAt(0)][0] === 0 ? m-1 : this.dfa[this.stackArr[i].character.charCodeAt(0)][0]+1 });
+        j = this.dfa[this.stackArr[i].character.charCodeAt(0)][0];
         matchCount++;
-        j = 1;
-        match = true;
       }
     }
 
@@ -137,6 +136,9 @@ export class DFAComponent implements OnInit {
     this.timeTakenInMilli();
     let resetToWhite = false;
     let lastSkipped = -1;
+
+    console.log([...this.animations]);
+
 
     const timer = setInterval(() => {
       const action: AnimationValues = this.animations.shift();

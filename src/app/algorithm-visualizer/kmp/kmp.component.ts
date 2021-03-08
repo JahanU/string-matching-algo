@@ -10,7 +10,7 @@ import { AlgorithmEnum } from 'src/app/shared/algorithm.enum';
   styleUrls: ['./kmp.component.scss']
 })
 export class KmpComponent implements OnInit {
-  
+
   @Input() isSorting: boolean;
   @Output() public kmpEvent = new EventEmitter();
   @Input() parentStack: Letters[] = []; // Take value from parent
@@ -60,8 +60,7 @@ export class KmpComponent implements OnInit {
 
   createFailureTable(): void {
     this.ELEMENT_DATA = []; // HTML table
-
-    for (let i = 0; i < this.next.length; i++) {
+    for (let i = 0; i < this.needleArr.length; i++) {
       this.ELEMENT_DATA.push({ character: this.needleArr[i].character, index: i, failValue: this.next[i] });
     }
   }
@@ -71,27 +70,19 @@ export class KmpComponent implements OnInit {
     if (this.stackArr.length < this.needleArr.length) return 0;
     if (this.stackArr.length == 0 || this.needleArr.length == 0) return 0;
 
-    let m = this.needleArr.length;
-    this.next = [].fill(0, m);
-    let j = -1;
+    var n = this.needleArr.length;
+    var q = 0;
+    this.next.push(q);
 
-    for (let i = 0; i < m; i++) {
-      if (i == 0) {
-        this.next[i] = -1;
+    for (var i = 1; i < n; i++) {
+      while (q > 0 && this.needleArr[q].character != this.needleArr[i].character) {
+        q = this.next[q - 1];
       }
-      else if (this.needleArr[i].character != this.needleArr[j].character) {
-        this.next[i] = j;
+      if (this.needleArr[q].character == this.needleArr[i].character) {
+        ++q;
       }
-      else {
-        this.next[i] = this.next[j];
-      }
-
-      while (j >= 0 && this.needleArr[i].character != this.needleArr[j].character) {
-        j = this.next[j];
-      }
-      j++;
-    }    
-
+      this.next[i] = q;
+    }
     this.createFailureTable();
   }
 
@@ -100,26 +91,30 @@ export class KmpComponent implements OnInit {
   kmpSearch() {
     if (this.stackArr.length < this.needleArr.length) return 0;
     if (this.stackArr.length == 0 || this.needleArr.length == 0) return 0;
-
-    let n = this.stackArr.length;
-    let m = this.needleArr.length;
     let matchCount = 0;
-    let i, j; // i = stack, j = needle
+    var n = this.stackArr.length;
+    var m = this.needleArr.length;
+    var q = 0;
 
-
-    for (i = 0, j = 0; i < n && j < m; i++) {
-      while (j >= 0 && this.stackArr[i].character != this.needleArr[j].character) {
-        j = this.next[j];
-        this.animations.push({ isMatch: isMatchEnum.FAILED, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: this.next[j]+1 });
+    for (var i = 0; i < n; i++) {
+      while (q > 0 && this.needleArr[q].character != this.stackArr[i].character) {
+        this.animations.push({ isMatch: isMatchEnum.FAILED, occurrencesCount: matchCount, stackIndex: i, needleIndex: q, skip: (q - this.next[q - 1]) - 1 });
+        q = this.next[q - 1];
       }
-      this.animations.push({ isMatch: isMatchEnum.CHAR_MATCH, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: -1 });
-      j++;
-      if (j == m) {
-        this.animations.push({ isMatch: isMatchEnum.COMPLETE, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: j-2 });
+      if (this.needleArr[q].character == this.stackArr[i].character) {
+        this.animations.push({ isMatch: isMatchEnum.CHAR_MATCH, occurrencesCount: matchCount, stackIndex: i, needleIndex: q, skip: -1 });
+        ++q;
+      }
+      else {
+        this.animations.push({ isMatch: isMatchEnum.FAILED, occurrencesCount: matchCount, stackIndex: i, needleIndex: q, skip: q });
+      }
+      if (q == m) {
+        this.animations.push({ isMatch: isMatchEnum.COMPLETE, occurrencesCount: matchCount, stackIndex: i, needleIndex: q, skip: (q - this.next[q - 1]) - 1 });
+        q = this.next[q - 1];
         matchCount++;
-        j = 1;
       }
     }
+
     this.animationMaxLimit = this.animations.length;
     return matchCount;
   }
@@ -133,7 +128,7 @@ export class KmpComponent implements OnInit {
     const timer = setInterval(() => {
       const action: AnimationValues = this.animations.shift();
 
-      if (action) {        
+      if (action) {
         this.occurrencesCount = action.occurrencesCount;
 
         if (resetToWhite) {
@@ -198,7 +193,7 @@ export class KmpComponent implements OnInit {
     if (skipNum <= -1) return;
 
     while (skipNum-- >= 0)
-      this.shiftArr.push({ character: " ", colour: null, index: null });    
+      this.shiftArr.push({ character: " ", colour: null, index: null });
   }
 
   timeTakenInMilli() {
