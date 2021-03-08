@@ -160,7 +160,7 @@ describe('DFAComponent', () => {
             component.needleArr.push({ character: char, colour: null, index: i });
         }
         component.setDFA();
-        const matches = component.DFASearch(); 
+        const matches = component.DFASearch();
         expect(matches).toBe(2);
     });
 
@@ -171,7 +171,7 @@ describe('DFAComponent', () => {
             component.needleArr.push({ character: InputDataSourceEnum.BIBLE_NEEDLE.charAt(i), colour: null, index: i });
 
         component.setDFA();
-        const matches = component.DFASearch(); 
+        const matches = component.DFASearch();
         expect(matches).toBe(9);
     });
 
@@ -182,7 +182,7 @@ describe('DFAComponent', () => {
             component.needleArr.push({ character: InputDataSourceEnum.STOCKS_NEEDLE.charAt(i), colour: null, index: i });
 
         component.setDFA();
-        const matches = component.DFASearch(); 
+        const matches = component.DFASearch();
         expect(matches).toBe(5);
     });
 
@@ -193,8 +193,32 @@ describe('DFAComponent', () => {
             component.needleArr.push({ character: InputDataSourceEnum.MOVIES_NEEDLE.charAt(i), colour: null, index: i });
 
         component.setDFA();
-        const matches = component.DFASearch(); 
+        const matches = component.DFASearch();
         expect(matches).toBe(3);
+    });
+
+    it('14, interlinked needle in stack - should return 2', () => {
+
+        component.needleArr = [
+            { character: 'A', colour: null, index: 0 },
+            { character: 'B', colour: null, index: 1 },
+            { character: 'B', colour: null, index: 2 },
+            { character: 'A', colour: null, index: 3 }
+        ];
+
+        component.stackArr = [
+            { character: 'A', colour: null, index: 0 },
+            { character: 'B', colour: null, index: 1 },
+            { character: 'B', colour: null, index: 2 },
+            { character: 'A', colour: null, index: 3 },
+            { character: 'B', colour: null, index: 4 },
+            { character: 'B', colour: null, index: 5 },
+            { character: 'A', colour: null, index: 6 },
+
+        ]
+        component.setDFA();
+        const matches = component.DFASearch();
+        expect(matches).toBe(2);
     });
 
 });

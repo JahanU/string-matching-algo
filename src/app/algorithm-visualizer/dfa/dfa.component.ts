@@ -28,8 +28,8 @@ export class DFAComponent implements OnInit {
   codeSnippet: string = AlgorithmEnum.DFA_CODE;
 
   dfa: any[] = []; // // the DFA automoton
-  displayedColumns: string[] = ['character', 'index', 'failValue'];
-  ELEMENT_DATA: failArray[] = [];
+  displayedColumns: string[] = ['character', 'index', 'automoton'];
+  ELEMENT_DATA: dfa[] = [];
 
   constructor(
     private readonly stringService: StringService,
@@ -57,20 +57,19 @@ export class DFAComponent implements OnInit {
     this.shiftArr = [];
   }
 
-
   createFailureTable(): void {
     this.ELEMENT_DATA = []; // HTML table
     let notEmptyArray = []; // Array rows with relevent rows, ignoring those filled with just 0s
-    let sortedLetters = [...new Set(this.needleArr.map((ch) => ch.character).sort())]; 
+    let sortedLetters = [...new Set(this.needleArr.map((ch) => ch.character).sort())];
     const reducerSum = (accumulator, currentValue) => accumulator + currentValue;
-    
+
     for (let row of this.dfa) {
       let sum = row.reduce(reducerSum);
       if (sum > 0)
         notEmptyArray.push(row);
     }
     for (let i = 0; i < sortedLetters.length; i++) {
-      this.ELEMENT_DATA.push({ character: sortedLetters[i], index: i, failValue: notEmptyArray[i] });
+      this.ELEMENT_DATA.push({ character: sortedLetters[i], index: i, automoton: notEmptyArray[i] });
     }
   }
 
@@ -109,20 +108,23 @@ export class DFAComponent implements OnInit {
     let m = this.needleArr.length;
     let matchCount = 0;
     let i, j; // i = stack, j = needle
+    let match = false;
 
     for (i = 0, j = 0; i < n && j < m; i++) { // i < stack, j < needle
 
-      if (this.stackArr[i].character == this.needleArr[j].character)
+      if (this.stackArr[i].character == this.needleArr[j].character) {
         this.animations.push({ isMatch: isMatchEnum.CHAR_MATCH, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: -1 });
+      }
       else {
         this.animations.push({ isMatch: isMatchEnum.FAILED, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: j - this.dfa[this.stackArr[i].character.charCodeAt(0)][j] });
       }
-
       j = this.dfa[this.stackArr[i].character.charCodeAt(0)][j];
+
       if (j == m) { // perfect match!
-        this.animations.push({ isMatch: isMatchEnum.COMPLETE, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: j });
+        this.animations.push({ isMatch: isMatchEnum.COMPLETE, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: j - 2 });
         matchCount++;
-        j = 0;
+        j = 1;
+        match = true;
       }
     }
 
@@ -235,8 +237,8 @@ export enum isMatchEnum {
 }
 
 
-interface failArray {
+interface dfa {
   character: string;
   index: number;
-  failValue: number;
+  automoton: number;
 }

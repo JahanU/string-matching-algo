@@ -28,8 +28,8 @@ export class KmpComponent implements OnInit {
   codeSnippet: string = AlgorithmEnum.KMP_CODE;
 
   next: number[] = []; // // the kmp automoton
-  // displayedColumns: string[] = ['character', 'index', 'failValue'];
-  // ELEMENT_DATA: failArray[] = [];
+  displayedColumns: string[] = ['character', 'index', 'failValue'];
+  ELEMENT_DATA: failArray[] = [];
 
   constructor(
     private readonly stringService: StringService,
@@ -58,21 +58,13 @@ export class KmpComponent implements OnInit {
   }
 
 
-  // createFailureTable(): void {
-  //   this.ELEMENT_DATA = []; // HTML table
-  //   let notEmptyArray = []; // Array rows with relevent rows, ignoring those filled with just 0s
-  //   let sortedLetters = [...new Set(this.needleArr.map((ch) => ch.character).sort())]; 
-  //   const reducerSum = (accumulator, currentValue) => accumulator + currentValue;
-    
-  //   for (let row of this.kmp) {
-  //     let sum = row.reduce(reducerSum);
-  //     if (sum > 0)
-  //       notEmptyArray.push(row);
-  //   }
-  //   for (let i = 0; i < sortedLetters.length; i++) {
-  //     this.ELEMENT_DATA.push({ character: sortedLetters[i], index: i, failValue: notEmptyArray[i] });
-  //   }
-  // }
+  createFailureTable(): void {
+    this.ELEMENT_DATA = []; // HTML table
+
+    for (let i = 0; i < this.next.length; i++) {
+      this.ELEMENT_DATA.push({ character: this.needleArr[i].character, index: i, failValue: this.next[i] });
+    }
+  }
 
   // create Knuth-Morris-Pratt NFA from pattern
   setNFA() {
@@ -100,7 +92,7 @@ export class KmpComponent implements OnInit {
       j++;
     }    
 
-    // this.createFailureTable();
+    this.createFailureTable();
   }
 
   // return offset of first occurrence of text in pattern (or n if no match)
@@ -114,19 +106,18 @@ export class KmpComponent implements OnInit {
     let matchCount = 0;
     let i, j; // i = stack, j = needle
 
-    console.log(this.next);
 
     for (i = 0, j = 0; i < n && j < m; i++) {
       while (j >= 0 && this.stackArr[i].character != this.needleArr[j].character) {
-        this.animations.push({ isMatch: isMatchEnum.FAILED, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: Math.max(0, this.next[j]) });
         j = this.next[j];
+        this.animations.push({ isMatch: isMatchEnum.FAILED, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: this.next[j]+1 });
       }
       this.animations.push({ isMatch: isMatchEnum.CHAR_MATCH, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: -1 });
       j++;
       if (j == m) {
-        this.animations.push({ isMatch: isMatchEnum.COMPLETE, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: j-1 });
+        this.animations.push({ isMatch: isMatchEnum.COMPLETE, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: j-2 });
         matchCount++;
-        j = 0;
+        j = 1;
       }
     }
     this.animationMaxLimit = this.animations.length;
@@ -141,6 +132,7 @@ export class KmpComponent implements OnInit {
 
     const timer = setInterval(() => {
       const action: AnimationValues = this.animations.shift();
+
       if (action) {        
         this.occurrencesCount = action.occurrencesCount;
 
@@ -152,7 +144,7 @@ export class KmpComponent implements OnInit {
         }
 
         if (action.isMatch === isMatchEnum.CHAR_MATCH) {
-          if (action.needleIndex >= 0) this.needleArr[action.needleIndex].colour = Colours.SELECTED;
+          this.needleArr[action.needleIndex].colour = Colours.SELECTED;
           this.stackArr[action.stackIndex].colour = Colours.SELECTED;
 
           if (action.needleIndex > 0) { // Traverse back from the prefix~

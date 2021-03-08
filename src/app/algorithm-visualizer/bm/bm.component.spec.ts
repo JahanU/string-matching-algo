@@ -200,4 +200,28 @@ describe('BMComponent', () => {
         expect(matches).toBe(3);
     });
 
+    it('14, interlinked needle in stack - should return 2', () => {
+
+        component.needleArr = [
+            { character: 'A', colour: null, index: 0 },
+            { character: 'B', colour: null, index: 1 },
+            { character: 'B', colour: null, index: 2 },
+            { character: 'A', colour: null, index: 3 }
+        ];
+
+        component.stackArr = [
+            { character: 'A', colour: null, index: 0 },
+            { character: 'B', colour: null, index: 1 },
+            { character: 'B', colour: null, index: 2 },
+            { character: 'A', colour: null, index: 3 },
+            { character: 'B', colour: null, index: 4 },
+            { character: 'B', colour: null, index: 5 },
+            { character: 'A', colour: null, index: 6 },
+
+        ];
+        component.genBadCharArray();
+        const matches = component.BMSearch();
+        expect(matches).toBe(2);
+    });
+
 });
