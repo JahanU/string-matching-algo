@@ -8,7 +8,13 @@ export enum AlgorithmEnum {
   ALL = 'All',
   // TWSM = 'Two-way String Matching',
   // 
-  NAIVE_CODE = `naiveSearch(): number {
+  NAIVE_CODE = `/*
+Pre-processing Time: 𝘕/𝘈
+Search Time: 𝑂(𝑛𝑚)
+Extra Space: 𝘕/𝘈
+*/
+
+naiveSearch(): number {
   if (stackArr.length < needleArr.length) return 0;
   if (stackArr.length == 0 || needleArr.length == 0) return 0;
   matchCount = 0;
@@ -28,7 +34,13 @@ export enum AlgorithmEnum {
 }
     `,
   // 
-  DFA_CODE = `setDFA() {
+  DFA_CODE = `/*
+Pre-processing Time: 𝑂(𝑚|Σ|)
+Search Time: 𝑂(𝑛)
+Extra Space: 𝑂(𝑚|Σ|)
+*/  
+
+setDFA() {
   const R = 256; // the radix
   const M = needleArr.length; // length of pattern
   dfa = []; // the KMP automoton
@@ -65,7 +77,13 @@ DFASearch(): number {
 }
     `,
   //
-  KMP_CODE = `next = []; // the kmp automoton
+  KMP_CODE = `/*
+Pre-processing Time: 𝑂(𝑚)
+Search Time: 𝑂(𝑛)
+Extra Space: 𝑂(𝑚)
+*/
+
+next = []; // the kmp automoton
 
 // Create Knuth-Morris-Pratt NFA from pattern
 setNFA() {
@@ -109,7 +127,13 @@ kmpSearch() {
 }
   `,
   // 
-  BM_CODE = `radix = 256;
+  BM_CODE = `/*
+Pre-processing Time: 𝑂(𝑚 + 𝜎)
+Search Time: 𝑂(𝑛) (often better)
+Extra Space: 𝑂(𝑚 + 𝜎)
+*/
+  
+radix = 256;
 
 genBadCharArray() {
   // position of rightmost occurrence of c in the pattern
@@ -146,7 +170,13 @@ BMSearch() {
 }
   `,
   // 
-  RK_CODE = `R = 256;
+  RK_CODE = `/*
+Pre-processing Time: 𝑂(𝑚)
+Search Time: 𝑂(𝑛 + 𝑚) (expected)
+Extra Space: 𝑂(1)
+*/
+  
+R = 256;
 prime = 199;
 RM = 1; // precompute R^(m-1) % j for use in removing leading digit
 
