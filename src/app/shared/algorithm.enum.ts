@@ -1,7 +1,7 @@
 export enum AlgorithmEnum {
   SELECTED_ALGORITHM = 'Algorithms',
   NAIVE = 'Naive',
-  DFA = 'Deterministic Finite Automation',
+  DFA = 'Deterministic Finite Automata',
   KMP = 'Knuth-Morris-Pratt',
   BM = 'Boyer-Moore',
   RK = 'Rabin-Karp',
