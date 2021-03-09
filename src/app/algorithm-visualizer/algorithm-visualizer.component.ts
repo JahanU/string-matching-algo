@@ -24,7 +24,7 @@ export class AlgorithmVisualizerComponent implements OnInit {
   algorithmEnum = AlgorithmEnum; // init, to use in HTML
   inputDataEnum = InputDataEnum; // init
 
-  selectedAlgorithm: AlgorithmEnum = AlgorithmEnum.ALL; // default
+  selectedAlgorithm: AlgorithmEnum = AlgorithmEnum.NAIVE; // default
   selectedInput: InputDataEnum = InputDataEnum.USER_INPUT; // default
   allStories = new Map<InputDataEnum, [InputDataSourceEnum, InputDataSourceEnum]>();
 
@@ -88,7 +88,7 @@ export class AlgorithmVisualizerComponent implements OnInit {
   }
 
   startSearching(): void {
-    this.isSorting = true;
+    this.isSorting = !this.isSorting;
   }
 
   handleIsSorting(event: any) { // event/message from child back to parent
