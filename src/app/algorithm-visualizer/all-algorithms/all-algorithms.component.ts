@@ -22,14 +22,16 @@ export class AllAlgorithmsComponent implements OnInit {
   constructor(public stringService: StringService) { }
 
   ngOnInit(): void {
-    console.log('in ALL');
     this.allAnimationsCompleteCount = 0;
   }
-  handleIsSorting(event: any) { // event/message from child back to parent
+
+  // child components e.g. naive, kmp all emit their value when they complete their animation.
+  // this handles them until the count (i.e. they all finished) is met.
+  handleCompletion(event: any) { // event/message from child back to parent
+
     this.allAnimationsCompleteCount++;
-    console.log('anim done!');
-    if (this.allAnimationsCompleteCount == 2) {
-      this.allEvent.emit(event);  
+    if (this.allAnimationsCompleteCount == 5) {
+      this.allEvent.emit(event);
       this.allAnimationsCompleteCount = 0;
     }
   }

@@ -72,14 +72,13 @@ export class AlgorithmVisualizerComponent implements OnInit {
   
 
   updateInputData() {
-
     let stackAndNeedle = this.allStories.get(this.selectedInput); // [needle, stack];
     if (stackAndNeedle) {
       this.inputForm.get('needle').setValue(stackAndNeedle[0]); // e.g. DNA_NEEDLE
       this.inputForm.get('stack').setValue(stackAndNeedle[1]);// e.g. DNA_STACK
     }
     else 
-      console.log('error');
+      console.log('error - Cannot find input data');
 
     this.updateStrings();
   }

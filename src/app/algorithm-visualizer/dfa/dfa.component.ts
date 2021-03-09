@@ -105,13 +105,11 @@ export class DFAComponent implements OnInit {
   DFASearch() {// simulate operation of DFA on text
     if (this.stackArr.length < this.needleArr.length) return 0;
     if (this.stackArr.length == 0 || this.needleArr.length == 0) return 0;
-
     let n = this.stackArr.length;
     let m = this.needleArr.length;
     let matchCount = 0;
-    let i = 0, j = 0; // i = stack, j = needle
 
-    for (i = 0; i < n; i++) { // i < stack, j < needle
+    for (let i = 0, j = 0; i < n; i++) { // i = stack, j = needle
       if (this.stackArr[i].character == this.needleArr[j].character) {
         this.animations.push({ isMatch: isMatchEnum.CHAR_MATCH, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: -1 });
       }
@@ -136,9 +134,6 @@ export class DFAComponent implements OnInit {
     this.timeTakenInMilli();
     let resetToWhite = false;
     let lastSkipped = -1;
-
-    console.log([...this.animations]);
-
 
     const timer = setInterval(() => {
       const action: AnimationValues = this.animations.shift();

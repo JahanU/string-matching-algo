@@ -9,6 +9,9 @@ import { AlgorithmEnum } from '../../shared/algorithm.enum';
   templateUrl: './naive.component.html',
   styleUrls: ['./naive.component.scss']
 })
+
+// https://algs4.cs.princeton.edu/53substring/Brute.java.html
+
 export class NaiveComponent implements OnInit {
 
   @Input() isSorting: boolean;
@@ -33,7 +36,6 @@ export class NaiveComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log('In Naive');
   }
 
   ngOnChanges(changes: OnChanges): void { // whenever parent values change, this updates!
@@ -135,8 +137,7 @@ export class NaiveComponent implements OnInit {
     this.needleArr.forEach((chr) => (chr.colour = Colours.GREEN));
   }
 
-  shiftTextRight() {
-    // > 0 so if match is last, it does uneededly shift chars
+  shiftTextRight() {// > 0 so if match is last, it does uneededly shift chars
     if (this.animations.length == 0) return;
     this.shiftArr.push({ character: null, colour: null, index: 0 });
   }

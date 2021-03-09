@@ -10,6 +10,7 @@ import { StringService } from 'src/app/shared/string.service';
   styleUrls: ['./rk.component.scss']
 })
 // https://algs4.cs.princeton.edu/53substring/RabinKarp.java.html
+
 export class RkComponent implements OnInit {
 
   @Input() isSorting: boolean;
@@ -35,7 +36,6 @@ export class RkComponent implements OnInit {
   prime: number;      // a large prime, small enough to avoid long overflow
   R: number;          // radix
   RM: number;         // R^(M-1) % Q
-
 
   constructor(public stringService: StringService) {
     this.R = 256;
@@ -69,19 +69,15 @@ export class RkComponent implements OnInit {
     this.rkAnimation();
   }
 
-  /**
-   * Preprocesses the pattern string.
-   *
-   */
+  // Create hashcode for Needle
   setNeedleHash() {
     this.RM = 1;
-    // precompute R^(m-1) % q for use in removing leading digit
     for (let i = 1; i <= this.needleArr.length - 1; i++) {
       this.RM = (this.R * this.RM) % this.prime;
     }
     this.currentHashedSubstring = this.stackArr.slice(0, this.needleArr.length).map((chr) => chr.character).join('');
     this.patHash = this.hash(this.needleArr, this.needleArr.length);
-    
+
   }
 
   getHashCode(text: string): number { // To display hash code
@@ -91,13 +87,17 @@ export class RkComponent implements OnInit {
     }
     return h;
   }
-  
-  // Compute hash for key[0..m-1]. 
+
+  /**
+   * Preprocesses the pattern string.
+   *
+   */
+  // Compute hash for key[0..m-1]. - e.g. For every substring we pass in
   hash(text: Letters[], wordLength: number): number {
     let h = 0;
     for (let i = 0; i < wordLength; i++) {
       h = (this.R * h + text[i].character.charCodeAt(0)) % this.prime;
-      this.animations.push({ isMatch: isMatchEnum.HASHING, occurrencesCount: this.matchCount, currentString: this.currentHashedSubstring, stackIndex: i, needleIndex: i, shiftRight: false  });
+      this.animations.push({ isMatch: isMatchEnum.HASHING, occurrencesCount: this.matchCount, currentString: this.currentHashedSubstring, stackIndex: i, needleIndex: i, shiftRight: false });
     }
     return h;
   }
@@ -110,10 +110,10 @@ export class RkComponent implements OnInit {
         return false;
       }
       else
-        this.animations.push({ isMatch: isMatchEnum.SELECTED_INDEX_MATCH, occurrencesCount: this.matchCount, currentString: this.currentHashedSubstring, stackIndex: (i + j), needleIndex: j, shiftRight: false  });
+        this.animations.push({ isMatch: isMatchEnum.SELECTED_INDEX_MATCH, occurrencesCount: this.matchCount, currentString: this.currentHashedSubstring, stackIndex: (i + j), needleIndex: j, shiftRight: false });
     }
 
-    this.animations.push({ isMatch: isMatchEnum.COMPLETE, occurrencesCount: this.matchCount, currentString: this.currentHashedSubstring, stackIndex: i, needleIndex: null, shiftRight: true  });
+    this.animations.push({ isMatch: isMatchEnum.COMPLETE, occurrencesCount: this.matchCount, currentString: this.currentHashedSubstring, stackIndex: i, needleIndex: null, shiftRight: true });
     return true;
   }
 
@@ -121,26 +121,28 @@ export class RkComponent implements OnInit {
   rkSearch(): number {
     if (this.stackArr.length < this.needleArr.length) return 0;
     if (this.stackArr.length == 0 || this.needleArr.length == 0) return 0;
+    let n = this.stackArr.length;
+    let m = this.needleArr.length;
 
-    let txtHash = this.hash(this.stackArr, this.needleArr.length);
+    let txtHash = this.hash(this.stackArr, m);
 
     // check for match at offset 0
-    if ((this.patHash == txtHash) && this.check(0)) 
+    if ((this.patHash == txtHash) && this.check(0))
       this.matchCount++;
     else // If no match, then we pop the first element, otherwise we keep the first element as this is a perf match!
       this.animations.push({ isMatch: isMatchEnum.POP, occurrencesCount: this.matchCount, currentString: this.currentHashedSubstring, stackIndex: 0, needleIndex: 0, shiftRight: true });
 
-    // check for hash match; if hash match, check for exact match
-    for (let i = this.needleArr.length; i < this.stackArr.length; i++) {
+    // check for hash match; if hash match, then check for exact match (Via Las Vegas)
+    for (let i = m; i < n; i++) {
 
       // Remove leading digit, add trailing digit, check for match. 
-      txtHash = (txtHash + this.prime - this.RM * this.stackArr[i - this.needleArr.length].character.charCodeAt(0) % this.prime) % this.prime;
+      txtHash = (txtHash + this.prime - this.RM * this.stackArr[i - m].character.charCodeAt(0) % this.prime) % this.prime;
       txtHash = (txtHash * this.R + this.stackArr[i].character.charCodeAt(0)) % this.prime;
-      this.animations.push({ isMatch: isMatchEnum.HASHING, occurrencesCount: this.matchCount, currentString: this.currentHashedSubstring, stackIndex: i, needleIndex: null, shiftRight: false  }); // Push current char first
+      this.animations.push({ isMatch: isMatchEnum.HASHING, occurrencesCount: this.matchCount, currentString: this.currentHashedSubstring, stackIndex: i, needleIndex: null, shiftRight: false }); // Push current char first
       this.currentHashedSubstring += this.stackArr[i].character;
 
       // match
-      const offset = i - this.needleArr.length + 1;
+      const offset = i - m + 1;
       this.currentHashedSubstring = this.currentHashedSubstring.substring(1);
       this.animations[this.animations.length - 1].currentString = this.currentHashedSubstring;
       this.animations.push({ isMatch: isMatchEnum.POP, occurrencesCount: this.matchCount, currentString: this.currentHashedSubstring, stackIndex: offset, needleIndex: 0, shiftRight: true });
@@ -163,28 +165,24 @@ export class RkComponent implements OnInit {
       if (action) {
         this.occurrencesCount = action.occurrencesCount;
         this.currentHashedSubstring = action.currentString;
-        
+
         if (isMatchEnum.FAILED === action.isMatch) {
-          console.log('failed');
           this.stackArr[action.stackIndex].colour = Colours.RED;
           this.needleArr[action.needleIndex].colour = Colours.RED;
         }
 
         if (isMatchEnum.HASHING === action.isMatch) {
-          console.log('hashing');
           this.stackArr[action.stackIndex].colour = Colours.SELECTED;
           if (action.needleIndex !== null) this.needleArr[action.needleIndex].colour = Colours.SELECTED;
         }
 
         if (isMatchEnum.POP == action.isMatch) {
-          console.log('pop');
           this.stackArr[action.stackIndex].colour = Colours.WHITE;
           this.shiftTextRight();
 
         }
 
         if (isMatchEnum.SELECTED_INDEX_MATCH == action.isMatch) {
-          console.log('TURNING GREEN');
           if (action.stackIndex - 1 >= 0 && this.stackArr[action.stackIndex - 1].colour !== Colours.GREEN) {
             this.shiftArr.pop();
           }
@@ -193,7 +191,6 @@ export class RkComponent implements OnInit {
         }
 
         if (isMatchEnum.COMPLETE == action.isMatch) {
-          console.log('COMPLETE');
           this.setColourFromIndex(action.stackIndex, Colours.GREEN);
           this.setColourFromIndex(action.stackIndex, Colours.SELECTED);
           this.setToWhiteToIndex(this.stackArr, action.stackIndex)

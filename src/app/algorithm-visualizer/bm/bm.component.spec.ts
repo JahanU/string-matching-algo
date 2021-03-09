@@ -137,7 +137,7 @@ describe('BMComponent', () => {
         expect(matches).toBe(1);
     });
 
-    it('9, DNA - should return 6', () => {
+    it('9, DNA - should return 3', () => {
         for (let i = 0; i < InputDataSourceEnum.DNA_STACK.length; i++) {
             let char = InputDataSourceEnum.DNA_STACK.charAt(i);
             component.stackArr.push({ character: char, colour: null, index: i });
@@ -150,7 +150,7 @@ describe('BMComponent', () => {
 
         component.genBadCharArray();
         const matches = component.BMSearch();
-        expect(matches).toBe(6);
+        expect(matches).toBe(3);
     });
 
     it('10, Story - should return 2', () => {

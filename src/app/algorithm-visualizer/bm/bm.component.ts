@@ -186,7 +186,6 @@ export class BMComponent implements OnInit {
     // > 0 so if match is last, it does uneededly shift chars
     if (this.animations.length == 0) return;
     if (skipNum == -1) return;
-    console.log('skipped: ', skipNum);
 
     for (let i = 0; i < skipNum; i++) {
       this.shiftArr.push({ character: null, colour: null, index: null });

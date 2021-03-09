@@ -61,16 +61,17 @@
         <mat-form-field class="inputField">
           <input formControlName="stack" matInput placeholder="Haystack" value="ABCDE">
         </mat-form-field>
-        <hr>
       </form>
 
+      <br>
+
       <div *ngIf="selectedAlgorithm == algorithmEnum.NAIVE">
-        <app-naive [parentNeedle]="needleArr" [parentStack]="stackArr" [isSorting]="isSorting" [hideCodeSnippet]=false
+        <app-naive [parentNeedle]="needleArr" [parentStack]="stackArr" [isSorting]="isSorting"
           (naiveEvent)="handleIsSorting($event)"> </app-naive>
       </div>
 
       <div *ngIf="selectedAlgorithm == algorithmEnum.DFA">
-        <app-dfa [parentNeedle]="needleArr" [parentStack]="stackArr" [isSorting]="isSorting"
+        <app-dfa [parentNeedle]="needleArr" [parentStack]="stackArr" [isSorting]="isSorting" 
           (dfaEvent)="handleIsSorting($event)"> </app-dfa>
       </div>
 
