@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AlgorithmEnum } from 'src/app/shared/algorithm.enum';
-import { InputDataEnum } from 'src/app/shared/input-data.enum';
+import { InputDataEnum } from 'src/app/shared/input-data-titles.enum';
 import { Letters } from 'src/app/shared/models/Letters';
 import { StringService } from 'src/app/shared/string.service';
 

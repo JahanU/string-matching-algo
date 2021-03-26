@@ -2,7 +2,7 @@ import { Component, OnInit, OnChanges, Input } from '@angular/core';
 import { StringService } from '../shared/string.service';
 import { BsDropdownConfig } from 'ngx-bootstrap/dropdown';
 import { AlgorithmEnum } from '../shared/algorithm.enum';
-import { InputDataEnum } from '../shared/input-data.enum';
+import { InputDataEnum } from '../shared/input-data-titles.enum';
 import { InputDataSourceEnum } from '../shared/input-data-source.enum';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Letters } from '../shared/models/Letters';
