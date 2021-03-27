@@ -1,8 +1,8 @@
 import { Component, OnInit, OnChanges, Input, Output, EventEmitter, ViewChild } from '@angular/core';
-import { StringService } from 'src/app/shared/string.service';
+import { StringService } from 'src/app/shared/services/string.service';
 import { Letters } from 'src/app/shared/models/Letters';
-import { Colours } from 'src/app/shared/colours.enum';
-import { AlgorithmEnum } from '../../shared/algorithm.enum';
+import { Colours } from 'src/app/shared/enums/colours.enum';
+import { AlgorithmEnum } from '../../shared/enums/algorithm.enum';
 
 @Component({
   selector: 'app-naive',

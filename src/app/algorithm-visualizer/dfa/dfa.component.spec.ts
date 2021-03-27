@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { InputDataSourceEnum } from '../../shared/input-data-source.enum';
-import { StringService } from 'src/app/shared/string.service';
+import { StringService } from 'src/app/shared/services/string.service';
 import { DFAComponent } from './dfa.component';
 
 describe('DFAComponent', () => {

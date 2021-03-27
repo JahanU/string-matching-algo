@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { AlgorithmEnum } from 'src/app/shared/algorithm.enum';
-import { InputDataEnum } from 'src/app/shared/input-data-titles.enum';
+import { AlgorithmEnum } from 'src/app/shared/enums/algorithm.enum';
+import { InputDataEnum } from 'src/app/shared/enums/input-data-titles.enum';
 import { Letters } from 'src/app/shared/models/Letters';
-import { StringService } from 'src/app/shared/string.service';
+import { StringService } from 'src/app/shared/services/string.service';
 
 @Component({
   selector: 'app-all-algorithms',

@@ -1,9 +1,9 @@
 import { OnChanges } from '@angular/core';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { AlgorithmEnum } from 'src/app/shared/algorithm.enum';
-import { Colours } from 'src/app/shared/colours.enum';
+import { AlgorithmEnum } from 'src/app/shared/enums/algorithm.enum';
+import { Colours } from 'src/app/shared/enums/colours.enum';
 import { Letters } from 'src/app/shared/models/Letters';
-import { StringService } from 'src/app/shared/string.service';
+import { StringService } from 'src/app/shared/services/string.service';
 
 @Component({
   selector: 'app-bm',

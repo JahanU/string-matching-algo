@@ -1,8 +1,8 @@
 import { Component, OnInit, Output, EventEmitter, Input, OnChanges } from '@angular/core';
-import { StringService } from 'src/app/shared/string.service';
+import { StringService } from 'src/app/shared/services/string.service';
 import { Letters } from 'src/app/shared/models/Letters';
-import { Colours } from '../../shared/colours.enum';
-import { AlgorithmEnum } from 'src/app/shared/algorithm.enum';
+import { Colours } from '../../shared/enums/colours.enum';
+import { AlgorithmEnum } from 'src/app/shared/enums/algorithm.enum';
 
 @Component({
   selector: 'app-kmp',
