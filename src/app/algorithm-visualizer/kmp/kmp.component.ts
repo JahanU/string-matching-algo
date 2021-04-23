@@ -90,55 +90,32 @@ export class KmpComponent implements OnInit {
     this.createFailureTable();
   }
 
-  setDFA(): dfa[]  {
-    if (this.stackArr.length < this.needleArr.length) return [];
-    if (this.stackArr.length == 0 || this.needleArr.length == 0) return [];
-    
-    const R = 256; // the radix
-    const M = this.needleArr.length;
-
-    let dfa = [];
-    for (let r = 0; r < R; r++) {
-      dfa.push(new Array(M).fill(0));
-    }
-
-    const hasChar = this.needleArr[0].character != '';
-    if (hasChar)
-      dfa[this.needleArr[0].character.charCodeAt(0)][0] = 1;
-
-    for (let i = 0, j = 1; j < M; j++) {
-      for (let c = 0; c < R; c++)
-        dfa[c][j] = dfa[c][i]; // Copy mismatch cases. 
-
-      dfa[this.needleArr[j].character.charCodeAt(0)][j] = j + 1; // Set match case. 
-      i = dfa[this.needleArr[j].character.charCodeAt(0)][i]; // Update restart state. 
-    }
-
-    return dfa;
-  }
-
-  kmpSearch() { // simulate operation of DFA on text
+  // return offset of first occurrence of text in pattern (or n if no match)
+  // simulate the NFA to find match 
+  kmpSearch() {
     if (this.stackArr.length < this.needleArr.length) return 0;
     if (this.stackArr.length == 0 || this.needleArr.length == 0) return 0;
-
-    let dfa = this.setDFA();
-    let n = this.stackArr.length;
-    let m = this.needleArr.length;
     let matchCount = 0;
-    let i = 0, j = 0; // i = stack, j = needle
+    var n = this.stackArr.length;
+    var m = this.needleArr.length;
+    var j = 0;
 
-    for (i = 0; i < n; i++) { // i < stack, j < needle
-      if (this.stackArr[i].character == this.needleArr[j].character) {
+    for (var i = 0; i < n; i++) {
+      while (j > 0 && this.needleArr[j].character != this.stackArr[i].character) {
+        this.animations.push({ isMatch: isMatchEnum.FAILED, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: (j - this.next[j - 1]) - 1 });
+        j = this.next[j - 1];
+      }
+  
+      if (this.needleArr[j].character == this.stackArr[i].character) {
         this.animations.push({ isMatch: isMatchEnum.CHAR_MATCH, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: -1 });
+        ++j;
       }
       else {
-        this.animations.push({ isMatch: isMatchEnum.FAILED, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: j - dfa[this.stackArr[i].character.charCodeAt(0)][j] });
+          this.animations.push({ isMatch: isMatchEnum.FAILED, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: j });
       }
-      j = dfa[this.stackArr[i].character.charCodeAt(0)][j];
-
-      if (j == m) { // perfect match!
-        this.animations.push({ isMatch: isMatchEnum.COMPLETE, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: dfa[this.stackArr[i].character.charCodeAt(0)][0] === 0 ? m-1 : dfa[this.stackArr[i].character.charCodeAt(0)][0]+1 });
-        j = dfa[this.stackArr[i].character.charCodeAt(0)][0];
+      if (j == m) {
+        this.animations.push({ isMatch: isMatchEnum.COMPLETE, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: (j - this.next[j - 1]) - 1 });
+        j = this.next[j - 1];
         matchCount++;
       }
     }
@@ -146,41 +123,6 @@ export class KmpComponent implements OnInit {
     this.animationMaxLimit = this.animations.length;
     return matchCount;
   }
-
-
-  // // return offset of first occurrence of text in pattern (or n if no match)
-  // // simulate the NFA to find match 
-  // kmpSearch() {
-  //   if (this.stackArr.length < this.needleArr.length) return 0;
-  //   if (this.stackArr.length == 0 || this.needleArr.length == 0) return 0;
-  //   let matchCount = 0;
-  //   var n = this.stackArr.length;
-  //   var m = this.needleArr.length;
-  //   var j = 0;
-
-  //   for (var i = 0; i < n; i++) {
-  //     while (j > 0 && this.needleArr[j].character != this.stackArr[i].character) {
-  //       this.animations.push({ isMatch: isMatchEnum.FAILED, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: (j - this.next[j - 1]) - 1 });
-  //       j = this.next[j - 1];
-  //     }
-  
-  //     if (this.needleArr[j].character == this.stackArr[i].character) {
-  //       this.animations.push({ isMatch: isMatchEnum.CHAR_MATCH, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: -1 });
-  //       ++j;
-  //     }
-  //     else {
-  //         this.animations.push({ isMatch: isMatchEnum.FAILED, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: j });
-  //     }
-  //     if (j == m) {
-  //       this.animations.push({ isMatch: isMatchEnum.COMPLETE, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: (j - this.next[j - 1]) - 1 });
-  //       j = this.next[j - 1];
-  //       matchCount++;
-  //     }
-  //   }
-
-  //   this.animationMaxLimit = this.animations.length;
-  //   return matchCount;
-  // }
 
 
   kmpSearchAnimation(): void {
@@ -273,7 +215,6 @@ export class KmpComponent implements OnInit {
   }
 }
 
-
 interface AnimationValues {
   isMatch: isMatchEnum;
   occurrencesCount: number;
@@ -294,8 +235,68 @@ interface failArray {
   failValue: number;
 }
 
-interface dfa {
-  character: string;
-  index: number;
-  automoton: number;
-}
+// interface dfa {
+//   character: string;
+//   index: number;
+//   automoton: number;
+// }
+
+ // setDFA(): dfa[]  { 
+  //   if (this.stackArr.length < this.needleArr.length) return [];
+  //   if (this.stackArr.length == 0 || this.needleArr.length == 0) return [];
+    
+  //   const R = 256; // the radix
+  //   const M = this.needleArr.length;
+
+  //   let dfa = [];
+  //   for (let r = 0; r < R; r++) {
+  //     dfa.push(new Array(M).fill(0));
+  //   }
+
+  //   const hasChar = this.needleArr[0].character != '';
+  //   if (hasChar)
+  //     dfa[this.needleArr[0].character.charCodeAt(0)][0] = 1;
+
+  //   for (let i = 0, j = 1; j < M; j++) {
+  //     for (let c = 0; c < R; c++)
+  //       dfa[c][j] = dfa[c][i]; // Copy mismatch cases. 
+
+  //     dfa[this.needleArr[j].character.charCodeAt(0)][j] = j + 1; // Set match case. 
+  //     i = dfa[this.needleArr[j].character.charCodeAt(0)][i]; // Update restart state. 
+  //   }
+
+  //   return dfa;
+  // }
+
+  // // kmpSearch() { // simulate operation of DFA on text
+  // //   if (this.stackArr.length < this.needleArr.length) return 0;
+  // //   if (this.stackArr.length == 0 || this.needleArr.length == 0) return 0;
+
+  // //   let dfa = this.setDFA();
+  // //   let n = this.stackArr.length;
+  // //   let m = this.needleArr.length;
+  // //   let matchCount = 0;
+  // //   let i = 0, j = 0; // i = stack, j = needle
+
+  // //   for (i = 0; i < n; i++) { // i < stack, j < needle
+  // //     if (this.stackArr[i].character == this.needleArr[j].character) {
+  // //       this.animations.push({ isMatch: isMatchEnum.CHAR_MATCH, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: -1 });
+  // //     }
+  // //     else {
+  // //       this.animations.push({ isMatch: isMatchEnum.FAILED, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: j - dfa[this.stackArr[i].character.charCodeAt(0)][j] });
+  // //     }
+  // //     j = dfa[this.stackArr[i].character.charCodeAt(0)][j];
+
+  // //     if (j == m) { // perfect match!
+  // //       this.animations.push({ isMatch: isMatchEnum.COMPLETE, occurrencesCount: matchCount, stackIndex: i, needleIndex: j, skip: dfa[this.stackArr[i].character.charCodeAt(0)][0] === 0 ? m-1 : dfa[this.stackArr[i].character.charCodeAt(0)][0]+1 });
+  // //       j = dfa[this.stackArr[i].character.charCodeAt(0)][0];
+  // //       matchCount++;
+  // //     }
+  // //   }
+
+  // //   this.animationMaxLimit = this.animations.length;
+  // //   return matchCount;
+  // // }
+
+
+

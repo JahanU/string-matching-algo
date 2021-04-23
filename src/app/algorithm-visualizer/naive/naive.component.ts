@@ -154,7 +154,7 @@ export class NaiveComponent implements OnInit {
       }
     }, 10);
   }
-
+  
 }
 
 interface AnimationValues {

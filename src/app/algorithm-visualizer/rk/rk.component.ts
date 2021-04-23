@@ -195,7 +195,6 @@ export class RkComponent implements OnInit {
           this.setColourFromIndex(action.stackIndex, Colours.SELECTED);
           this.setToWhiteToIndex(this.stackArr, action.stackIndex)
           this.shiftTextRight();
-
         }
 
       }
