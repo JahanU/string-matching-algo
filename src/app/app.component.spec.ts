@@ -16,10 +16,10 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'algorithm-visualizer'`, () => {
+  it(`should have as title 'Visualizing String Matching Algorithms'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('algorithm-visualizer');
+    expect(app.title).toEqual('Visualizing String Matching Algorithms');
   });
 
   // it('should render title', () => {

@@ -11,7 +11,6 @@ export class StringService {
   stackArr: Letters[];
   needleArr: Letters[];
   occurrencesCount: number = 0;
-
   animationSpeed: number = 400;
 
   constructor() {

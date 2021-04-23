@@ -20,8 +20,8 @@ import { DFAComponent } from './algorithm-visualizer/dfa/dfa.component';
 import { BMComponent } from './algorithm-visualizer/bm/bm.component';
 import { AllAlgorithmsComponent } from './algorithm-visualizer/all-algorithms/all-algorithms.component';
 import { RkComponent } from './algorithm-visualizer/rk/rk.component';
-import { HighlightModule, HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
 import { KmpComponent } from './algorithm-visualizer/kmp/kmp.component';
+import { HighlightModule, HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
 
 const routes: Routes = [
   { path: '', component: AlgorithmVisualizerComponent },

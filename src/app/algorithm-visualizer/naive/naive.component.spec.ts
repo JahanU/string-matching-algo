@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { StringService } from 'src/app/shared/services/string.service';
-import { InputDataSourceEnum } from '../../shared/input-data-source.enum';
+import { InputDataSourceEnum } from 'src/app/shared/enums/input-data-source.enum';
 import { NaiveComponent } from './naive.component';
 
 describe('NaiveComponent', () => {
@@ -21,9 +21,9 @@ describe('NaiveComponent', () => {
   });
 
   /* AAA
-     Arrange -> Prepare code required for specific tests
-     Act -> Invocation of the method to be tested
-     Assert -> Check if result is expected
+    Arrange -> Prepare code required for specific tests
+    Act -> Invocation of the method to be tested
+    Assert -> Check if result is expected
  */
   it('1 - should return 0, occurrences = 0', () => {
     component.needleArr = [{ character: 'A', colour: null, index: 0 }, { character: 'A', colour: null, index: 2 }];
@@ -190,14 +190,14 @@ describe('NaiveComponent', () => {
   it('14, interlinked needle in stack - should return 2', () => {
 
     component.needleArr = [
-    { character: 'A', colour: null, index: 0 }, 
-    { character: 'B', colour: null, index: 1 },
-    { character: 'B', colour: null, index: 2 },
-    { character: 'A', colour: null, index: 3 }
-  ];
+      { character: 'A', colour: null, index: 0 },
+      { character: 'B', colour: null, index: 1 },
+      { character: 'B', colour: null, index: 2 },
+      { character: 'A', colour: null, index: 3 }
+    ];
 
     component.stackArr = [
-      { character: 'A', colour: null, index: 0 }, 
+      { character: 'A', colour: null, index: 0 },
       { character: 'B', colour: null, index: 1 },
       { character: 'B', colour: null, index: 2 },
       { character: 'A', colour: null, index: 3 },

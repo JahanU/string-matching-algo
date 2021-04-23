@@ -3,8 +3,8 @@
   <div class="btn-group" dropdown [insideClick]="true">
 
     <button id="button-animated" dropdownToggle type="button" class="btn btn-primary dropdown-toggle"
-      aria-controls="dropdown-animated" [disabled]="isSorting">
-      {{ selectedAlgorithm }} <span class="caret"></span>
+    [disabled]="isSorting">
+      {{ selectedAlgorithm }} 
     </button>
 
     <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-animated">
@@ -24,7 +24,7 @@
   <div class="btn-group" dropdown [insideClick]="true">
     <button id="button-animated" dropdownToggle type="button" class="btn btn-primary dropdown-toggle"
       aria-controls="dropdown-animated" [disabled]="isSorting">
-      {{ selectedInput }} <span class="caret"></span>
+      {{ selectedInput }} 
     </button>
     <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-animated">
 
@@ -55,11 +55,11 @@
 
       <form [formGroup]="inputForm" (keyup)="updateStrings()" class="example-form text-center">
         <mat-form-field class="inputField">
-          <input formControlName="needle" matInput placeholder="Needle" value="ABC">
+          <input formControlName="needle" matInput placeholder="Needle">
         </mat-form-field>
 
         <mat-form-field class="inputField">
-          <input formControlName="stack" matInput placeholder="Haystack" value="ABCDE">
+          <input formControlName="stack" matInput placeholder="Haystack">
         </mat-form-field>
       </form>
 

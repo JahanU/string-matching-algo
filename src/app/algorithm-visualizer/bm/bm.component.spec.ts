@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { InputDataSourceEnum } from 'src/app/shared/input-data-source.enum';
+import { InputDataSourceEnum } from 'src/app/shared/enums/input-data-source.enum';
 import { BMComponent } from './bm.component';
 
 describe('BMComponent', () => {
