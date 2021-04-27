@@ -1,6 +1,6 @@
 export enum Colours {
-  GREEN = '#b2ff59',
-  RED = 'red',
-  WHITE = 'white',
-  SELECTED = 'orange'
+  GREEN = '#b2ff59',  // Successful Complete Match
+  RED = 'red',        // Unsuccessful Match
+  WHITE = 'white',    // Default background colour of text
+  SELECTED = 'orange' // Selected Index 
 }
